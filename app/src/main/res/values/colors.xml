@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#ffffff</color>
+    <color name="line_gray">#ddd</color>
+    <color name="comment_bg">#eee</color>
+    <color name="orange">#eb6800</color>
+    <color name="blue">#0091ff</color>
+    <color name="black">#333</color>
+    <color name="gray">#646464</color>
+    <color name="light_black">#9c9c9c</color>
+    <color name="edit_text">#919191</color>
+    <color name="home_text">#484848</color>
+    <color name="tab_normal">#555</color>
+    <color name="red">#df1111</color>
+    <color name="background">#eee</color>
+    <color name="lijibanli">#e3bb06</color>
+    <color name="order_info">#999</color>
+    <color name="alpha">#99333333</color>
+    <color name="renwu_bg">#e4e4e4</color>
+
+    <color name="moren">#f999a5</color>
+    <color name="home_progress">#ffa500</color>
+    <color name="qipeishang">#2970f6</color>
+    <color name="luntan_name">#316487</color>
+
+    <color name = "transparent">#99eeeeee</color>
+</resources>

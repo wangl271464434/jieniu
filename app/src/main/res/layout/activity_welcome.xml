@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".WelcomeActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/welcome"
+        android:scaleType="fitCenter"
+        />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/size_10dp"
+        >
+
+        <com.jieniuwuliu.jieniu.view.CountdownView
+            android:id="@+id/tv_enter"
+            android:layout_width="@dimen/size_40dp"
+            android:layout_height="@dimen/size_40dp"
+            app:text="跳过"
+            app:text_color="@android:color/white"
+            app:update_time="300"
+            app:total_time="3000"
+            app:bg_color="@color/black"
+            app:progress_color="@color/white"
+            app:progress_width="2dp"
+            app:text_size="@dimen/size_13sp"
+            app:progress_hint_color="#94595b59"
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>

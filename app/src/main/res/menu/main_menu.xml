@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home"
+        android:enabled="true"
+        android:icon="@mipmap/ic_home_bar_home"
+        android:title="@string/home"
+        />
+    <item
+        android:id="@+id/qipeishang"
+        android:enabled="true"
+        android:icon="@mipmap/ic_home_bar_auto"
+        android:title="@string/qipeishang"
+         />
+    <item
+        android:id="@+id/item_bottom_3"
+        android:enabled="true"
+        android:title=""
+        />
+    <item
+        android:id="@+id/luntan"
+        android:enabled="true"
+        android:icon="@mipmap/ic_home_bar_repair"
+        android:title="@string/luntan"
+         />
+    <item
+        android:id="@+id/mine"
+        android:enabled="true"
+        android:icon="@mipmap/ic_home_bar_personal"
+        android:title="@string/mine"
+         />
+</menu>

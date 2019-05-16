@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/size_100dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/size_10dp"
+    android:gravity="center"
+    >
+     <ImageView
+         android:id="@+id/img"
+         android:layout_width="@dimen/size_80dp"
+         android:layout_height="@dimen/size_80dp"
+         android:src="@mipmap/ic_launcher"
+         />
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_5dp"
+        android:gravity="center"
+        android:text="大家奥斯卡了房间卡电视里看到啊啊送来的快解散了"
+        android:textSize="@dimen/size_12sp"
+        android:ems="6"
+        android:ellipsize="end"
+        android:maxLines="2"
+        />
+</LinearLayout>
