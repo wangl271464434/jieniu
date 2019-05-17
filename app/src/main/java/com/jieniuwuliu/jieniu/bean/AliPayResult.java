@@ -45,7 +45,8 @@ public class AliPayResult {
 
         private String PrivateKey;
         private String Appid;
-        private String Value;
+        private String out_trade_no;
+        private String Notify;
 
         public String getPrivateKey() {
             return PrivateKey;
@@ -63,12 +64,20 @@ public class AliPayResult {
             this.Appid = Appid;
         }
 
-        public String getValue() {
-            return Value;
+        public String getOut_trade_no() {
+            return out_trade_no;
         }
 
-        public void setValue(String Value) {
-            this.Value = Value;
+        public void setOut_trade_no(String out_trade_no) {
+            this.out_trade_no = out_trade_no;
+        }
+
+        public String getNotify() {
+            return Notify;
+        }
+
+        public void setNotify(String notify) {
+            Notify = notify;
         }
     }
 }

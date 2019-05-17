@@ -60,7 +60,7 @@ public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.Vi
                 viewHolder.tvUpLine.setVisibility(View.VISIBLE);
                 viewHolder.tvDownLine.setVisibility(View.VISIBLE);
             }
-            viewHolder.tvTime.setText(TimeUtil.getDateStr(item.getCreatedAt()));
+            viewHolder.tvTime.setText(item.getCreatedAt());
             viewHolder.tvInfo.setText(item.getName()+"已经取件");
             switch (item.getLevel()){
                 case 1:

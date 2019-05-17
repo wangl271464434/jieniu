@@ -10,4 +10,6 @@ public class Constant {
     public static String SECRETKEY = "W4dtDZ6hLFC6433Pi4lVF0lXGf9iL1nI";
     public static String BuglyId = "a03c18a7a9";
     public static String WXAPPID = "";
+    public static String MONTH_CARD = "月卡费用";
+    public static String JIJIAN = "快递费用";
 }

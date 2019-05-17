@@ -51,7 +51,7 @@ public class UnReadAdapter extends RecyclerView.Adapter<UnReadAdapter.ViewHolder
         GlideUtil.setUserImgUrl(context,item.getPhoto(),viewHolder.img);
         viewHolder.tvName.setText(item.getName());
         viewHolder.tvMsg.setText(item.getInfo());
-        viewHolder.tvTime.setText(TimeUtil.getDateStr(item.getCreatedAt()));
+        viewHolder.tvTime.setText(item.getCreatedAt());
     }
 
     @Override

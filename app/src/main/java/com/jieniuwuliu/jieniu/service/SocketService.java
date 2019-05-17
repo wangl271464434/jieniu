@@ -34,7 +34,7 @@ public class SocketService extends Service {
     /**
      * 心跳检测时间
      */
-    private static final long HEART_BEAT_RATE = 15 * 1000;//每隔15秒进行一次对长连接的心跳检测
+    private static final long HEART_BEAT_RATE = 3*60*1000;//每隔3分钟进行一次对长连接的心跳检测
     private static String WEBSOCKET_HOST_AND_PORT = "ws://62.234.155.41:1323/ws?";//可替换为自己的主机名和端口号
     private WebSocket mWebSocket;
     @Override

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class TimeUtil {
-    public static String getDateStr(String string){
+   /* public static String getDateStr(String string){
         string = string.replace("Z", " UTC");//注意是空格+UTC
         try{
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss Z");
@@ -20,24 +20,29 @@ public class TimeUtil {
             e.printStackTrace();
         }
         return "";
-    }
+    }*/
     //获取当前毫秒值
     public static long getMillisecond(){
         long milisecond = System.currentTimeMillis();
         return milisecond;
+    }
+    //获取当前毫秒值
+    public static String getCurrentTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return  sdf.format(new Date());
     }
     //将时间字符串转换成毫秒值
     public static long getMiliSecond(String string){
         long second = 0;
 /*        String tzId = TimeZone.getDefault().getID();
         TimeZone tz = TimeZone.getTimeZone(tzId);*/
-        string = string.replace("Z", " UTC");//注意是空格+UTC
+//        string = string.replace("Z", " UTC");//注意是空格+UTC
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss Z");
+   /*         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss Z");
             Date date = formatter.parse(string);
-            Log.i("date",date.toString());
-       /*     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date1 = sdf.parse(sdf.format(date));*/
+            Log.i("date",date.toString());*/
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse(string);
             second = date.getTime();
             return second;
         } catch (ParseException e) {

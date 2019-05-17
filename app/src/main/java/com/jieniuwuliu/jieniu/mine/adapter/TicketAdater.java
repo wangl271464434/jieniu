@@ -62,7 +62,7 @@ public class TicketAdater extends RecyclerView.Adapter<TicketAdater.ViewHolder> 
         }else{
             viewHolder.tvMoney.setText("¥  "+item.getMoney()/100);
         }
-        viewHolder.tvTime.setText("有效期至"+TimeUtil.getDateStr(item.getCouponTime()));
+        viewHolder.tvTime.setText("有效期至"+item.getCouponTime());
     }
 
     @Override

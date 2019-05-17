@@ -14,19 +14,19 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 public class VideoActivity extends BaseActivity{
     @BindView(R.id.player)
     CustomJCVideo player;
-    private LunTanResult.DataBean video;
+    private String videoUrl;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_video;
     }
     @Override
     protected void init() {
-        video = (LunTanResult.DataBean) getIntent().getSerializableExtra("video");
+        videoUrl =  getIntent().getStringExtra("video");
     }
     @Override
     protected void onResume() {
         super.onResume();
-        player.setUp(video.getVideo(),JCVideoPlayer.SCREEN_WINDOW_FULLSCREEN,"没有标题");
+        player.setUp(videoUrl,JCVideoPlayer.SCREEN_WINDOW_FULLSCREEN,"没有标题");
         player.startVideo();
     }
     @OnClick(R.id.img_back)

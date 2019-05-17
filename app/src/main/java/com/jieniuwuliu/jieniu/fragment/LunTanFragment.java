@@ -35,6 +35,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.LoginActivity;
+import com.jieniuwuliu.jieniu.MainActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.FileUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
@@ -237,6 +238,9 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                             if (unReadMsg.getData()!=null){
                                 if (unReadMsg.getData().size()>0){
                                     badge.setBadgeNumber(-1);
+                                }else {
+                                    badge.hide(true);
+                                    MainActivity.badge.hide(true);
                                 }
                             }
                             break;
@@ -699,7 +703,7 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     public void playVideo(int position) {
         Intent intent = new Intent();
         intent.setClass(getActivity(),VideoActivity.class);
-        intent.putExtra("video", list.get(position));
+        intent.putExtra("video", list.get(position).getVideo());
         getActivity().startActivity(intent);
     }
 

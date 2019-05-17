@@ -168,6 +168,9 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
                             }
                             GlideUtil.setUserImgUrl(getActivity(),user.getShopPhoto(),headImg);
                             switch (user.getPersonType()){
+                                case 0:
+                                    tvType.setVisibility(View.GONE);
+                                    break;
                                 case 1:
                                     type = "配件商";
                                     break;

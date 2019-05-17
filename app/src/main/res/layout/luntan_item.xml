@@ -41,12 +41,13 @@
                 />
             <ImageView
                 android:id="@+id/iv"
-                android:layout_width="@dimen/size_180dp"
-                android:layout_height="@dimen/size_120dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/context"
                 android:src="@mipmap/pic_forum_showpic"
                 android:layout_marginLeft="@dimen/size_5dp"
-
+                android:adjustViewBounds="true"
+                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/size_10dp"
                 android:scaleType="centerCrop"
                 />

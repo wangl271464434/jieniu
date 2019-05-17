@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -142,7 +143,12 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
                         case 200:
                             data = (Forum) GsonUtil.praseJsonToModel(response.body().string(),Forum.class);
                             name.setText(data.getData().getName());
-                            context.setText(data.getData().getInfo());
+                            if (data.getData().getInfo().equals("")){
+                                context.setVisibility(View.GONE);
+                            }else{
+                                context.setVisibility(View.VISIBLE);
+                                context.setText(data.getData().getInfo());
+                            }
                             time = data.getData().getCreatedAt();
                             tvTime.setText(TimeUtil.getShowString(TimeUtil.getMiliSecond(time)));
                             if (data.getData().getPhoto()!=null){
@@ -162,6 +168,12 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
                                             for (int j = 0;j<array.length();j++){
                                                 pics.add(array.get(j).toString());
                                             }
+                                            ViewGroup.LayoutParams lp = iv.getLayoutParams();
+                                            lp.width = 360;
+                                            lp.height = 480;
+                                            iv.setLayoutParams(lp);
+                                            iv.setMaxHeight(lp.height);
+                                            iv.setMaxWidth(lp.width);
                                             GlideUtil.setImgUrl(LuntanInfoActivity.this,pics.get(0),iv);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -247,12 +259,11 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
         }
     }
 
-
     @OnClick({R.id.back, R.id.head_img,R.id.iv,R.id.img,R.id.tv_send})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                onBackPressed();
+                finish();
                 break;
             case R.id.head_img:
                 intent = new Intent();
@@ -269,7 +280,7 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
             case R.id.img:
                 intent = new Intent();
                 intent.setClass(this,VideoActivity.class);
-                intent.putExtra("video",data);
+                intent.putExtra("video",data.getData().getVideo());
                 startActivity(intent);
                 break;
             case R.id.tv_send://发送消息

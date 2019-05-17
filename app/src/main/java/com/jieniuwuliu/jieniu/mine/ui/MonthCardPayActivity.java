@@ -12,9 +12,11 @@ import android.widget.TextView;
 import com.alipay.sdk.app.PayTask;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AliPayUtil;
+import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -24,6 +26,12 @@ import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -104,7 +112,7 @@ public class MonthCardPayActivity extends BaseActivity {
      * */
     private void zfbPay() {
         loading.show();
-        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo("0.01","","月卡费用");
+        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo("0.01","",Constant.MONTH_CARD);
         call.enqueue(new Callback<AliPayResult>() {
             @Override
             public void onResponse(Call<AliPayResult> call, Response<AliPayResult> response) {
@@ -114,8 +122,12 @@ public class MonthCardPayActivity extends BaseActivity {
                         case 200:
                             String privateKey = response.body().getData().getPrivateKey();
                             String appId = response.body().getData().getAppid();
-                            String info = response.body().getData().getValue();
-                            String orderInfo =  AliPayUtil.pay(privateKey,info);
+                            String notify = response.body().getData().getNotify();
+                            String order_no = response.body().getData().getOut_trade_no();
+                            Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.MONTH_CARD,"0.01",order_no,notify);
+                            String orderParam = AliPayUtil.buildOrderParam(map);
+                            String sign =  AliPayUtil.pay(privateKey,map);
+                            String orderInfo = orderParam +"&"+sign;
                             aliPay(orderInfo);
                             break;
                         case 400:

@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity{
     private int status;
     public static Activity activity;
     private MsgReceiver receiver;
-    private Badge badge;
+    public static Badge badge;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;

@@ -59,7 +59,7 @@ public class FaPiaoAdater extends RecyclerView.Adapter<FaPiaoAdater.ViewHolder> 
             }
             viewHolder.tvNo.setText("运单号："+list.get(i).getOrderNumber());
             viewHolder.tvNum.setText("x"+list.get(i).getNumber());
-            viewHolder.tvTime.setText("下单时间："+TimeUtil.getDateStr(list.get(i).getCreatedAt()));
+            viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt());
             float price  = list.get(i).getTotalMoney()/100;
             viewHolder.tvPrice.setText("¥ "+String.format("%.2f",price));
             if (list.get(i).isInvoice()){

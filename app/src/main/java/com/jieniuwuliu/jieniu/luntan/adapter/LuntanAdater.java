@@ -36,7 +36,6 @@ import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.listener.OnItemLongClickListener;
 import com.jieniuwuliu.jieniu.luntan.AppearTextActivity;
 import com.jieniuwuliu.jieniu.luntan.LookPicActivity;
-import com.jieniuwuliu.jieniu.luntan.VideoActivity;
 import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
 
 import org.json.JSONArray;
@@ -176,11 +175,22 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         context.startActivity(intent);
                     }
                 });
-                holder.context.setText(list.get(i-1).getInfo());
+                if (list.get(i-1).getInfo().equals("")){
+                    holder.context.setVisibility(View.GONE);
+                }else{
+                    holder.context.setVisibility(View.VISIBLE);
+                    holder.context.setText(list.get(i-1).getInfo());
+                }
                 String json = list.get(i-1).getPhotos();
                 final ArrayList<String> pics = new ArrayList<>();
                 if (!json.equals("")){
                     holder.iv.setVisibility(View.VISIBLE);
+                    ViewGroup.LayoutParams lp =   holder.iv.getLayoutParams();
+                    lp.width = 360;
+                    lp.height = 480;
+                    holder.iv.setLayoutParams(lp);
+                    holder.iv.setMaxHeight(lp.height);
+                    holder.iv.setMaxWidth(lp.width);
                     try {
                         JSONArray array = new JSONArray(json);
                         for (int j = 0;j<array.length();j++){
@@ -314,7 +324,12 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         context.startActivity(intent);
                     }
                 });
-                picHolder.context.setText(list.get(i-1).getInfo());
+                if (list.get(i-1).getInfo().equals("")){
+                    picHolder.context.setVisibility(View.GONE);
+                }else{
+                    picHolder.context.setVisibility(View.VISIBLE);
+                    picHolder.context.setText(list.get(i-1).getInfo());
+                }
                 String jsonpic = list.get(i-1).getPhotos();
                 final ArrayList<String> imgs = new ArrayList<>();
                 if (!jsonpic.equals("")){
@@ -465,7 +480,12 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }else{
                     videoViewHolder.layoutComment.setVisibility(View.INVISIBLE);
                 }
-                videoViewHolder.context.setText(list.get(i-1).getInfo());
+                if (list.get(i-1).getInfo().equals("")){
+                    videoViewHolder.context.setVisibility(View.GONE);
+                }else{
+                    videoViewHolder.context.setVisibility(View.VISIBLE);
+                    videoViewHolder.context.setText(list.get(i-1).getInfo());
+                }
                 videoViewHolder.imgIcon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

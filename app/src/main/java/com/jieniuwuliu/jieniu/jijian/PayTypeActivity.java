@@ -21,6 +21,7 @@ import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.PayResult;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -33,6 +34,9 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,18 +102,63 @@ public class PayTypeActivity extends BaseActivity {
                 break;
             case R.id.btn_sure:
                 switch (payType){
-                    case 1:
+                    case 1://微信
                         wxPay();
                         break;
-                    case 2:
+                    case 2://支付宝
                         zfbPay();
                         break;
-                    case 3:
+                    case 3://货到付款
+                        update();
                         break;
                 }
                 break;
         }
     }
+    /**
+     * 货到付款
+     * */
+    private void update() {
+        try {
+            loading.show();
+            JSONObject object = new JSONObject();
+            object.put("payType",payType);
+            String json = object.toString();
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateOrder(orderNo,body);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    loading.dismiss();
+                    try {
+                        switch (response.code()){
+                            case 200:
+                                finish();
+                                break;
+                            case 400:
+                                String s = response.errorBody().string();
+                                Log.w("result",s);
+                                JSONObject object = new JSONObject(s);
+                                MyToast.show(getApplicationContext(), object.getString("msg"));
+                                break;
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    loading.dismiss();
+                    MyToast.show(getApplicationContext(), "网络错误，请重试");
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     /**
      * 微信支付
      * */
@@ -121,7 +170,7 @@ public class PayTypeActivity extends BaseActivity {
      * */
     private void zfbPay() {
         loading.show();
-        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo("0.01",orderNo,"快递费用");
+        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo("0.01",orderNo,Constant.JIJIAN);
         call.enqueue(new Callback<AliPayResult>() {
             @Override
             public void onResponse(Call<AliPayResult> call, Response<AliPayResult> response) {
@@ -129,10 +178,14 @@ public class PayTypeActivity extends BaseActivity {
                 try {
                     switch (response.code()){
                         case 200:
-                           String privateKey = response.body().getData().getPrivateKey();
-                           String appId = response.body().getData().getAppid();
-                           String info = response.body().getData().getValue();
-                           String orderInfo =  AliPayUtil.pay(privateKey,info);
+                            String privateKey = response.body().getData().getPrivateKey();
+                            String appId = response.body().getData().getAppid();
+                            String notify = response.body().getData().getNotify();
+                            String order_no = response.body().getData().getOut_trade_no();
+                            Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.JIJIAN,"0.01",order_no,notify);
+                            String orderParam = AliPayUtil.buildOrderParam(map);
+                            String sign =  AliPayUtil.pay(privateKey,map);
+                            String orderInfo = orderParam +"&"+sign;
                             aliPay(orderInfo);
                             break;
                         case 400:
