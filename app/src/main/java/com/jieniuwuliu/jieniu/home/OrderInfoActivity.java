@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu.home;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AMapUtil;
+import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
@@ -94,8 +97,22 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     TextView tvTime;
     @BindView(R.id.info)
     LinearLayout info;
-    @BindView(R.id.btn_info)
+   /* @BindView(R.id.btn_info)
+    TextView btnInfo;*/
+    @BindView(R.id.img_user)
+    ImageView imgUser;
+    @BindView(R.id.tv_info)
     TextView tvInfo;
+    @BindView(R.id.tv_baojia)
+    TextView tvBaojia;
+    @BindView(R.id.tv_baojia_money)
+    TextView tvBaojiaMoney;
+    @BindView(R.id.tv_daishou)
+    TextView tvDaiShou;
+    @BindView(R.id.tv_yunfei)
+    TextView tvYunFei;
+    @BindView(R.id.tv_total)
+    TextView tvTotal;
     private boolean isShow = false;
     private AMap aMap;
     protected Unbinder unbinder;
@@ -157,6 +174,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getOrderInfo(orderNo);
         call.enqueue(new Callback<ResponseBody>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
@@ -171,8 +189,15 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                             tvShouhuoName.setText(orderWuliuInfo.getToName());
                             tvShouhuoAddress.setText(orderWuliuInfo.getToAddress());
                             tvShouhuoPhone.setText(orderWuliuInfo.getToPhone());
+                            tvInfo.setText(orderWuliuInfo.getInfo()+" x " +orderWuliuInfo.getNumber()+"件");
+                            tvBaojia.setText("¥ "+(orderWuliuInfo.getBaojiaMoney()/100));
+                            tvBaojiaMoney.setText("¥ "+(orderWuliuInfo.getBaojiajine()/100));
+                            tvDaiShou.setText("¥ "+(orderWuliuInfo.getDaishouMoney()/100));
+                            tvYunFei.setText("¥ "+(orderWuliuInfo.getYunfeiMoney()/100));
+                            tvTotal.setText("¥ "+(orderWuliuInfo.getTotalMoney()/100));
                             if (orderWuliuInfo.getOrderList()!=null){
                                 if (orderWuliuInfo.getOrderList().size()!=0){
+                                    GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);
                                     tvName.setText(orderWuliuInfo.getOrderList().get(0).getName());
                                     tvPhone.setText(orderWuliuInfo.getOrderList().get(0).getPhone());
                                     list.addAll(orderWuliuInfo.getOrderList());
@@ -181,14 +206,13 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                                     tvState.setText("正在发货中");
                                     isShow = true;
                                     info.setVisibility(View.VISIBLE);
-                                    tvInfo.setText("隐藏详情");
                                     tvName.setText("暂无信息");
                                     tvPhone.setText("暂无信息");
                                 }
                             }else {
                                 tvState.setText("正在发货中");
                                 isShow = true;
-                                tvInfo.setText("隐藏详情");
+//                                btnInfo.setText("隐藏详情");
                                 info.setVisibility(View.VISIBLE);
                                 tvName.setText("暂无信息");
                                 tvPhone.setText("暂无信息");
@@ -317,11 +341,11 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             case R.id.btn_info://查看详情
                 if (isShow){
                     info.setVisibility(View.GONE);
-                    tvInfo.setText("查看详情");
+//                    btnInfo.setText("查看详情");
                     isShow = false;
                 }else{
                     info.setVisibility(View.VISIBLE);
-                    tvInfo.setText("隐藏详情");
+//                    btnInfo.setText("隐藏详情");
                     isShow = true;
                 }
                 break;

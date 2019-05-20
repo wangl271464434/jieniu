@@ -307,10 +307,19 @@ public class OrderInfo implements Serializable{
         private String Name;
         private boolean Status;
         private String Phone;
+        private String Photo;
         private double Lat;
         private double Lng;
         private String Region;
         private int Level;
+
+        public String getPhoto() {
+            return Photo;
+        }
+
+        public void setPhoto(String photo) {
+            Photo = photo;
+        }
 
         public int getID() {
             return ID;

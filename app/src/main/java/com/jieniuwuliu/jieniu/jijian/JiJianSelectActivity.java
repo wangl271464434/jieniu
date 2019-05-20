@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu.jijian;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,8 @@ import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
+import com.jieniuwuliu.jieniu.home.OrderInfoActivity;
+import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.mine.adapter.JiJianSelectAdater;
 import com.jieniuwuliu.jieniu.mine.ui.ChooseAddressActivity;
@@ -66,6 +69,7 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
     private MyLoading loading;
     private String token;
     private List<OrderInfo> list;
+    private Intent intent;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_jijian_select;
@@ -181,7 +185,10 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
 
     @Override
     public void onItemClick(View view, int position) {
-
+        intent = new Intent();
+        intent.setClass(this,OrderInfoActivity.class);
+        intent.putExtra("orderNo",list.get(position).getOrderNumber());
+        startActivity(intent);
     }
 
     @Override

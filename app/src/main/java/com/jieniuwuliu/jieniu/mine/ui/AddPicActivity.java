@@ -85,7 +85,6 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
 
     @Override
     protected void init() {
-
         dialog = new MyLoading(this,R.style.CustomDialog);
         storeCerity = (StoreCerity) getIntent().getSerializableExtra("storeCerity");
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");

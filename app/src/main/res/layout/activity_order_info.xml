@@ -69,15 +69,133 @@
                 android:visibility="invisible"
                 />
         </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/size_10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总         价："
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:id="@+id/tv_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/red"
+                android:textSize="@dimen/size_15sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/size_10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="物品信息："
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="箱子"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/size_10dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保价金额："
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+              />
+            <TextView
+                android:id="@+id/tv_baojia_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/red"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保价费："
+                android:layout_marginLeft="@dimen/size_20dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:id="@+id/tv_baojia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/red"
+                android:textSize="@dimen/size_15sp"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/size_10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="代收货款："
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:id="@+id/tv_daishou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/red"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_20dp"
+
+                android:text="运    费："
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_15sp"
+                />
+            <TextView
+                android:id="@+id/tv_yunfei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/red"
+                android:textSize="@dimen/size_15sp"
+                />
+        </LinearLayout>
         <TextView
             android:id="@+id/btn_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="查看详情"
+            android:text="订单详情"
             android:padding="@dimen/size_10dp"
             android:drawableLeft="@mipmap/ic_order_niu"
             android:drawablePadding="@dimen/size_5dp"
-            android:layout_margin="@dimen/size_10dp"
             android:textSize="@dimen/size_13sp"
             android:textColor="@color/blue"
             />
@@ -257,10 +375,18 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_user"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="@dimen/size_40dp"
+                    android:src="@mipmap/user"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/img_user"
                     android:text="配送员"
+                    android:layout_marginLeft="@dimen/size_10dp"
                     android:textSize="@dimen/size_15sp"
                     android:textColor="@color/home_text"
                     />

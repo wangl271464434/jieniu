@@ -33,7 +33,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.ContactInfo;
 import com.jieniuwuliu.jieniu.bean.SearchStore;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
-import com.jieniuwuliu.jieniu.messageEvent.AddressEvent;
+import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
 import com.jieniuwuliu.jieniu.mine.ui.AddPicActivity;
 import com.jieniuwuliu.jieniu.mine.ui.ChooseAddressActivity;
@@ -200,11 +200,13 @@ public class EditShouAdrActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event(AddressEvent event) {
+    public void Event(CarEvent event) {
         Log.w("address",event.toString());
-        lat = event.getPoint().getLatitude();
-        lng = event.getPoint().getLongitude();
-        tvCity.setText(event.getAddress());
+        if (event.getType().equals("address")){
+            lat = event.getPoint().getLatitude();
+            lng = event.getPoint().getLongitude();
+            tvCity.setText(event.getAddress());
+        }
     }
     @OnClick({R.id.back, R.id.tv_city, R.id.btn})
     public void onViewClicked(View view) {

@@ -38,6 +38,7 @@ import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.home.adapter.HomeAdapter;
 import com.jieniuwuliu.jieniu.home.OrderInfoActivity;
 import com.jieniuwuliu.jieniu.home.adapter.RecomStoreAdapter;
+import com.jieniuwuliu.jieniu.jijian.JiJianSelectActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.mine.ui.ChooseAddressActivity;
 import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
@@ -106,7 +107,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             public void onItemClick(View view, int position) {
                 intent = new Intent();
                 intent.setClass(getActivity(),QPSORQXInfoActivity.class);
-                intent.putExtra("id",recomList.get(position).getId());
+                intent.putExtra("id",recomList.get(position).getUid());
                 startActivity(intent);
             }
         });
@@ -221,6 +222,9 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 MyToast.show(getActivity(),"该功能正在开发");
                 break;
             case R.id.home_tab_3://我的快件
+                intent = new Intent();
+                intent.setClass(getActivity(),JiJianSelectActivity.class);
+                getActivity().startActivity(intent);
                 break;
         }
     }

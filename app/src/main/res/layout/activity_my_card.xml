@@ -45,20 +45,39 @@
                 android:layout_marginLeft="@dimen/size_10dp"
                 />
         </LinearLayout>
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/size_15sp"
             android:layout_below="@id/layout"
-            android:background="@drawable/card_btn_shape"
-            android:paddingLeft="@dimen/size_20dp"
-            android:paddingRight="@dimen/size_20dp"
-            android:text="立即办理"
-            android:layout_marginTop="@dimen/size_15dp"
-            android:textColor="@color/lijibanli"
-            />
+            android:layout_marginTop="@dimen/size_10dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="月卡过期时间"
+                android:layout_below="@id/layout"
+                android:textSize="@dimen/size_15sp"
+                android:textColor="@color/orange"
+                android:visibility="gone"
+                />
+            <Button
+                android:id="@+id/btn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_40dp"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/size_15sp"
+                android:background="@drawable/card_btn_shape"
+                android:paddingLeft="@dimen/size_20dp"
+                android:paddingRight="@dimen/size_20dp"
+                android:text="立即办理"
+                android:textColor="@color/lijibanli"
+                />
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 

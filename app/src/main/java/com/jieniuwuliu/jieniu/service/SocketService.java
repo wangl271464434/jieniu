@@ -34,8 +34,9 @@ public class SocketService extends Service {
     /**
      * 心跳检测时间
      */
-    private static final long HEART_BEAT_RATE = 3*60*1000;//每隔3分钟进行一次对长连接的心跳检测
+    private static final long HEART_BEAT_RATE = 30*1000;//每隔30秒进行一次对长连接的心跳检测
     private static String WEBSOCKET_HOST_AND_PORT = "ws://62.234.155.41:1323/ws?";//可替换为自己的主机名和端口号
+    private static String webSocketUrl = "";
     private WebSocket mWebSocket;
     @Override
     public IBinder onBind(Intent intent) {
@@ -76,14 +77,16 @@ public class SocketService extends Service {
     }
 
     private void initSocket() throws UnknownHostException, IOException {
-        WEBSOCKET_HOST_AND_PORT = WEBSOCKET_HOST_AND_PORT+"token="+SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
+        webSocketUrl = WEBSOCKET_HOST_AND_PORT+"token="+SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
+        Log.i("websocket","socket链接："+webSocketUrl);
         OkHttpClient client = new OkHttpClient.Builder().readTimeout(0,TimeUnit.MILLISECONDS).build();
-        Request request = new Request.Builder().url(WEBSOCKET_HOST_AND_PORT).build();
+        Request request = new Request.Builder().url(webSocketUrl).build();
         client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(okhttp3.WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
                 mWebSocket = webSocket;
+                Log.i("websocket","websocket链接："+webSocket.toString());
             }
 
             @Override

@@ -37,8 +37,8 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
-import com.jieniuwuliu.jieniu.messageEvent.AddressEvent;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
+import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 import com.jieniuwuliu.jieniu.mine.adapter.MapAddressAdapter;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.lljjcoder.citypickerview.widget.CityPicker;
@@ -307,7 +307,8 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
 
     @Override
     public void onItemClick(View view, int position) {
-        AddressEvent event = new AddressEvent();
+        CarEvent event = new CarEvent();
+        event.setType("address");
         event.setPoint(list.get(position).getLatLonPoint());
         event.setAddress(tvCity.getText().toString()+list.get(position).getAdName()+list.get(position).toString());
         EventBus.getDefault().post(event);

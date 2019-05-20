@@ -92,7 +92,7 @@ public class StoreCertifyActivity extends BaseActivity {
     private List<WorkType> workTypes;//业务
     private  Intent intent;
     private List<String> typeList;
-
+    private double lat,lng;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_store_certify;
@@ -144,6 +144,11 @@ public class StoreCertifyActivity extends BaseActivity {
                 }
                 etContext.setText(s1);
                 break;
+            case "address":
+                tvCity.setText(carEvent.getAddress());
+                lat = carEvent.getPoint().getLatitude();
+                lng = carEvent.getPoint().getLongitude();
+                break;
         }
     }
     @OnClick({R.id.back, R.id.tv_type, R.id.et_context, R.id.tv_city,R.id.layout2, R.id.submit})
@@ -166,7 +171,8 @@ public class StoreCertifyActivity extends BaseActivity {
                 break;
             case R.id.tv_city:
                 KeyboardUtil.hideSoftKeyboard(this);
-                inintCityPicker();
+                startAcy(ChooseAddressActivity.class);
+//                inintCityPicker();
                 break;
             case R.id.submit://提交
                 storeName = etStoreName.getText().toString();
@@ -205,41 +211,23 @@ public class StoreCertifyActivity extends BaseActivity {
                 if (carTypeList.size()!=0){
                     storeCerity.setFuwuCars(GsonUtil.listToJson(carTypeList));
                 }
-                //根据地址搜索经纬度
-                GeocodeSearch search = new GeocodeSearch(this);
-                GeocodeQuery query = new GeocodeQuery(address,city);
-                search.getFromLocationNameAsyn(query);
-                search.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-                    @Override
-                    public void onRegeocodeSearched(RegeocodeResult geocodeResult, int i) {
-                        Log.w("result",geocodeResult.toString());
-                    }
-                    @Override
-                    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-                        Log.w("result",geocodeResult.toString());
-                        LatLonPoint latLonPoint = geocodeResult.getGeocodeAddressList().get(0).getLatLonPoint();
-                        Double lat = latLonPoint.getLatitude();
-                        Double lng = latLonPoint.getLongitude();
-                        Log.w("经纬度",lat+","+lng);
-                        Address adr = new Address();
-                        adr.setLat(lat);
-                        adr.setLng(lng);
-                        adr.setAddress(address);
-                        adr.setPhone(phone);
-                        adr.setName(contanct);
-                        storeCerity.setAddress(adr);
-                        Intent intent = new Intent();
-                        intent.setClass(StoreCertifyActivity.this,AddPicActivity.class);
-                        intent.putExtra("storeCerity",storeCerity);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+                Address adr = new Address();
+                adr.setLat(lat);
+                adr.setLng(lng);
+                adr.setAddress(address);
+                adr.setPhone(phone);
+                adr.setName(contanct);
+                storeCerity.setAddress(adr);
+                Intent intent = new Intent();
+                intent.setClass(StoreCertifyActivity.this,AddPicActivity.class);
+                intent.putExtra("storeCerity",storeCerity);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
     /**
-     *
+     * 门店类型
      * */
     private void showTypeDialog() {
         typeList = new ArrayList<>();

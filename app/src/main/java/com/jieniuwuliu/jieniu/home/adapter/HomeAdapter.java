@@ -76,6 +76,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     viewHolder.imgEnd.setVisibility(View.INVISIBLE);
                     viewHolder.tvYunShu.setVisibility(View.INVISIBLE);
                     viewHolder.tvPeiSong.setVisibility(View.VISIBLE);
+                    viewHolder.tvPeiSong.setText(item.getOrderList().get(0).getName()+"配送中");
                     break;
                 case 3:
                     break;

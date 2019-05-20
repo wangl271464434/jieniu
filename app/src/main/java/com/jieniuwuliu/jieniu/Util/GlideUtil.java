@@ -66,6 +66,13 @@ public class GlideUtil {
                 .centerCrop()
                 .into(imageView);
     }
+    public static void setLocal0UserImgUrl(Context context, String path, ImageView imageView) {
+        Glide.with(context)
+                .load(new File(path))
+                .transform(new GlideCircleTransform(context, 2, context.getResources().getColor(R.color.white)))
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageView);
+    }
     /**
      * 加载用户头像
      */

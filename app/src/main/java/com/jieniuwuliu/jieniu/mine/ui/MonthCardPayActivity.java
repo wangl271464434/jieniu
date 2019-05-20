@@ -166,6 +166,7 @@ public class MonthCardPayActivity extends BaseActivity {
                         String resultInfo = aliPayResult.getResult();// 同步返回需要验证的信息
                         String resultStatus = aliPayResult.getResultStatus();
                         if (TextUtils.equals(resultStatus, "9000")) {
+                            finish();
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         }
                     }

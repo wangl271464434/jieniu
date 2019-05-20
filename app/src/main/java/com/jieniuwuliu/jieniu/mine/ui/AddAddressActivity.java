@@ -14,8 +14,8 @@ import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.AddAdr;
 import com.jieniuwuliu.jieniu.bean.Address;
-import com.jieniuwuliu.jieniu.messageEvent.AddressEvent;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,11 +59,13 @@ public class AddAddressActivity extends BaseActivity {
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event(AddressEvent event) {
+    public void Event(CarEvent event) {
         Log.w("address",event.toString());
-        lat = event.getPoint().getLatitude();
-        lng = event.getPoint().getLongitude();
-        tvAddress.setText(event.getAddress());
+        if (event.getType().equals("address")){
+            lng = event.getPoint().getLongitude();
+            lat = event.getPoint().getLatitude();
+            tvAddress.setText(event.getAddress());
+        }
     }
 
     @OnClick({R.id.back, R.id.tv_address, R.id.btn_save})
