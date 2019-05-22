@@ -48,8 +48,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-     /*   Intent intent = new Intent(this, MyService.class);
-        startService(intent);*/
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
         //初始化Bugly
         initBugly();
     }

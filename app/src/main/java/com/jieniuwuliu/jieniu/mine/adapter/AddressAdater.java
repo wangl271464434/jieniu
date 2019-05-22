@@ -71,6 +71,14 @@ public class AddressAdater extends RecyclerView.Adapter<AddressAdater.ViewHolder
             viewHolder.tvDefault.setChecked(false);
             viewHolder.tvDefault.setText("设为默认地址");
         }
+        viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isPressed()){
+                    callBack.setDefault(i,isChecked);
+                }
+            }
+        });
         viewHolder.tvDefault.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

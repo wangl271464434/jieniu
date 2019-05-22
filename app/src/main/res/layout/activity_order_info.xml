@@ -18,7 +18,7 @@
             <com.amap.api.maps.MapView
                 android:id="@+id/map"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size_240dp"
+                android:layout_height="@dimen/size_360dp"
                 />
             <ImageView
                 android:id="@+id/back"
@@ -194,7 +194,7 @@
             android:layout_height="wrap_content"
             android:text="订单详情"
             android:padding="@dimen/size_10dp"
-            android:drawableLeft="@mipmap/ic_order_niu"
+            android:drawableLeft="@mipmap/icon_dingdan"
             android:drawablePadding="@dimen/size_5dp"
             android:textSize="@dimen/size_13sp"
             android:textColor="@color/blue"

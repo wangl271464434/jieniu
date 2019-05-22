@@ -204,16 +204,11 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                                     adapter.notifyDataSetChanged();
                                 }else{
                                     tvState.setText("正在发货中");
-                                    isShow = true;
-                                    info.setVisibility(View.VISIBLE);
                                     tvName.setText("暂无信息");
                                     tvPhone.setText("暂无信息");
                                 }
                             }else {
                                 tvState.setText("正在发货中");
-                                isShow = true;
-//                                btnInfo.setText("隐藏详情");
-                                info.setVisibility(View.VISIBLE);
                                 tvName.setText("暂无信息");
                                 tvPhone.setText("暂无信息");
                             }
@@ -382,11 +377,10 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                     drivingRouteOverlay.removeFromMap();
                     drivingRouteOverlay.addToMap();
                     drivingRouteOverlay.zoomToSpan();
-
+                 /*   aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(start.getLatitude(), start.getLongitude()),
+                            new LatLng(end.getLatitude(), end.getLongitude())), 50));*/
                     //将地图移动到定位点
                     aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(start.getLatitude(), start.getLongitude())));
-                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(start.getLatitude(), start.getLongitude()),
-                            new LatLng(end.getLatitude(), end.getLongitude())), 50));
                 }
             }
         }

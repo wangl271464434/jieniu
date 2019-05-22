@@ -56,7 +56,7 @@ public class WelcomeActivity extends BaseActivity {
     private void enter() {
         if (isGuide) {
             if (!token.equals("")) {
-                if (userType == 5) {
+                if (userType == 5||userType == 6) {
                     startAcy(PeisongHomeActivity.class);
                 } else {
                     startAcy(MainActivity.class);

@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,17 +9,24 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.Notice;
 import com.jieniuwuliu.jieniu.fragment.HomeFragment;
 import com.jieniuwuliu.jieniu.fragment.LunTanFragment;
 import com.jieniuwuliu.jieniu.fragment.MineFragment;
@@ -29,8 +37,12 @@ import com.tencent.bugly.beta.Beta;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 首页
@@ -50,6 +62,7 @@ public class MainActivity extends BaseActivity{
     public static Activity activity;
     private MsgReceiver receiver;
     public static Badge badge;
+    private String token;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -58,6 +71,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void init() {
         activity = this;
+        token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         badge = new QBadgeView(this).bindTarget(luntan);
         //启动接收推送服务
         Intent intent = new Intent(this, SocketService.class);
@@ -69,6 +83,62 @@ public class MainActivity extends BaseActivity{
         registerReceiver(receiver, filter);
         homeFragment = new HomeFragment();
         getFragment(homeFragment);
+        getNotice();
+    }
+    /**
+     * 获取通告
+     * */
+    private void getNotice() {
+        Call<Notice> call = HttpUtil.getInstance().getApi(token).getNotice();
+        call.enqueue(new Callback<Notice>() {
+            @Override
+            public void onResponse(Call<Notice> call, Response<Notice> response) {
+                try {
+                    switch (response.code()){
+                        case 200:
+                            String info = response.body().getData().get(0).getInfo();
+                            showNotice(info);
+                            break;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Notice> call, Throwable t) {
+
+            }
+        });
+    }
+    /**
+     * 通告
+     * */
+    private void showNotice(String info) {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
+        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        dialog.setContentView(R.layout.notice);
+        dialog.setCanceledOnTouchOutside(true);
+        ImageView img = dialog.findViewById(R.id.img_close);
+        TextView textView = dialog.findViewById(R.id.tv_info);
+        textView.setText(info);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -82,9 +152,46 @@ public class MainActivity extends BaseActivity{
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){finish();}
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            exitDialog();
+        }
         return super.onKeyDown(keyCode, event);
     }
+    /**
+     * 退出应用弹窗
+     * */
+    private void exitDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
+        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        dialog.setContentView(R.layout.exit_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+        TextView yes = dialog.findViewById(R.id.tv_yes);
+        TextView no = dialog.findViewById(R.id.tv_no);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               dialog.dismiss();
+            }
+        });
+    }
+
     @OnClick({R.id.home, R.id.qipeishang,R.id.jijian, R.id.luntan, R.id.mine})
     public void onViewClicked(View view) {
         status = (int) SPUtil.get(this,Constant.ISCERTIFY,Constant.ISCERTIFY,0);

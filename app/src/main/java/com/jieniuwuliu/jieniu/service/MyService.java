@@ -119,6 +119,7 @@ public class MyService extends Service implements AMapLocationListener {
     private void updatePSYPosition() {
         String token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         Map<String,Object> map = new HashMap();
+        map.clear();
         map.put("lat",latitude);
         map.put("lng",longitude);
         String json = GsonUtil.mapToJson(map);

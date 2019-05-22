@@ -332,13 +332,14 @@ public class JiJianActivity extends BaseActivity {
                     switch (response.code()){
                         case 200:
                             String json = response.body().string();
+                            Log.i("json",json);
                             OrderBean orderBean = (OrderBean) GsonUtil.praseJsonToModel(json,OrderBean.class);
                             Intent intent = new Intent();
                             intent.setClass(JiJianActivity.this,PayTypeActivity.class);
                             intent.putExtra("orderNo",orderBean.getData().getOrderNumber());
                             intent.putExtra("price",orderBean.getData().getTotalMoney());
                             startActivity(intent);
-                            Log.i("json",json);
+                            finish();
 //                            MyToast.show(getApplicationContext(), "下单成功");
                          /*   startAcy(PayTypeActivity.class);
                             finish();*/

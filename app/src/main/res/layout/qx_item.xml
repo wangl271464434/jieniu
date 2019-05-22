@@ -69,49 +69,6 @@
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_1dp"
-        android:background="@color/line_gray"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_40dp"
-        >
-        <TextView
-            android:id="@+id/tv_phone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/size_50dp"
-            android:paddingRight="@dimen/size_30dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/size_16sp"
-            android:gravity="center"
-            android:drawablePadding="@dimen/size_10dp"
-            android:drawableLeft="@mipmap/ic_autodealer_dial"
-            android:textColor="@color/orange"
-            android:text="拨打电话"
-            />
-        <View
-            android:layout_width="@dimen/size_1dp"
-            android:layout_height="match_parent"
-            android:background="@color/line_gray"
-
-            />
-        <TextView
-            android:id="@+id/tv_wechat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/size_40dp"
-            android:paddingRight="@dimen/size_50dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="@dimen/size_16sp"
-            android:drawablePadding="@dimen/size_10dp"
-            android:textColor="@color/orange"
-            android:drawableLeft="@mipmap/wechat"
-            android:text="加微信"
-            />
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
         android:layout_height="@dimen/size_5dp"
         android:background="@color/line_gray"/>
 </LinearLayout>

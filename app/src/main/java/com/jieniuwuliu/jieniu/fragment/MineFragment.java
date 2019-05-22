@@ -304,7 +304,7 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
                     }
                 }
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                Uri data = Uri.parse("tel:" + "15384642801");
+                Uri data = Uri.parse("tel:" + "400-029-2282");
                 intent.setData(data);
                 startActivity(intent);
                 dialog.dismiss();

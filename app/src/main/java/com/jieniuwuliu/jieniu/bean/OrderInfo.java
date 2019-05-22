@@ -31,10 +31,19 @@ public class OrderInfo implements Serializable{
     private int totalMoney;
     private int status;
     private String orderNumber;
+    private String finishPhoto;
     private int kuaidiID;
     private String info;
     private boolean isInvoice = false;//是否开发票
     private List<OrderListBean> orderList;
+
+    public String getFinishPhoto() {
+        return finishPhoto;
+    }
+
+    public void setFinishPhoto(String finishPhoto) {
+        this.finishPhoto = finishPhoto;
+    }
 
     public List<OrderListBean> getOrderList() {
         return orderList;

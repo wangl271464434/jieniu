@@ -53,12 +53,11 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
         viewHolder.itemView.setTag(i);
         StoreBean.DataBean item = list.get(i);
         viewHolder.tvName.setText(item.getNickname());
-        viewHolder.tvAddress.setText(item.getAddress().getAddress());
+        viewHolder.tvAddress.setText("地址："+item.getAddress().getAddress());
         GlideUtil.setImgUrl(context,item.getShopPhoto(),viewHolder.img);
         String s = "";
         if (item.getFuwuCar().size()>0){
             viewHolder.rv.setVisibility(View.VISIBLE);
-            viewHolder.tvCars.setVisibility(View.GONE);
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(LinearLayoutManager.HORIZONTAL);
             viewHolder.rv.setLayoutManager(manager);

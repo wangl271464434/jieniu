@@ -61,7 +61,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QXActivity extends BaseActivity implements AMapLocationListener, OnItemClickListener, OnRefreshListener, OnLoadMoreListener, QXAdapter.CallBack {
+public class QXActivity extends BaseActivity implements AMapLocationListener, OnItemClickListener, OnRefreshListener, OnLoadMoreListener {
 
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshLayout;
@@ -81,7 +81,6 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
     private int page = 1;//页数
     private int num = 10;//条数
     private String yewu = "",distance = "20000", region = "";
-    private AMap aMap;
     public static double longitude = 0.0;
     public static double currentLng = 0.0;
     public static double latitude = 0.0;
@@ -114,7 +113,6 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
         adapter = new QXAdapter(this,list);
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
-        adapter.setCallBack(this);
         checkSDK();
     }
     private void checkSDK() {
@@ -335,39 +333,13 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         list.clear();
         page = 1;
+        getData();
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         page++;
         getData();
-    }
-    /**
-     * 打电话
-     * */
-    @Override
-    public void callPhone(int positon) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
-            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
-                return;
-            }
-        }
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        Uri data = Uri.parse("tel:" + list.get(positon).getAddress().getPhone());
-        intent.setData(data);
-        startActivity(intent);
-    }
-    /**
-     * 复制微信
-     * */
-    @Override
-    public void callWeChat(int positon) {
-        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("Label",list.get(positon).getWechat());
-        manager.setPrimaryClip(clipData);
-        MyToast.show(this,"复制成功");
     }
     //动态权限申请后处理
     @Override

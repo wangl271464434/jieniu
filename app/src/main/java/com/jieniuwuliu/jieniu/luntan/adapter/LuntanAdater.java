@@ -196,7 +196,7 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         for (int j = 0;j<array.length();j++){
                             pics.add(array.get(j).toString());
                         }
-                        GlideUtil.setImgUrl(context,pics.get(0),holder.iv);
+                        GlideUtil.setImgUrl(context,pics.get(0),R.mipmap.loading,holder.iv);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

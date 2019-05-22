@@ -25,6 +25,15 @@ public class Order {
     private int payType;  //1货到付款 2在线付款
     private String info;//物品信息
     private int payUid;
+    private String finishPhone;
+
+    public String getFinishPhone() {
+        return finishPhone;
+    }
+
+    public void setFinishPhone(String finishPhone) {
+        this.finishPhone = finishPhone;
+    }
 
     public int getBaojiajine() {
         return baojiajine;

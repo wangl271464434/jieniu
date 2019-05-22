@@ -53,6 +53,7 @@ public class PrintActivity extends BaseActivity {
     private PSOrderInfo.DataBean data;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean isConnect = false;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_print;
@@ -61,6 +62,7 @@ public class PrintActivity extends BaseActivity {
     @Override
     protected void init() {
         title.setText("打印");
+        loading = new MyLoading(this,R.style.CustomDialog);
         data = (PSOrderInfo.DataBean) getIntent().getSerializableExtra("data");
     }
     /**
@@ -123,7 +125,10 @@ public class PrintActivity extends BaseActivity {
 
                 break;
             case R.id.btn_print://打印
+           /*     loading.show();
+                setPrint();*/
                 if (isConnect){
+                    loading.show();
                     setPrint();
                 }else{
                     MyToast.show(getApplicationContext(),"请先连接打印机");
@@ -154,8 +159,8 @@ public class PrintActivity extends BaseActivity {
             HPRTPrinterHelper.AutLine("10","230",100,4,true,false,"收");
             HPRTPrinterHelper.InverseLine("80","140","80","350","1");
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"4","0","90","150",data.getToName());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"4","0","90","200",data.getToPhone());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"4","0","90","250",data.getToAddress());
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"4","0","90","250",data.getToPhone());
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","90","290",data.getToAddress());
             HPRTPrinterHelper.InverseLine("0","350","550","350","1");
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","40","380","寄");
             HPRTPrinterHelper.InverseLine("80","350","80","450","1");
@@ -166,10 +171,10 @@ public class PrintActivity extends BaseActivity {
             HPRTPrinterHelper.PrintQR(HPRTPrinterHelper.BARCODE,"20","460","2","6",data.getOrderNumber());//订单二维码
             HPRTPrinterHelper.InverseLine("160","450","160","600","1");
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","460","物品信息："+data.getInfo());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","500","代收货款："+data.getDaishouMoney());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","540","保价费："+data.getBaojiaMoney());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","570","运费："+data.getYunfeiMoney());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","300","570","合计："+data.getTotalMloney());
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","500","代收货款："+(data.getDaishouMoney()/100));
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","540","保价费："+(data.getBaojiaMoney()/100));
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","170","570","运费："+(data.getYunfeiMoney()/100));
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","300","570","合计："+(data.getTotalMoney()/100));
             HPRTPrinterHelper.InverseLine("0","600","550","600","1");
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","610","签收：");
             HPRTPrinterHelper.InverseLine("0","660","550","660","1");
@@ -192,10 +197,10 @@ public class PrintActivity extends BaseActivity {
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","90","910",data.getFromPhone());
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","90","940",data.getFromAddress());
             HPRTPrinterHelper.InverseLine("0","980","550","980","1");
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1040","代收货款："+data.getDaishouMoney());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1070","保价费："+data.getBaojiaMoney());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1100","运费："+data.getYunfeiMoney());
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1130","合计："+data.getTotalMloney());
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1040","代收货款："+(data.getDaishouMoney()/100));
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1070","保价费："+(data.getBaojiaMoney()/100));
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1100","运费："+(data.getYunfeiMoney()/100));
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","10","1130","合计："+(data.getTotalMoney()/100));
             HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT,"7","0","320","1010","扫码关注公众号");
             HPRTPrinterHelper.PrintQR(HPRTPrinterHelper.BARCODE,"320","1040","2","6","http://weixin.qq.com/r/5i-Tyz-EcGIPrXuo93r0");//公众号二维码
             HPRTPrinterHelper.InverseLine("0","1260","550","1260","1");
@@ -203,9 +208,12 @@ public class PrintActivity extends BaseActivity {
             HPRTPrinterHelper.InverseLine("0","1300","550","1300","1");
             HPRTPrinterHelper.Form();
             HPRTPrinterHelper.Print();
+            loading.dismiss();
             finish();
         } catch (Exception e) {
             e.printStackTrace();
+            loading.dismiss();
+            MyToast.show(PrintActivity.this,"打印机未连接");
         }
     }
 

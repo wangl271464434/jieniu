@@ -1,7 +1,13 @@
 package com.jieniuwuliu.jieniu;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -48,6 +54,8 @@ public class LoginActivity extends BaseActivity {
     TextView tvForget;
     @BindView(R.id.img_eye)
     ImageView imgEye;
+    @BindView(R.id.tv_phone)
+    TextView tvPhone;
     private boolean flag = false;
     @Override
     protected int getLayoutId() {
@@ -59,7 +67,7 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.back, R.id.tv_register,R.id.img_eye, R.id.tv_forget, R.id.login, R.id.tv_agreement})
+    @OnClick({R.id.back, R.id.tv_register,R.id.img_eye, R.id.tv_forget, R.id.login,R.id.tv_phone, R.id.tv_agreement})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -96,6 +104,19 @@ public class LoginActivity extends BaseActivity {
                     flag = true;
                 }
                 break;
+            case R.id.tv_phone:
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+                    if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
+                        return;
+                    }
+                }
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                Uri data = Uri.parse("tel:" + tvPhone.getText().toString());
+                intent.setData(data);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -121,7 +142,7 @@ public class LoginActivity extends BaseActivity {
                             SPUtil.put(getApplicationContext(), Constant.ISCERTIFY, Constant.ISCERTIFY, response.body().getData().getAuth());
                             //用户类型
                             SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
-                            if (response.body().getData().getPersonType() == 5) {
+                            if (response.body().getData().getPersonType() == 5 ||response.body().getData().getPersonType() == 6) {
                                  startAcy(PeisongHomeActivity.class);
                                 finish();
                             } else {

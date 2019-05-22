@@ -177,7 +177,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="中转站"
                 android:textSize="@dimen/size_10sp"
                 android:textColor="@color/black"
                 />

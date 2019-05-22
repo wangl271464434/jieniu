@@ -60,28 +60,23 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             viewHolder.img.setImageResource(R.mipmap.ic_home_shoujian);
         }
         if (item.getOrderList()!=null){
-            switch (item.getOrderList().get(0).getLevel()){
-                case 1:
-                    viewHolder.bar.setSecondaryProgress(30);
-                    viewHolder.imgStart.setVisibility(View.VISIBLE);
-                    viewHolder.imgMiddle.setVisibility(View.INVISIBLE);
-                    viewHolder.imgEnd.setVisibility(View.INVISIBLE);
-                    viewHolder.tvYunShu.setVisibility(View.VISIBLE);
-                    viewHolder.tvPeiSong.setVisibility(View.INVISIBLE);
-                    break;
-                case 2:
-                    viewHolder.bar.setSecondaryProgress(70);
-                    viewHolder.imgStart.setVisibility(View.INVISIBLE);
-                    viewHolder.imgMiddle.setVisibility(View.VISIBLE);
-                    viewHolder.imgEnd.setVisibility(View.INVISIBLE);
-                    viewHolder.tvYunShu.setVisibility(View.INVISIBLE);
-                    viewHolder.tvPeiSong.setVisibility(View.VISIBLE);
-                    viewHolder.tvPeiSong.setText(item.getOrderList().get(0).getName()+"配送中");
-                    break;
-                case 3:
-                    break;
+            if (item.getOrderList().size()>0){
+                viewHolder.imgStart.setVisibility(View.INVISIBLE);
+                viewHolder.imgMiddle.setVisibility(View.VISIBLE);
+                viewHolder.imgEnd.setVisibility(View.INVISIBLE);
+                viewHolder.bar.setSecondaryProgress(50);
+                viewHolder.tvMiddle.setText("配送中");
+            }else{
+                viewHolder.imgStart.setVisibility(View.VISIBLE);
+                viewHolder.imgMiddle.setVisibility(View.INVISIBLE);
+                viewHolder.imgEnd.setVisibility(View.INVISIBLE);
+                viewHolder.bar.setSecondaryProgress(0);
             }
-            viewHolder.tvMiddle.setText(item.getOrderList().get(0).getRegion());
+        }else {
+            viewHolder.imgStart.setVisibility(View.VISIBLE);
+            viewHolder.imgMiddle.setVisibility(View.INVISIBLE);
+            viewHolder.imgEnd.setVisibility(View.INVISIBLE);
+            viewHolder.bar.setSecondaryProgress(0);
         }
 
 //        viewHolder.img.setImageResource(R.mipmap.ic_home_jijian);

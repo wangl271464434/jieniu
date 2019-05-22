@@ -1,8 +1,6 @@
 package com.jieniuwuliu.jieniu.peisongyuan;
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +25,6 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
@@ -38,34 +34,19 @@ import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
-import com.jieniuwuliu.jieniu.ForgetPwdActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AMapUtil;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.JwtUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.PrintUtil;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.PSOrderInfo;
-import com.jieniuwuliu.jieniu.messageEvent.MessageEvent;
-import com.jieniuwuliu.jieniu.messageEvent.PSYEvent;
 import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import HPRTAndroidSDKA300.HPRTPrinterHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -131,7 +112,7 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
             UiSettings settings = aMap.getUiSettings();
             settings.setLogoBottomMargin(-50);
             settings.setZoomControlsEnabled(false);
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
 //                   setUpMap();
         }
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
@@ -213,6 +194,11 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
     private void setLine() {
         RouteSearch routeSearch = new RouteSearch(this);
         routeSearch.setRouteSearchListener(this);
+      /*  if (orderWuliuInfo.getOrderList()!=null){
+            start = new LatLonPoint(orderWuliuInfo.getOrderList().get(0).getLat(), orderWuliuInfo.getOrderList().get(0).getLng());
+        }else {
+            start = new LatLonPoint(orderWuliuInfo.getFromLat(), orderWuliuInfo.getFromLng());
+        }*/
         start = new LatLonPoint(data.getFromLat(), data.getFromLng());
         end = new LatLonPoint(data.getToLat(), data.getToLng());
         setfromandtoMarker();
@@ -228,7 +214,7 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
     private void setfromandtoMarker() {
         aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(start))
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.start)));
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_niu)));
         aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(end))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.end)));
@@ -426,8 +412,8 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
 
                     //将地图移动到定位点
                     aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(start.getLatitude(), start.getLongitude())));
-                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(start.getLatitude(), start.getLongitude()),
-                            new LatLng(end.getLatitude(), end.getLongitude())), 50));
+           /*         aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(start.getLatitude(), start.getLongitude()),
+                            new LatLng(end.getLatitude(), end.getLongitude())), 50));*/
                 }
             }
         }

@@ -24,7 +24,8 @@
             android:layout_weight="1"
             android:text="全部区域"
             android:gravity="center"
-            android:textSize="@dimen/size_15sp"
+            android:textSize="@dimen/size_12sp"
+            android:drawableRight="@mipmap/ic_send_more_down"
             android:textColor="@color/black"
             android:padding="@dimen/size_10dp"
             />
@@ -40,7 +41,8 @@
             android:layout_weight="1"
             android:text="区域"
             android:gravity="center"
-            android:textSize="@dimen/size_15sp"
+            android:drawableRight="@mipmap/ic_send_more_down"
+            android:textSize="@dimen/size_12sp"
             android:textColor="@color/black"
             android:padding="@dimen/size_10dp"
             />
@@ -56,7 +58,8 @@
             android:layout_weight="1"
             android:text="主营业务"
             android:gravity="center"
-            android:textSize="@dimen/size_15sp"
+            android:textSize="@dimen/size_12sp"
+            android:drawableRight="@mipmap/ic_send_more_down"
             android:textColor="@color/black"
             android:padding="@dimen/size_10dp"
             />

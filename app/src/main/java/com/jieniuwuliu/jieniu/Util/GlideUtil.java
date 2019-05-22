@@ -51,6 +51,7 @@ public class GlideUtil {
     public static void setImgUrl(Context context, String path, int resId, ImageView imageView) {
         Glide.with(context)
                 .load(path)
+                .placeholder(resId)
                 .dontAnimate()
                 .centerCrop()
                 .error(resId).into(imageView);

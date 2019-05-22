@@ -47,31 +47,74 @@ public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.Vi
         if (list.size()!=0){
             OrderInfo.OrderListBean item = list.get(i);
             if (i==0){
-                viewHolder.tvUpLine.setVisibility(View.INVISIBLE);
                 if (list.size()>1){
+                    viewHolder.tvUpLine.setVisibility(View.INVISIBLE);
                     viewHolder.tvDownLine.setVisibility(View.VISIBLE);
                 }else{
+                    viewHolder.tvUpLine.setVisibility(View.INVISIBLE);
                     viewHolder.tvDownLine.setVisibility(View.INVISIBLE);
                 }
-            }else if (i == 2){
-                viewHolder.tvUpLine.setVisibility(View.VISIBLE);
-                viewHolder.tvDownLine.setVisibility(View.INVISIBLE);
-            }else{
-                viewHolder.tvUpLine.setVisibility(View.VISIBLE);
-                viewHolder.tvDownLine.setVisibility(View.VISIBLE);
+                viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
+                switch (item.getLevel()){
+                    case 1:
+                        viewHolder.tvState.setText("分拣中");
+                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
+                        break;
+                    case 2:
+                        viewHolder.tvState.setText("配送中");
+                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
+                        break;
+                    case 3:
+                        viewHolder.tvState.setText("分拣中");
+                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
+                        break;
+                    case 4:
+                        viewHolder.tvState.setText("配送中");
+                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
+                        break;
+                    case 5:
+                        viewHolder.tvState.setText("已完成");
+                        viewHolder.tvInfo.setText(item.getName()+"已送达");
+                        break;
+                }
+            }else {
+                if (i == list.size()-1){
+                    viewHolder.tvUpLine.setVisibility(View.VISIBLE);
+                    viewHolder.tvDownLine.setVisibility(View.INVISIBLE);
+                }else{
+                    viewHolder.tvUpLine.setVisibility(View.VISIBLE);
+                    viewHolder.tvDownLine.setVisibility(View.VISIBLE);
+                }
+                switch (item.getLevel()){
+                    case 1:
+                        viewHolder.tvState.setText("分拣中");
+                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_peisong);
+                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
+                        break;
+                    case 2:
+                        viewHolder.tvState.setText("配送中");
+                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
+                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
+                        break;
+                    case 3:
+                        viewHolder.tvState.setText("分拣中");
+                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_peisong);
+                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
+                        break;
+                    case 4:
+                        viewHolder.tvState.setText("配送中");
+                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
+                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
+                        break;
+                    case 5:
+                        viewHolder.tvState.setText("已完成");
+                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
+                        viewHolder.tvInfo.setText(item.getName()+"已送达");
+                        break;
+                }
             }
             viewHolder.tvTime.setText(item.getCreatedAt());
-            viewHolder.tvInfo.setText(item.getName()+"已经取件");
-            switch (item.getLevel()){
-                case 1:
-                    viewHolder.tvState.setText("运输中");
-                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
-                    break;
-                case 2:
-                    viewHolder.tvState.setText("配送中");
-                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_peisong);
-                    break;
-            }
+
         }
 
     }

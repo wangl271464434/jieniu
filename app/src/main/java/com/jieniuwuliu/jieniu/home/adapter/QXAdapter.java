@@ -34,11 +34,11 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
     private Context context;
     private OnItemClickListener listener;
     private List<StoreBean.DataBean> list;
-    private CallBack callBack;
+   /* private CallBack callBack;
 
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
-    }
+    }*/
 
     public QXAdapter(Context context, List<StoreBean.DataBean> list) {
         this.context = context;
@@ -90,28 +90,13 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
             }
         });
         search.calculateRouteDistanceAsyn(query);
-        viewHolder.tvPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callBack.callPhone(i);
-            }
-        });
-        viewHolder.tvWechat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callBack.callWeChat(i);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
-    public interface CallBack{
-        void callPhone(int positon);
-        void callWeChat(int positon);
-    }
+
     @Override
     public void onClick(View view) {
         if (listener != null) {
@@ -130,10 +115,6 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
         TextView yewu;
         @BindView(R.id.distance)
         TextView distance;
-        @BindView(R.id.tv_phone)
-        TextView tvPhone;
-        @BindView(R.id.tv_wechat)
-        TextView tvWechat;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -7,6 +7,7 @@ import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
+import com.jieniuwuliu.jieniu.bean.Notice;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 
@@ -22,6 +23,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpApi {
+    /**获取通告*/
+    @GET("users/notices")
+    Call<Notice> getNotice();
     /**登录*/
     @POST("login")
     Call<LoginBean> login(@Body RequestBody body);

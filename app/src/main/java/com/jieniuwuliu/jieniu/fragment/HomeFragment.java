@@ -34,6 +34,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
+import com.jieniuwuliu.jieniu.home.QPShopActivity;
 import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.home.adapter.HomeAdapter;
 import com.jieniuwuliu.jieniu.home.OrderInfoActivity;
@@ -219,7 +220,9 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 getActivity().startActivity(intent);
                 break;
             case R.id.home_tab_2://汽配商城
-                MyToast.show(getActivity(),"该功能正在开发");
+                intent = new Intent();
+                intent.setClass(getActivity(),QPShopActivity.class);
+                getActivity().startActivity(intent);
                 break;
             case R.id.home_tab_3://我的快件
                 intent = new Intent();

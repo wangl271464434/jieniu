@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/context"
-                android:src="@mipmap/pic_forum_showpic"
+                android:src="@mipmap/loading"
                 android:layout_marginLeft="@dimen/size_5dp"
                 android:adjustViewBounds="true"
                 android:layout_gravity="center"

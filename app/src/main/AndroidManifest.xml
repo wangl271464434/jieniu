@@ -246,7 +246,8 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-        <activity android:name=".mine.ui.MonthCardPayActivity"></activity>
+        <activity android:name=".mine.ui.MonthCardPayActivity" />
+        <activity android:name=".home.QPShopActivity"></activity>
     </application>
 
 </manifest>

@@ -39,7 +39,7 @@
             android:layout_toRightOf="@id/tv_tab"
             android:layout_marginLeft="@dimen/size_10dp"
             android:layout_below="@id/tv_no"
-            android:layout_marginTop="@dimen/size_10dp"
+            android:layout_marginTop="@dimen/size_5dp"
             android:text="地址：的撒旦撒旦"
             />
         <ImageView

@@ -15,13 +15,13 @@
             <TextView
                 android:id="@+id/tv_up_line"
                 android:layout_width="@dimen/size_1dp"
-                android:layout_height="@dimen/size_40dp"
+                android:layout_height="@dimen/size_30dp"
                 android:background="@color/light_black"
                 />
             <ImageView
                 android:id="@+id/img_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/size_30dp"
+                android:layout_height="@dimen/size_30dp"
                 android:src="@mipmap/ic_order_wancheng"
                 />
             <TextView

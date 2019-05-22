@@ -43,7 +43,7 @@ public class LuntanPicAdapter extends RecyclerView.Adapter<LuntanPicAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
-        GlideUtil.setImgUrl(context,list.get(i),viewHolder.img);
+        GlideUtil.setImgUrl(context,list.get(i),R.mipmap.loading,viewHolder.img);
     }
 
     @Override

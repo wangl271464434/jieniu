@@ -108,8 +108,17 @@ public class OrderBean {
         private String kuaidiPhone;
         private String info;
         private String region;
+        private String finishPhoto;
         private boolean isInvoice;
         private boolean payStatus;
+
+        public String getFinishPhoto() {
+            return finishPhoto;
+        }
+
+        public void setFinishPhoto(String finishPhoto) {
+            this.finishPhoto = finishPhoto;
+        }
 
         public int getId() {
             return id;

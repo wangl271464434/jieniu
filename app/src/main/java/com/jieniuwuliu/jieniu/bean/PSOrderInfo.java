@@ -101,7 +101,7 @@ public class PSOrderInfo implements Serializable{
         private int baojiajine;
         private int baojiaMoney;
         private int payType;
-        private int totalMloney;
+        private int totalMoney;
         private int status;
         private String orderNumber;
         private int kuaidiID;
@@ -304,12 +304,12 @@ public class PSOrderInfo implements Serializable{
             this.payType = payType;
         }
 
-        public int getTotalMloney() {
-            return totalMloney;
+        public int getTotalMoney() {
+            return totalMoney;
         }
 
-        public void setTotalMloney(int totalMloney) {
-            this.totalMloney = totalMloney;
+        public void setTotalMloney(int totalMoney) {
+            this.totalMoney = totalMoney;
         }
 
         public int getStatus() {

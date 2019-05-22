@@ -225,6 +225,7 @@ public class PayTypeActivity extends BaseActivity {
                         String resultStatus = aliPayResult.getResultStatus();
                         if (TextUtils.equals(resultStatus, "9000")) {
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                            finish();
                         }
                     }
                 });

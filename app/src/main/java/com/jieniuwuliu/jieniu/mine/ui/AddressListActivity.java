@@ -164,6 +164,14 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
      * */
     @Override
     public void setDefault(int position,boolean isChecked) {
+        for (int i = 0;i<list.size();i++){
+            if (i == position){
+                list.get(i).setDefaultX(isChecked);
+            }else{
+                list.get(i).setDefaultX(false);
+            }
+        }
+        adapter.notifyDataSetChanged();
         if (!isChecked){
             cancelDefault(position);
         }else{
