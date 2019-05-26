@@ -103,7 +103,8 @@ public class PayTypeActivity extends BaseActivity {
             case R.id.btn_sure:
                 switch (payType){
                     case 1://微信
-                        wxPay();
+                        MyToast.show(this,"该功能暂未开放");
+//                        wxPay();
                         break;
                     case 2://支付宝
                         zfbPay();

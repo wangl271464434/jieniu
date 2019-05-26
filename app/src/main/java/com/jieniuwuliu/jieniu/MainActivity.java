@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.view.Display;
 import android.view.Gravity;
@@ -18,12 +19,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.StringUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Notice;
@@ -63,6 +67,7 @@ public class MainActivity extends BaseActivity{
     private MsgReceiver receiver;
     public static Badge badge;
     private String token;
+    private int userType;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -72,6 +77,8 @@ public class MainActivity extends BaseActivity{
     protected void init() {
         activity = this;
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
+        userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
+
         badge = new QBadgeView(this).bindTarget(luntan);
         //启动接收推送服务
         Intent intent = new Intent(this, SocketService.class);
@@ -120,20 +127,24 @@ public class MainActivity extends BaseActivity{
         WindowManager m = getWindowManager();
         Display defaultDisplay = m.getDefaultDisplay();
         window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (defaultDisplay.getWidth()*0.8);
-        window.setAttributes(params);
         window.setGravity(Gravity.CENTER);
         dialog.show();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.7);
+        window.setAttributes(params);
         dialog.setContentView(R.layout.notice);
         dialog.setCanceledOnTouchOutside(true);
         ImageView img = dialog.findViewById(R.id.img_close);
         TextView textView = dialog.findViewById(R.id.tv_info);
-        textView.setText(info);
+        RelativeLayout layout = dialog.findViewById(R.id.notice);
+        textView.setText(StringUtil.ToDBC(info));
         img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -166,11 +177,11 @@ public class MainActivity extends BaseActivity{
         WindowManager m = getWindowManager();
         Display defaultDisplay = m.getDefaultDisplay();
         window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = (int) (defaultDisplay.getWidth()*0.8);
         window.setAttributes(params);
-        window.setGravity(Gravity.CENTER);
-        dialog.show();
         window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
                 | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -264,21 +275,30 @@ public class MainActivity extends BaseActivity{
         tvTab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent();
-                intent.setClass(MainActivity.this,JiJianActivity.class);
-                intent.putExtra("type","上门取件");
-                startActivity(intent);
-                dialog.dismiss();
+                if (userType == 2){//判断是否是汽修厂
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this,JiJianActivity.class);
+                    intent.putExtra("type","上门取件");
+                    startActivity(intent);
+                    dialog.dismiss();
+                }else{
+                    MyToast.show(MainActivity.this,"只有汽修厂用户才能选择上门取件");
+                }
             }
         });
         tvTab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent();
-                intent.setClass(MainActivity.this,JiJianActivity.class);
-                intent.putExtra("type","服务点自寄");
-                startActivity(intent);
-                dialog.dismiss();
+                if (userType != 2){//判断是否是汽修厂
+                    intent = new Intent();
+                    intent.setClass(MainActivity.this,JiJianActivity.class);
+                    intent.putExtra("type","服务点自寄");
+                    startActivity(intent);
+                    dialog.dismiss();
+                }else{
+                    MyToast.show(MainActivity.this,"您是汽修厂用户不能选择服务点自寄");
+                }
+
             }
         });
         tvCancel.setOnClickListener(new View.OnClickListener() {

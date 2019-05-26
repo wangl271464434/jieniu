@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.mine.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -105,7 +106,14 @@ public class MyCardActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn:
-                startAcy(MonthCardPayActivity.class);
+                Intent intent = new Intent();
+                intent.setClass(this,MonthCardPayActivity.class);
+                if (user.getPersonType()==2){
+                    intent.putExtra("money","300.00");
+                }else{
+                    intent.putExtra("money","700.00");
+                }
+               startActivity(intent);
                 break;
         }
     }

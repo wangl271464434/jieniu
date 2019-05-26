@@ -16,9 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -113,6 +115,12 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     TextView tvYunFei;
     @BindView(R.id.tv_total)
     TextView tvTotal;
+    @BindView(R.id.layout_img)
+    LinearLayout layoutImg;
+    @BindView(R.id.img)
+    ImageView img;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
     private boolean isShow = false;
     private AMap aMap;
     protected Unbinder unbinder;
@@ -158,6 +166,17 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             //设置缩放级别
             aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         }
+        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                }else{
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+
+                }
+            }
+        });
         LinearLayoutManager manager = new LinearLayoutManager(this);
         rv.setLayoutManager(manager);
         adapter = new OrderWuLiuAdapter(this, list);
@@ -195,6 +214,14 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                             tvDaiShou.setText("¥ "+(orderWuliuInfo.getDaishouMoney()/100));
                             tvYunFei.setText("¥ "+(orderWuliuInfo.getYunfeiMoney()/100));
                             tvTotal.setText("¥ "+(orderWuliuInfo.getTotalMoney()/100));
+                            //签收照片
+                            if (!orderWuliuInfo.getFinishPhoto().equals("")){
+                                layoutImg.setVisibility(View.VISIBLE);
+                                GlideUtil.setImgUrl(OrderInfoActivity.this,orderWuliuInfo.getFinishPhoto(),R.mipmap.loading,img);
+                            }else{
+                                layoutImg.setVisibility(View.GONE);
+                            }
+
                             if (orderWuliuInfo.getOrderList()!=null){
                                 if (orderWuliuInfo.getOrderList().size()!=0){
                                     GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);

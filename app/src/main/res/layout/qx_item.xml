@@ -69,6 +69,20 @@
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1dp"
+        android:background="@color/line_gray"/>
+    <TextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="到这去"
+        android:gravity="center"
+        android:padding="@dimen/size_10dp"
+        android:textSize="@dimen/size_15sp"
+        android:textColor="@color/orange"
+        />
+    <View
+        android:layout_width="match_parent"
         android:layout_height="@dimen/size_5dp"
         android:background="@color/line_gray"/>
 </LinearLayout>

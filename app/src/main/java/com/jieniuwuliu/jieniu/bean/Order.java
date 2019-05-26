@@ -26,6 +26,15 @@ public class Order {
     private String info;//物品信息
     private int payUid;
     private String finishPhone;
+    private int kuaidiID;
+
+    public int getKuaidiID() {
+        return kuaidiID;
+    }
+
+    public void setKuaidiID(int kuaidiID) {
+        this.kuaidiID = kuaidiID;
+    }
 
     public String getFinishPhone() {
         return finishPhone;

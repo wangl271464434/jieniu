@@ -223,6 +223,7 @@
             android:background="@color/light_black"
             />
         <RelativeLayout
+            android:id="@+id/layout_psy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/size_10dp"
@@ -231,14 +232,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="支付方式"
+                android:text="选择网点"
                 android:textSize="@dimen/size_12sp"
                 android:textColor="@color/light_black"
                 />
             <TextView
+                android:id="@+id/tv_psy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="目前仅支持货到付款"
+                android:text="请选择"
+                android:drawablePadding="@dimen/size_5dp"
+                android:drawableRight="@mipmap/ic_send_forward"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_12sp"

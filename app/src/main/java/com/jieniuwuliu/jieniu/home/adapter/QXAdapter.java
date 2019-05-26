@@ -34,11 +34,11 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
     private Context context;
     private OnItemClickListener listener;
     private List<StoreBean.DataBean> list;
-   /* private CallBack callBack;
+    private CallBack callBack;
 
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
-    }*/
+    }
 
     public QXAdapter(Context context, List<StoreBean.DataBean> list) {
         this.context = context;
@@ -90,6 +90,12 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
             }
         });
         search.calculateRouteDistanceAsyn(query);
+        viewHolder.tvGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callBack.chooseMap(i);
+            }
+        });
     }
 
     @Override
@@ -103,7 +109,9 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
             listener.onItemClick(view, (Integer) view.getTag());
         }
     }
-
+    public interface CallBack{
+        void chooseMap(int position);
+    }
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.img)
         ImageView img;
@@ -115,6 +123,8 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
         TextView yewu;
         @BindView(R.id.distance)
         TextView distance;
+        @BindView(R.id.tv_go)
+        TextView tvGo;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

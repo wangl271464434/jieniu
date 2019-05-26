@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/tv_gaode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="高德地图"
+        android:textSize="@dimen/size_18sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:padding="@dimen/size_10dp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1dp"
+        android:background="@color/line_gray"/>
+    <TextView
+        android:id="@+id/tv_baidu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="百度地图"
+        android:textSize="@dimen/size_18sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:padding="@dimen/size_10dp"
+        />
+</LinearLayout>

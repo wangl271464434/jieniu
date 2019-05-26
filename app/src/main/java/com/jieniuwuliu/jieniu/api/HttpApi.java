@@ -259,4 +259,9 @@ public interface HttpApi {
       * */
      @GET("users/alipay")
      Call<AliPayResult> getAliInfo(@Query("total_amount")String amount, @Query("out_trade_no")String tradeNo,@Query("subject")String info);
+    /**
+     * 获取网点
+     * */
+    @GET("users/wangdian")
+    Call<ResponseBody> getWangDianList();
 }

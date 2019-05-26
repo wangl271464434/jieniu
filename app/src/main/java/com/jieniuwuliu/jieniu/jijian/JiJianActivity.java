@@ -95,6 +95,8 @@ public class JiJianActivity extends BaseActivity {
     TextView tvDaishou;
     @BindView(R.id.checkbox)
     CheckBox checkBox;
+    @BindView(R.id.tv_psy)
+    TextView tvPsy;
     private String type = "";
     private String weightType = "";
     private Coupon.DataBean data;
@@ -106,6 +108,7 @@ public class JiJianActivity extends BaseActivity {
     private boolean flag = false;//判断是否免运费
     private MyLoading loading;
     private String info = "";
+    private int kuaidiId;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_ji_jian;
@@ -232,10 +235,13 @@ public class JiJianActivity extends BaseActivity {
             tvMoney.setText(""+getYunFeiPrice());
             tvTotalMoney.setText(""+getTotalPrice());
         }
-
+        if (event.getUser()!=null){
+            kuaidiId = event.getUser().getId();
+            tvPsy.setText(event.getUser().getNickname());
+        }
     }
 
-    @OnClick({R.id.back, R.id.tv_ji_adr, R.id.tv_fuwu, R.id.layout_num, R.id.layout_ticket,
+    @OnClick({R.id.back, R.id.tv_ji_adr, R.id.tv_fuwu, R.id.layout_num, R.id.layout_psy,R.id.layout_ticket,
             R.id.layout_baojia,R.id.layout_daishou,R.id.layout_shou_address,R.id.submit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -247,6 +253,9 @@ public class JiJianActivity extends BaseActivity {
                 break;
             case R.id.layout_shou_address://编辑收货地址
                 startAcy(EditShouAdrActivity.class);
+                break;
+            case R.id.layout_psy:
+                startAcy(ChoosePsyActivity.class);
                 break;
             case R.id.layout_num:
                 startAcy(JiJianNumActivity.class);
@@ -264,6 +273,10 @@ public class JiJianActivity extends BaseActivity {
                 startAcy(FuWuActivity.class);
                 break;
             case R.id.submit:
+                if (tvPsy.getText().toString().equals("请选择")){
+                    MyToast.show(getApplicationContext(),"请选择网点");
+                    return;
+                }
                 if (tvShouAddress.getText().toString().isEmpty()){
                     MyToast.show(getApplicationContext(),"请选输入收货地址");
                     return;
@@ -287,6 +300,7 @@ public class JiJianActivity extends BaseActivity {
         loading.show();
         Order order = new Order();
         order.setInfo(info);
+        order.setKuaidiID(kuaidiId);
         order.setFromUid(user.getId());
         order.setFromName(tvFaName.getText().toString());
         order.setFromLat(start.latitude);

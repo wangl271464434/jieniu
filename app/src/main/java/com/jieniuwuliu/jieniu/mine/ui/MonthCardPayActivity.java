@@ -62,6 +62,7 @@ public class MonthCardPayActivity extends BaseActivity {
     private String token;
     private int payType = 1;
     private MyLoading loading;
+    private String money;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_month_card_pay;
@@ -70,7 +71,8 @@ public class MonthCardPayActivity extends BaseActivity {
     @Override
     protected void init() {
         loading = new MyLoading(this,R.style.CustomDialog);
-        tvMoney.setText("¥ "+"300.00");
+        money = getIntent().getStringExtra("money");
+        tvMoney.setText("¥ "+money);
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
     }
 
@@ -93,7 +95,8 @@ public class MonthCardPayActivity extends BaseActivity {
             case R.id.btn_sure:
                 switch (payType){
                     case 1:
-                        wxPay();
+                        MyToast.show(this,"该功能暂未开放");
+//                        wxPay();
                         break;
                     case 2:
                         zfbPay();

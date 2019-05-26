@@ -2,12 +2,22 @@ package com.jieniuwuliu.jieniu.messageEvent;
 
 import com.jieniuwuliu.jieniu.bean.ContactInfo;
 import com.jieniuwuliu.jieniu.bean.Coupon;
+import com.jieniuwuliu.jieniu.bean.PSYUser;
 
 public class WeightEvent {
     private String type = "";
     private String info = "";
     private int num = 0;
     private ContactInfo contactInfo;
+    private PSYUser.DataBean user;
+
+    public PSYUser.DataBean getUser() {
+        return user;
+    }
+
+    public void setUser(PSYUser.DataBean user) {
+        this.user = user;
+    }
 
     public ContactInfo getContactInfo() {
         return contactInfo;

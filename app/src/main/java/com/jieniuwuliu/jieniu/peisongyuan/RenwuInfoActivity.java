@@ -132,9 +132,9 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
                 layoutGaipai.setEnabled(true);
                 break;
             case "paisong":
-                tvState.setText("已接单");
+                tvState.setText("完成");
                 tvGaipai.setText("改派");
-                layoutJiedan.setEnabled(false);
+                layoutJiedan.setEnabled(true);
                 layoutGaipai.setEnabled(true);
                 break;
             case "wancheng":
@@ -262,7 +262,7 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
                 finish();
                 break;
             case R.id.tv_dayin:
-                if (tvState.getText().toString().equals("已接单")){//已接单的订单才可以打印
+                if (tvState.getText().toString().equals("完成")){//已接单的订单才可以打印
                     intent = new Intent();
                     intent.setClass(this,PrintActivity.class);
                     intent.putExtra("data",data);
@@ -273,7 +273,14 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
 
                 break;
             case R.id.layout_jiedan:
-                update();
+                if (tvState.getText().toString().equals("完成")){
+                    intent = new Intent();
+                    intent.setClass(this,FinishRenwuActivity.class);
+                    intent.putExtra("orderNo",data.getOrderNumber());
+                    startActivity(intent);
+                }else{
+                    update();
+                }
                 break;
             case R.id.layout_gaipai:
                 if (tvGaipai.getText().toString().equals("拒接")){
@@ -337,8 +344,8 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
                         switch (response.code()){
                             case 200:
                                 MyToast.show(getApplicationContext(), "接单成功");
-                                tvState.setText("已接单");
-                                layoutJiedan.setEnabled(false);
+                                tvState.setText("完成");
+                                layoutJiedan.setEnabled(true);
                                 layoutGaipai.setEnabled(true);
                                 break;
                             case 400:

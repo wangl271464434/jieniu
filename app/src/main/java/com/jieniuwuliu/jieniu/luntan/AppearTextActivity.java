@@ -192,6 +192,7 @@ public class AppearTextActivity extends BaseActivity implements OnItemClickListe
      * */
     private void updateVideo() {
         MediaMetadataRetriever media = new MediaMetadataRetriever();
+        Log.i("video","要上传的视频路径："+list.get(0));
         media.setDataSource(list.get(0));// videoPath 本地视频的路径
         Bitmap bitmap  = media.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST_SYNC );
 //        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(list.get(0), MediaStore.Images.Thumbnails.MICRO_KIND);

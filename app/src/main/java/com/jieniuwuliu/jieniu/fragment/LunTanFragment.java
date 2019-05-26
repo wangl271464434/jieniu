@@ -123,6 +123,7 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     private final int PIC_CODE = 1001;//请求系统相册的请求码
     private final int CAMERA_CODE = 1002;//请求相机的请求码
     private final int VIDEO_CODE = 1003;//请求系统相册的请求码
+    private final int PIC_VIDEO_CODE = 1004;//请求系统相册的请求码
     private Uri fileUri;
     private String token;
     private UserBean.DataBean user;
@@ -360,6 +361,7 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
         TextView tvCamera = contentView.findViewById(R.id.tv_camera);
         TextView tvVideo = contentView.findViewById(R.id.tv_video);
         TextView tvPic = contentView.findViewById(R.id.tv_pic);
+        TextView tvPicVideo = contentView.findViewById(R.id.tv_pic_video);
         tvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,6 +466,35 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                 popupWindow.dismiss();
             }
         });
+        tvPicVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int read = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (read != PackageManager.PERMISSION_GRANTED){
+                        // 弹窗询问 ，让用户自己判断
+                        requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                        return;
+                    }
+                }
+                Matisse.from(fragment)
+                        .choose(MimeType.ofVideo())
+                        .showSingleMediaType(true)//参数1 显示资源类型 参数2 是否可以同时选择不同的资源类型 true表示不可以 false表示可以
+//            .theme(R.style.Matisse_Dracula) //选择主题 默认是蓝色主题，Matisse_Dracula为黑色主题
+                        .countable(true) //是否显示数字
+                        .capture(false)  //是否可以拍照
+//                .captureStrategy(//参数1 true表示拍照存储在共有目录，false表示存储在私有目录；参数2与 AndroidManifest中authorities值相同，用于适配7.0系统 必须设置
+//                        new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider"))
+                        .maxSelectable(1)  //最大选择资源数量
+//                .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K)) //添加自定义过滤器
+                        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.size_120dp)) //设置列宽
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) //设置屏幕方向
+                        .thumbnailScale(0.75f)  //图片缩放比例
+                        .imageEngine(new GlideEngine())  //选择图片加载引擎
+                        .forResult(PIC_VIDEO_CODE);
+                popupWindow.dismiss();
+            }
+        });
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -474,6 +505,7 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                     mPictureList = Matisse.obtainResult(data);
                     List<String> list = new ArrayList<>();
                     for (Uri uri:mPictureList){
+                        Log.i("path",FileUtil.getRealFilePath(getActivity(),uri));
                         list.add(FileUtil.getRealFilePath(getActivity(),uri));
                     }
                     intent = new Intent();
@@ -502,6 +534,16 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                         intent.putExtra("user",user);
                         startActivity(intent);
                     }
+                    break;
+                case PIC_VIDEO_CODE://录像
+                    mPictureList = Matisse.obtainResult(data);
+                    String path = FileUtil.getRealFilePath(getActivity(),mPictureList.get(0));
+                    intent = new Intent();
+                    intent.setClass(getActivity(),AppearTextActivity.class);
+                    intent.putExtra("type","video");
+                    intent.putExtra("path",path);
+                    intent.putExtra("user",user);
+                    startActivity(intent);
                     break;
             }
         }catch (Exception e){

@@ -54,29 +54,7 @@ public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.Vi
                     viewHolder.tvUpLine.setVisibility(View.INVISIBLE);
                     viewHolder.tvDownLine.setVisibility(View.INVISIBLE);
                 }
-                viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
-                switch (item.getLevel()){
-                    case 1:
-                        viewHolder.tvState.setText("分拣中");
-                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
-                        break;
-                    case 2:
-                        viewHolder.tvState.setText("配送中");
-                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
-                        break;
-                    case 3:
-                        viewHolder.tvState.setText("分拣中");
-                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
-                        break;
-                    case 4:
-                        viewHolder.tvState.setText("配送中");
-                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
-                        break;
-                    case 5:
-                        viewHolder.tvState.setText("已完成");
-                        viewHolder.tvInfo.setText(item.getName()+"已送达");
-                        break;
-                }
+
             }else {
                 if (i == list.size()-1){
                     viewHolder.tvUpLine.setVisibility(View.VISIBLE);
@@ -85,33 +63,23 @@ public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.Vi
                     viewHolder.tvUpLine.setVisibility(View.VISIBLE);
                     viewHolder.tvDownLine.setVisibility(View.VISIBLE);
                 }
-                switch (item.getLevel()){
-                    case 1:
-                        viewHolder.tvState.setText("分拣中");
-                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_peisong);
-                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
-                        break;
-                    case 2:
-                        viewHolder.tvState.setText("配送中");
-                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
-                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
-                        break;
-                    case 3:
-                        viewHolder.tvState.setText("分拣中");
-                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_peisong);
-                        viewHolder.tvInfo.setText(item.getName()+"正在分拣");
-                        break;
-                    case 4:
-                        viewHolder.tvState.setText("配送中");
-                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
-                        viewHolder.tvInfo.setText(item.getName()+"正在配送");
-                        break;
-                    case 5:
-                        viewHolder.tvState.setText("已完成");
-                        viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
-                        viewHolder.tvInfo.setText(item.getName()+"已送达");
-                        break;
-                }
+
+            }
+            viewHolder.tvState.setText(list.get(i).getMsg());
+            viewHolder.tvInfo.setText(list.get(i).getName()+list.get(i).getMsg());
+            switch (list.get(i).getMsg()){
+                case "已发货":
+                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_fahuo);
+                    break;
+                case "分拣中":
+                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_zhongzhuan);
+                    break;
+                case "配送中":
+                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
+                    break;
+                case "已签收":
+                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
+                    break;
             }
             viewHolder.tvTime.setText(item.getCreatedAt());
 

@@ -247,7 +247,9 @@
             android:exported="false"
             android:screenOrientation="behind" />
         <activity android:name=".mine.ui.MonthCardPayActivity" />
-        <activity android:name=".home.QPShopActivity"></activity>
+        <activity android:name=".home.QPShopActivity" />
+        <activity android:name=".peisongyuan.FinishRenwuActivity" />
+        <activity android:name=".jijian.ChoosePsyActivity"></activity>
     </application>
 
 </manifest>

@@ -42,7 +42,7 @@
             android:textSize="@dimen/size_15sp"
             android:padding="@dimen/size_10dp"
             android:gravity="center"
-            android:textColor="@color/blue"
+            android:textColor="@color/orange"
             android:text="否"
             />
     </LinearLayout>

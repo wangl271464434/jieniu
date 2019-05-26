@@ -320,7 +320,16 @@ public class OrderInfo implements Serializable{
         private double Lat;
         private double Lng;
         private String Region;
-        private int Level;
+        private String msg;
+        private String Level;
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
 
         public String getPhoto() {
             return Photo;
@@ -418,11 +427,11 @@ public class OrderInfo implements Serializable{
             this.Region = Region;
         }
 
-        public int getLevel() {
+        public String getLevel() {
             return Level;
         }
 
-        public void setLevel(int Level) {
+        public void setLevel(String Level) {
             this.Level = Level;
         }
     }

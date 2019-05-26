@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -51,6 +52,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QXActivity extends BaseActivity implements AMapLocationListener, OnItemClickListener, OnRefreshListener, OnLoadMoreListener {
+public class QXActivity extends BaseActivity implements AMapLocationListener, OnItemClickListener, OnRefreshListener, OnLoadMoreListener, QXAdapter.CallBack {
 
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshLayout;
@@ -113,6 +115,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
         adapter = new QXAdapter(this,list);
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
+        adapter.setCallBack(this);
         checkSDK();
     }
     private void checkSDK() {
@@ -353,5 +356,91 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 }break;
             default:super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+    /***
+     * 选择地图
+     * */
+    @Override
+    public void chooseMap(int position) {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        dialog.show();
+        dialog.setContentView(R.layout.dialog_check_map);
+        dialog.setCanceledOnTouchOutside(true);
+        TextView tvGaode = dialog.findViewById(R.id.tv_gaode);
+        TextView tvBaidu = dialog.findViewById(R.id.tv_baidu);
+        tvGaode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                checkGaodeMap(list.get(position).getAddress().getLat(),list.get(position).getAddress().getLng(),list.get(position).getAddress().getAddress());
+            }
+        });
+        tvBaidu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                checkBaiduMap(list.get(position).getAddress().getLat(),list.get(position).getAddress().getLng(),list.get(position).getAddress().getAddress());
+            }
+        });
+    }
+    //跳转到高德地图
+    private void checkGaodeMap(double latitude,double longtitude,String address){
+        if (isInstallApk(QXActivity.this, "com.autonavi.minimap")) {// 是否安装了高德地图
+            try {
+                Intent intent = Intent.getIntent("androidamap://navi?sourceApplication=&poiname="+address+"&lat="
+                        + latitude
+                        + "&lon="
+                        + longtitude + "&dev=0");
+                QXActivity.this.startActivity(intent); // 启动调用
+            } catch (URISyntaxException e) {
+                Log.e("intent", e.getMessage());
+            }
+        }else {// 未安装
+            Toast.makeText(QXActivity.this, "您尚未安装高德地图", Toast.LENGTH_LONG)
+                    .show();
+            Uri uri = Uri
+                    .parse("market://details?id=com.autonavi.minimap");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            QXActivity.this.startActivity(intent);
+        }
+    }
+
+    //跳转到百度地图
+    private void checkBaiduMap(double latitude,double longtitude,String address) {
+        if (isInstallApk(QXActivity.this, "com.baidu.BaiduMap")) {// 是否安装了百度地图
+            try {
+                Intent intent = Intent.getIntent("intent://map/direction?destination=latlng:"
+                        + latitude + ","
+                        + longtitude + "|name:"+address + // 终点
+                        "&mode=driving&" + // 导航路线方式
+                        "region=" + //
+                        "&src=#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+                QXActivity.this.startActivity(intent); // 启动调用
+            } catch (URISyntaxException e) {
+                Log.e("intent", e.getMessage());
+            }
+        }else {// 未安装
+            Toast.makeText(QXActivity.this, "您尚未安装百度地图", Toast.LENGTH_LONG)
+                    .show();
+            Uri uri = Uri
+                    .parse("market://details?id=com.baidu.BaiduMap");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            QXActivity.this.startActivity(intent);
+        }
+    }
+    /** 判断手机中是否安装指定包名的软件 */
+    public static boolean isInstallApk(Context context, String name) {
+        List<PackageInfo> packages = context.getPackageManager().getInstalledPackages(0);
+        for (int i = 0; i < packages.size(); i++) {
+            PackageInfo packageInfo = packages.get(i);
+            if (packageInfo.packageName.equals(name)) {
+                return true;
+            } else {
+                continue;
+            }
+        }
+        return false;
     }
 }
