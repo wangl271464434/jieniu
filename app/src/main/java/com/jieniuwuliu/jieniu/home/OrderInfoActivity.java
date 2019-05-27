@@ -51,6 +51,7 @@ import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.home.adapter.OrderWuLiuAdapter;
+import com.jieniuwuliu.jieniu.luntan.LookPicActivity;
 import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
@@ -132,6 +133,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private Context mContext;
     private List<OrderInfo.OrderListBean> list;
     private RouteSearch.DriveRouteQuery query;
+    private Intent intent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,9 +227,15 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                             if (orderWuliuInfo.getOrderList()!=null){
                                 if (orderWuliuInfo.getOrderList().size()!=0){
                                     if (!orderWuliuInfo.getOrderList().get(0).getMsg().equals("已发货")){
-                                        GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);
-                                        tvName.setText(orderWuliuInfo.getOrderList().get(0).getName());
-                                        tvPhone.setText(orderWuliuInfo.getOrderList().get(0).getPhone());
+                                        if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")){
+                                            GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(1).getPhoto(),imgUser);
+                                            tvName.setText(orderWuliuInfo.getOrderList().get(1).getName());
+                                            tvPhone.setText(orderWuliuInfo.getOrderList().get(1).getPhone());
+                                        }else{
+                                            GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);
+                                            tvName.setText(orderWuliuInfo.getOrderList().get(0).getName());
+                                            tvPhone.setText(orderWuliuInfo.getOrderList().get(0).getPhone());
+                                        }
                                     }
                                     list.addAll(orderWuliuInfo.getOrderList());
                                     adapter.notifyDataSetChanged();
@@ -334,7 +342,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         }
     }
 
-    @OnClick({R.id.back,R.id.refresh,R.id.tv_call_phone, R.id.btn_info})
+    @OnClick({R.id.back,R.id.refresh,R.id.layout_img,R.id.tv_call_phone, R.id.btn_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -344,6 +352,14 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 aMap.clear();
                 list.clear();
                 getOrderInfo();
+                break;
+            case R.id.layout_img:
+                ArrayList<String> list = new ArrayList<>();
+                list.add(orderWuliuInfo.getFinishPhoto());
+                intent = new Intent();
+                intent.setClass(OrderInfoActivity.this,LookPicActivity.class);
+                intent.putStringArrayListExtra("list", list);
+                startActivity(intent);
                 break;
             case R.id.tv_call_phone://联系配送员
                 if (Build.VERSION.SDK_INT >= 23) {
@@ -357,7 +373,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 if (phone.equals("暂无信息")){
                     return;
                 }
-                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent = new Intent(Intent.ACTION_CALL);
                 Uri data = Uri.parse("tel:" + phone);
                 intent.setData(data);
                 startActivity(intent);
