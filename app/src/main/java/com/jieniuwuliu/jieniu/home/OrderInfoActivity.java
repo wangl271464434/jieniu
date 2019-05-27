@@ -224,9 +224,11 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 
                             if (orderWuliuInfo.getOrderList()!=null){
                                 if (orderWuliuInfo.getOrderList().size()!=0){
-                                    GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);
-                                    tvName.setText(orderWuliuInfo.getOrderList().get(0).getName());
-                                    tvPhone.setText(orderWuliuInfo.getOrderList().get(0).getPhone());
+                                    if (!orderWuliuInfo.getOrderList().get(0).getMsg().equals("已发货")){
+                                        GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);
+                                        tvName.setText(orderWuliuInfo.getOrderList().get(0).getName());
+                                        tvPhone.setText(orderWuliuInfo.getOrderList().get(0).getPhone());
+                                    }
                                     list.addAll(orderWuliuInfo.getOrderList());
                                     adapter.notifyDataSetChanged();
                                 }else{

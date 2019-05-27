@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -24,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.Util.AppUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
@@ -68,6 +70,7 @@ public class MainActivity extends BaseActivity{
     public static Badge badge;
     private String token;
     private int userType;
+    private String scoketService = "com.jieniuwuliu.jieniu.service.SocketService";
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -155,6 +158,11 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        if (!AppUtil.isServiceRunning(this,scoketService)){
+            Log.i("service","重新啟動推送服務");
+            Intent intent = new Intent(this, SocketService.class);
+            startService(intent);
+        }
     }
 
     private void getFragment(Fragment fragment) {

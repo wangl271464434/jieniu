@@ -11,8 +11,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +89,8 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
     TextView tvState;
     @BindView(R.id.tv_gaipai)
     TextView tvGaipai;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
     private AMap aMap;
     private double longitude;
     private double latitude;
@@ -115,6 +119,17 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
             aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
 //                   setUpMap();
         }
+        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                }else{
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+
+                }
+            }
+        });
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         data = (PSOrderInfo.DataBean) getIntent().getSerializableExtra("data");
         type = getIntent().getStringExtra("type");

@@ -142,7 +142,7 @@ public class SPUtil {
      */
     private static SharedPreferences getSharedPreferences(Context context, String fileName) {
         // 返回默认路径下的 SharedPreferences : /data/data/%package_name%/shared_prefs/%fileName%.xml.xml
-        return context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        return context.getSharedPreferences(fileName, Context.MODE_MULTI_PROCESS);
     }
 
 }

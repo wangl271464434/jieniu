@@ -68,7 +68,7 @@ public class FinishRenwuActivity extends BaseActivity {
     ImageView img;
     private final int CAMERA_CODE = 1002;//请求相机的请求码
     private File pictureFile;
-    private String imgUrl,token,orderNo;
+    private String imgUrl = "",token,orderNo;
     private MyLoading loading;
     @Override
     protected int getLayoutId() {
@@ -123,7 +123,6 @@ public class FinishRenwuActivity extends BaseActivity {
                 startActivityForResult(cameraIntent, CAMERA_CODE);
                 break;
             case R.id.tv_sure:
-                loading.show();
                 update();
                 break;
         }
@@ -132,6 +131,11 @@ public class FinishRenwuActivity extends BaseActivity {
      * 上传图片到腾讯云
      * */
     private void update() {
+        if (imgUrl.equals("")){
+            MyToast.show(this,"请先进行拍照");
+            return;
+        }
+        loading.show();
         COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(FinishRenwuActivity.this).upload("img",new File(imgUrl).getName(),imgUrl);
         storeTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
@@ -154,7 +158,7 @@ public class FinishRenwuActivity extends BaseActivity {
         try {
             JSONObject object = new JSONObject();
             object.put("finishPhoto",accessUrl);
-            object.put("status",5);
+            object.put("status","5");
             String json = object.toString();
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateOrder(orderNo,body);
