@@ -132,9 +132,12 @@ public class RegisterActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.tv_code,R.id.img_eye1, R.id.img_eye2, R.id.tv_login, R.id.btn})
+    @OnClick({R.id.back,R.id.tv_code,R.id.img_eye1, R.id.img_eye2, R.id.tv_login, R.id.btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
             case R.id.tv_code://获取验证码
                 phone = etPhone.getText().toString();
                 if (phone.isEmpty()) {

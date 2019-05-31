@@ -13,7 +13,7 @@
         android:id="@+id/back"
         android:layout_width="@dimen/size_20dp"
         android:layout_height="@dimen/size_20dp"
-        android:src="@mipmap/ic_back"
+        android:src="@mipmap/ic_camera_close"
         android:layout_margin="@dimen/size_10dp"
         />
 </RelativeLayout>

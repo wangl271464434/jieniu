@@ -18,6 +18,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AppUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -27,7 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.OnClick;
 
-public class PeisongHomeActivity extends BaseActivity {
+public class PeisongHomeActivity extends BaseActivity  {
 
     private Fragment psyHome,psyPage;
     private String localService = "com.jieniuwuliu.jieniu.service.MyService";
@@ -61,6 +65,7 @@ public class PeisongHomeActivity extends BaseActivity {
             }
         }
     }
+
     private void getFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.context, fragment).addToBackStack(null).commitAllowingStateLoss();
     }
@@ -122,22 +127,6 @@ public class PeisongHomeActivity extends BaseActivity {
                 break;
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 200:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-//                    location();
-                } else {
-                    // Permission Denied
-                    Toast.makeText(this, "ACCESS_FINE_LOCATION Denied", Toast.LENGTH_SHORT)
-                            .show();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
-        }
-    }
+
+
 }

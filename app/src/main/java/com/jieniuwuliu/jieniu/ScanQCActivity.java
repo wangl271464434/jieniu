@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -24,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -46,8 +49,8 @@ public class ScanQCActivity extends BaseActivity implements OnScannerCompletionL
     protected void init() {
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},100);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
             }
         }
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
@@ -69,42 +72,43 @@ public class ScanQCActivity extends BaseActivity implements OnScannerCompletionL
     @Override
     public void onScannerCompletion(Result rawResult, ParsedResult parsedResult, Bitmap barcode) {
         String s = parsedResult.toString();
-        s = s.replace("\r\n","");
-        if (RegularUtil.isNum(s)){
+        s = s.replace("\r\n", "");
+        if (RegularUtil.isNum(s)) {
             bindOrder(s);
-        }else {
-            MyToast.show(this,s);
+        } else {
+            MyToast.show(this, s);
             finish();
         }
     }
+
     /**
      * 扫码绑定订单
-     * */
+     */
     private void bindOrder(String result) {
         try {
             JSONObject object = new JSONObject();
-            object.put("kuaidiStatus",true);
-            object.put("kuaidiID",Integer.valueOf(JwtUtil.JWTParse(token)));
+            object.put("kuaidiStatus", true);
+            object.put("kuaidiID", Integer.valueOf(JwtUtil.JWTParse(token)));
             String json = object.toString();
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateOrder(result,body);
+            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateOrder(result, body);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     try {
-                        switch (response.code()){
+                        switch (response.code()) {
                             case 200:
-                                MyToast.show(getApplicationContext(),"接单成功");
+                                MyToast.show(getApplicationContext(), "接单成功");
                                 finish();
                                 break;
                             case 400:
                                 String s = response.errorBody().string();
-                                Log.w("result",s);
+                                Log.w("result", s);
                                 JSONObject object = new JSONObject(s);
                                 MyToast.show(getApplicationContext(), object.getString("msg"));
                                 break;
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -117,5 +121,10 @@ public class ScanQCActivity extends BaseActivity implements OnScannerCompletionL
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @OnClick(R.id.back)
+    public void onViewClicked() {
+        finish();
     }
 }

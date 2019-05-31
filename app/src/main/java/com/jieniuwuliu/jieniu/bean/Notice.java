@@ -50,6 +50,15 @@ public class Notice {
         private String CreatedAt;
         private String UpdatedAt;
         private String info;
+        private boolean status;
+
+        public boolean isStatus() {
+            return status;
+        }
+
+        public void setStatus(boolean status) {
+            this.status = status;
+        }
 
         public int getId() {
             return id;

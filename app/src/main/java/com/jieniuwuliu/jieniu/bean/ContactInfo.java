@@ -9,6 +9,15 @@ public class ContactInfo implements Serializable {
     private String address;
     private double lat;
     private double lng;
+    private boolean isVip;
+
+    public boolean isVip() {
+        return isVip;
+    }
+
+    public void setVip(boolean vip) {
+        isVip = vip;
+    }
 
     public String getCompany() {
         return company;

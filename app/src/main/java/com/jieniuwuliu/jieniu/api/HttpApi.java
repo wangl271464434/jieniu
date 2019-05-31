@@ -195,6 +195,12 @@ public interface HttpApi {
     @GET("users/order/kuaidi/{type}")
     Call<ResponseBody> getPSorderList(@Path("type")String type,@Query("page")int page,@Query("number")int num);
     /**
+     * 配送员根据订单号查询订单
+     * @type   daijie paisong  wancheng
+     * */
+    @GET("users/order/kuaidi/{type}")
+    Call<ResponseBody> getPSSelectOrder(@Path("type")String type,@Query("order_number")String orderNo);
+    /**
      * 寄件列表
      * type 1寄件 2 收件 3 不限
      * status 1配送中 2已完成

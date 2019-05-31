@@ -71,16 +71,25 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1dp"
         android:background="@color/line_gray"/>
-    <TextView
+    <LinearLayout
         android:id="@+id/tv_go"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="到这去"
         android:gravity="center"
-        android:padding="@dimen/size_10dp"
-        android:textSize="@dimen/size_15sp"
-        android:textColor="@color/orange"
-        />
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="到这去"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/icon_goto"
+            android:drawablePadding="@dimen/size_10dp"
+            android:padding="@dimen/size_10dp"
+            android:textSize="@dimen/size_15sp"
+            android:textColor="@color/orange"
+            />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_5dp"

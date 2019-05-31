@@ -28,21 +28,37 @@
             android:layout_marginTop="@dimen/size_5dp"
             android:textColor="@color/white"
             />
-        <EditText
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_shape"
             android:layout_toLeftOf="@id/tv_scan"
-            android:padding="@dimen/size_5dp"
-            android:singleLine="true"
-            android:drawableRight="@mipmap/ic_psy_sousuo"
-            android:layout_centerVertical="true"
             android:layout_toRightOf="@id/tv_position"
             android:layout_marginLeft="@dimen/size_20dp"
             android:layout_marginRight="@dimen/size_20dp"
-            android:hint="输入关键字搜索任务"
-            android:textSize="@dimen/size_14sp"
-            />
+            android:layout_centerVertical="true"
+            >
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_shape"
+                android:padding="@dimen/size_5dp"
+                android:singleLine="true"
+                android:inputType="text"
+                android:hint="输入运单号搜索任务"
+                android:textSize="@dimen/size_14sp"
+                />
+            <ImageView
+                android:id="@+id/img_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_psy_sousuo"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/size_10dp"
+                />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/tv_scan"
             android:layout_width="wrap_content"
@@ -71,7 +87,6 @@
             android:text="待接单"
             android:paddingLeft="@dimen/size_20dp"
             android:paddingRight="@dimen/size_20dp"
-            android:checked="true"
             />
         <View
             android:layout_width="@dimen/size_1dp"
@@ -84,7 +99,7 @@
             android:text="派送中"
             android:paddingLeft="@dimen/size_20dp"
             android:paddingRight="@dimen/size_20dp"
-
+            android:checked="true"
             />
         <View
             android:layout_width="@dimen/size_1dp"

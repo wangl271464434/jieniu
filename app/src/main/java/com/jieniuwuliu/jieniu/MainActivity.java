@@ -107,7 +107,9 @@ public class MainActivity extends BaseActivity{
                     switch (response.code()){
                         case 200:
                             String info = response.body().getData().get(0).getInfo();
-                            showNotice(info);
+                            if (response.body().getData().get(0).isStatus()){//判断是否弹出公告
+                                showNotice(info);
+                            }
                             break;
                     }
                 }catch (Exception e){

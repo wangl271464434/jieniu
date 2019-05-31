@@ -501,7 +501,7 @@ public class JiJianActivity extends BaseActivity {
      * 总价方法
      * */
     private int getTotalPrice(){
-        return getYunFeiPrice()+baojiaPrice+daishouPrice;
+        return getYunFeiPrice()+baojiaPrice;
     }
     /**
      * 保价规则

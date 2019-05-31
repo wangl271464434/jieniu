@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,15 +59,21 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder>{
             holder.tvTag.setVisibility(View.GONE);
         }
         if (mData.get(position).isIscheck()){
-            holder.checkBox.setChecked(true);
+            holder.checkBox.setImageResource(R.mipmap.ic_fapiao_checked);
+        }else{
+            holder.checkBox.setImageResource(R.mipmap.ic_fapiao_unchecked);
         }
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isPressed()){
-                    mData.get(position).setIscheck(isChecked);
-                    callBack.isChecked(position,isChecked);
+            public void onClick(View v) {
+                if (mData.get(position).isIscheck()){
+                    mData.get(position).setIscheck(false);
+                    callBack.isChecked(position,false);
+                }else{
+                    mData.get(position).setIscheck(true);
+                    callBack.isChecked(position,true);
                 }
+                notifyItemChanged(position);
             }
         });
         GlideUtil.setImgUrl(mContext,mData.get(position).getTupian(),holder.img);
@@ -90,7 +97,9 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder>{
         @BindView(R.id.img)
         ImageView img;
         @BindView(R.id.checkbox)
-        CheckBox checkBox;
+        ImageView checkBox;
+        @BindView(R.id.layout)
+        LinearLayout layout;
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

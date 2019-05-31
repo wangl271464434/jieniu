@@ -37,6 +37,7 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
+import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 import com.jieniuwuliu.jieniu.mine.adapter.MapAddressAdapter;
@@ -77,6 +78,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
     private String city = "西安市";
     private List<PoiItem> list;
     private MapAddressAdapter adapter;
+    private PoiItem currentItem = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,11 +174,23 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
         //启动定位
         mLocationClient.startLocation();
     }
-    @OnClick({R.id.back, R.id.tv_city})
+    @OnClick({R.id.back,R.id.tv_sure, R.id.tv_city})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.tv_sure:
+                if (currentItem!=null){
+                    CarEvent event = new CarEvent();
+                    event.setType("address");
+                    event.setPoint(currentItem.getLatLonPoint());
+                    event.setAddress(tvCity.getText().toString()+currentItem.getAdName()+currentItem.toString());
+                    EventBus.getDefault().post(event);
+                    finish();
+                }else{
+                    MyToast.show(getApplicationContext(),"请选择一个地点");
+                }
                 break;
             case R.id.tv_city:
                 chooseCity();
@@ -293,6 +307,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
         list.addAll(poiResult.getPois());
         adapter.notifyDataSetChanged();
         aMap.clear();
+        currentItem = list.get(0);
         LatLng latLng = new LatLng(list.get(0).getLatLonPoint().getLatitude(), list.get(0).getLatLonPoint().getLongitude());
         aMap.addMarker(new MarkerOptions().position(latLng)
                 .icon(BitmapDescriptorFactory.fromResource (R.drawable.location_marker))
@@ -307,11 +322,12 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
 
     @Override
     public void onItemClick(View view, int position) {
-        CarEvent event = new CarEvent();
-        event.setType("address");
-        event.setPoint(list.get(position).getLatLonPoint());
-        event.setAddress(tvCity.getText().toString()+list.get(position).getAdName()+list.get(position).toString());
-        EventBus.getDefault().post(event);
-        finish();
+        aMap.clear();
+       currentItem = list.get(position);
+        LatLng latLng = new LatLng(currentItem.getLatLonPoint().getLatitude(), currentItem.getLatLonPoint().getLongitude());
+        aMap.addMarker(new MarkerOptions().position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource (R.drawable.location_marker))
+                .draggable(false));
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
     }
 }

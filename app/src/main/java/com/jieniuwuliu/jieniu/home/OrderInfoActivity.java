@@ -74,54 +74,14 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     MapView map;
     @BindView(R.id.rv)
     RecyclerView rv;
-    @BindView(R.id.tv_fahuo_name)
-    TextView tvFahuoName;
-    @BindView(R.id.tv_fahuo_address)
-    TextView tvFahuoAddress;
-    @BindView(R.id.tv_fahuo_phone)
-    TextView tvFahuoPhone;
-    @BindView(R.id.tv_fahuo_contact)
-    TextView tvFahuoContact;
-    @BindView(R.id.tv_shouhuo_name)
-    TextView tvShouhuoName;
-    @BindView(R.id.tv_shouhuo_address)
-    TextView tvShouhuoAddress;
-    @BindView(R.id.tv_shouhuo_phone)
-    TextView tvShouhuoPhone;
-    @BindView(R.id.tv_shouhuo_contact)
-    TextView tvShouhuoContact;
-    @BindView(R.id.tv_name)
-    TextView tvName;
-    @BindView(R.id.tv_phone)
-    TextView tvPhone;
+
     @BindView(R.id.tv_state)
     TextView tvState;
     @BindView(R.id.tv_time)
     TextView tvTime;
-    @BindView(R.id.info)
-    LinearLayout info;
-   /* @BindView(R.id.btn_info)
-    TextView btnInfo;*/
-    @BindView(R.id.img_user)
-    ImageView imgUser;
-    @BindView(R.id.tv_info)
-    TextView tvInfo;
-    @BindView(R.id.tv_baojia)
-    TextView tvBaojia;
-    @BindView(R.id.tv_baojia_money)
-    TextView tvBaojiaMoney;
-    @BindView(R.id.tv_daishou)
-    TextView tvDaiShou;
-    @BindView(R.id.tv_yunfei)
-    TextView tvYunFei;
-    @BindView(R.id.tv_total)
-    TextView tvTotal;
-    @BindView(R.id.layout_img)
-    LinearLayout layoutImg;
-    @BindView(R.id.img)
-    ImageView img;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
+
     private boolean isShow = false;
     private AMap aMap;
     protected Unbinder unbinder;
@@ -204,51 +164,9 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                         case 200:
                             String json = new JSONObject(response.body().string()).getString("data");
                             orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
-                            tvFahuoName.setText(orderWuliuInfo.getFromName());
-                            tvFahuoPhone.setText(orderWuliuInfo.getFromPhone());
-                            tvFahuoAddress.setText(orderWuliuInfo.getFromAddress());
-                            tvShouhuoName.setText(orderWuliuInfo.getToName());
-                            tvShouhuoAddress.setText(orderWuliuInfo.getToAddress());
-                            tvShouhuoPhone.setText(orderWuliuInfo.getToPhone());
-                            tvInfo.setText(orderWuliuInfo.getInfo()+" x " +orderWuliuInfo.getNumber()+"件");
-                            tvBaojia.setText("¥ "+(orderWuliuInfo.getBaojiaMoney()/100));
-                            tvBaojiaMoney.setText("¥ "+(orderWuliuInfo.getBaojiajine()/100));
-                            tvDaiShou.setText("¥ "+(orderWuliuInfo.getDaishouMoney()/100));
-                            tvYunFei.setText("¥ "+(orderWuliuInfo.getYunfeiMoney()/100));
-                            tvTotal.setText("¥ "+(orderWuliuInfo.getTotalMoney()/100));
-                            //签收照片
-                            if (!orderWuliuInfo.getFinishPhoto().equals("")){
-                                layoutImg.setVisibility(View.VISIBLE);
-                                GlideUtil.setImgUrl(OrderInfoActivity.this,orderWuliuInfo.getFinishPhoto(),R.mipmap.loading,img);
-                            }else{
-                                layoutImg.setVisibility(View.GONE);
-                            }
-
-                            if (orderWuliuInfo.getOrderList()!=null){
-                                if (orderWuliuInfo.getOrderList().size()!=0){
-                                    if (!orderWuliuInfo.getOrderList().get(0).getMsg().equals("已发货")){
-                                        if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")){
-                                            GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(1).getPhoto(),imgUser);
-                                            tvName.setText(orderWuliuInfo.getOrderList().get(1).getName());
-                                            tvPhone.setText(orderWuliuInfo.getOrderList().get(1).getPhone());
-                                        }else{
-                                            GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),imgUser);
-                                            tvName.setText(orderWuliuInfo.getOrderList().get(0).getName());
-                                            tvPhone.setText(orderWuliuInfo.getOrderList().get(0).getPhone());
-                                        }
-                                    }
-                                    list.addAll(orderWuliuInfo.getOrderList());
-                                    adapter.notifyDataSetChanged();
-                                }else{
-                                    tvState.setText("正在发货中");
-                                    tvName.setText("暂无信息");
-                                    tvPhone.setText("暂无信息");
-                                }
-                            }else {
-                                tvState.setText("正在发货中");
-                                tvName.setText("暂无信息");
-                                tvPhone.setText("暂无信息");
-                            }
+                            tvState.setText("正在发货中");
+                            list.addAll(orderWuliuInfo.getOrderList());
+                            adapter.notifyDataSetChanged();
                             setLine();
                             break;
                         case 400:
@@ -342,7 +260,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         }
     }
 
-    @OnClick({R.id.back,R.id.refresh,R.id.layout_img,R.id.tv_call_phone, R.id.btn_info})
+    @OnClick({R.id.back,R.id.refresh, R.id.btn_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -353,41 +271,11 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 list.clear();
                 getOrderInfo();
                 break;
-            case R.id.layout_img:
-                ArrayList<String> list = new ArrayList<>();
-                list.add(orderWuliuInfo.getFinishPhoto());
-                intent = new Intent();
-                intent.setClass(OrderInfoActivity.this,LookPicActivity.class);
-                intent.putStringArrayListExtra("list", list);
-                startActivity(intent);
-                break;
-            case R.id.tv_call_phone://联系配送员
-                if (Build.VERSION.SDK_INT >= 23) {
-                    int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
-                    if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
-                        return;
-                    }
-                }
-                String phone = tvPhone.getText().toString();
-                if (phone.equals("暂无信息")){
-                    return;
-                }
-                intent = new Intent(Intent.ACTION_CALL);
-                Uri data = Uri.parse("tel:" + phone);
-                intent.setData(data);
-                startActivity(intent);
-                break;
             case R.id.btn_info://查看详情
-                if (isShow){
-                    info.setVisibility(View.GONE);
-//                    btnInfo.setText("查看详情");
-                    isShow = false;
-                }else{
-                    info.setVisibility(View.VISIBLE);
-//                    btnInfo.setText("隐藏详情");
-                    isShow = true;
-                }
+                intent = new Intent();
+                intent.setClass(this,OrderDescActivity.class);
+                intent.putExtra("order",orderWuliuInfo);
+                startActivity(intent);
                 break;
         }
     }
@@ -407,7 +295,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                         return;
                     }
                     long duration = drivePath.getDuration();
-                    tvState.setText("正在运输中");
+                    tvState.setText("正在配送中");
                     tvTime.setVisibility(View.VISIBLE);
                     tvTime.setText("预计"+TimeUtil.formatDateTime(duration)+"后送达");
                     DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(

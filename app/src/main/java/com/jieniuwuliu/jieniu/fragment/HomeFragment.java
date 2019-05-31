@@ -12,7 +12,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.ScanQCActivity;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
+import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.base.BaseFragment;
@@ -61,7 +65,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements OnItemClickListener, OnRefreshListener, OnLoadMoreListener, AMapLocationListener {
+public class HomeFragment extends BaseFragment implements OnItemClickListener, OnRefreshListener, OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.rv)
@@ -72,6 +76,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     TextView tvPosition;
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.et_search)
+    EditText etSearch;
     private HomeAdapter adapter;
     private Intent intent;
     //声明AMapLocationClient类对象，定位发起端
@@ -94,6 +100,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
 
     @Override
     protected void init() {
+        etSearch.setOnEditorActionListener(this);
         list = new ArrayList<>();
         recomList = new ArrayList<>();
         loading = new MyLoading(getActivity(),R.style.CustomDialog);
@@ -319,6 +326,58 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
                 MyToast.show(getActivity(),"网络出现错误");
+            }
+        });
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEND||
+                (event!=null&&event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
+            String info = etSearch.getText().toString();
+            selectOrder(info);
+            KeyboardUtil.hideSoftKeyboard(getActivity());
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 查询某一条订单
+     * */
+    public void selectOrder(String info){
+        etSearch.setText("");
+        list.clear();
+        Call<ResponseBody> call =HttpUtil.getInstance().getApi(token).selectOrder(info);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try{
+                    switch (response.code()){
+                        case 200:
+                            if (refreshLayout!=null){
+                                refreshLayout.finishRefresh();
+                                refreshLayout.finishLoadMore();
+                            }
+                            String json = new JSONObject(response.body().string()).getString("data");
+                            OrderInfo dataBean = (OrderInfo) GsonUtil.praseJsonToModel(json,OrderInfo.class);
+                            list.add(dataBean);
+                            adapter.notifyDataSetChanged();
+                            refreshLayout.setNoMoreData(true);
+                            break;
+                        case 400:
+                            String s = response.errorBody().string();
+                            JSONObject object = new JSONObject(s);
+                            MyToast.show(getActivity(), object.getString("msg"));
+                            break;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                MyToast.show(getActivity(),"网络原因，获取失败");
             }
         });
     }

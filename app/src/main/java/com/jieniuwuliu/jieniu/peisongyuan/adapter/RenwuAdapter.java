@@ -24,10 +24,12 @@ public class RenwuAdapter extends RecyclerView.Adapter<RenwuAdapter.ViewHolder> 
     private Context context;
     private OnItemClickListener listener;
     private List<PSOrderInfo.DataBean> list;
+    private String type;
 
-    public RenwuAdapter(Context context,List<PSOrderInfo.DataBean> list) {
+    public RenwuAdapter(Context context,List<PSOrderInfo.DataBean> list,String type) {
         this.context = context;
         this.list = list;
+        this.type = type;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -50,7 +52,12 @@ public class RenwuAdapter extends RecyclerView.Adapter<RenwuAdapter.ViewHolder> 
             int a = i+1;
             viewHolder.tvTab.setText("任务"+a);
             viewHolder.tvNo.setText(list.get(i).getOrderNumber());
-            viewHolder.tvAddress.setText(list.get(i).getFromAddress());
+            if (type.equals("paisong")){
+                viewHolder.tvAddress.setText(list.get(i).getToAddress());
+            }else{
+                viewHolder.tvAddress.setText(list.get(i).getFromAddress());
+            }
+            viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt());
         }
     }
 
@@ -69,6 +76,8 @@ public class RenwuAdapter extends RecyclerView.Adapter<RenwuAdapter.ViewHolder> 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_tab)
         TextView tvTab;
+        @BindView(R.id.tv_time)
+        TextView tvTime;
         @BindView(R.id.tv_no)
         TextView tvNo;
         @BindView(R.id.tv_address)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -41,10 +42,14 @@
                     android:textColor="@color/white"
                     />
                 <EditText
+                    android:id="@+id/et_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_shape"
                     android:layout_toLeftOf="@id/tv_scan"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:inputType="text"
                     android:padding="@dimen/size_5dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_position"
@@ -52,7 +57,7 @@
                     android:layout_marginRight="@dimen/size_20dp"
                     android:hint="@string/search_hint"
                     android:textSize="@dimen/size_14sp"
-                    />
+                    tools:ignore="Autofill,RtlHardcoded,TextFields" />
                 <TextView
                     android:id="@+id/tv_scan"
                     android:layout_width="wrap_content"

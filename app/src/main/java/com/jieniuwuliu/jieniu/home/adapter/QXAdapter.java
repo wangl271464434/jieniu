@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -124,7 +125,7 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
         @BindView(R.id.distance)
         TextView distance;
         @BindView(R.id.tv_go)
-        TextView tvGo;
+        LinearLayout tvGo;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

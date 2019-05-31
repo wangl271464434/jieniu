@@ -3,6 +3,7 @@ package com.jieniuwuliu.jieniu.peisongyuan;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,16 +71,12 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
     TextView tvFahuoAddress;
     @BindView(R.id.tv_fahuo_phone)
     TextView tvFahuoPhone;
-    @BindView(R.id.tv_fahuo_contact)
-    TextView tvFahuoContact;
     @BindView(R.id.tv_shouhuo_name)
     TextView tvShouhuoName;
     @BindView(R.id.tv_shouhuo_address)
     TextView tvShouhuoAddress;
     @BindView(R.id.tv_shouhuo_phone)
     TextView tvShouhuoPhone;
-    @BindView(R.id.tv_shouhuo_contact)
-    TextView tvShouhuoContact;
     @BindView(R.id.layout_jiedan)
     LinearLayout layoutJiedan;
     @BindView(R.id.layout_gaipai)
@@ -270,7 +267,7 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
         unbinder.unbind();
     }
 
-    @OnClick({R.id.back, R.id.tv_dayin, R.id.layout_jiedan, R.id.layout_gaipai})
+    @OnClick({R.id.back, R.id.tv_dayin,R.id.tv_call_fahuo,R.id.tv_call_shouhuo, R.id.layout_jiedan, R.id.layout_gaipai})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -305,6 +302,34 @@ public class RenwuInfoActivity extends AppCompatActivity implements RouteSearch.
                     intent.setClass(this,PSYListActivity.class);
                     startActivityForResult(intent,100);
                 }
+                break;
+            case R.id.tv_call_fahuo://拨打发货人电话
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+                    if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
+                        return;
+                    }
+                }
+                String fromPhone = data.getFromPhone();
+                intent = new Intent(Intent.ACTION_CALL);
+                Uri fromUri = Uri.parse("tel:" + fromPhone);
+                intent.setData(fromUri);
+                startActivity(intent);
+                break;
+            case R.id.tv_call_shouhuo://拨打收货人电话
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+                    if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
+                        return;
+                    }
+                }
+                String toPhone = data.getToPhone();
+                intent = new Intent(Intent.ACTION_CALL);
+                Uri toUri = Uri.parse("tel:" + toPhone);
+                intent.setData(toUri);
+                startActivity(intent);
                 break;
         }
     }

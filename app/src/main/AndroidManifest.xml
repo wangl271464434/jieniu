@@ -249,7 +249,8 @@
         <activity android:name=".mine.ui.MonthCardPayActivity" />
         <activity android:name=".home.QPShopActivity" />
         <activity android:name=".peisongyuan.FinishRenwuActivity" />
-        <activity android:name=".jijian.ChoosePsyActivity"></activity>
+        <activity android:name=".jijian.ChoosePsyActivity" />
+        <activity android:name=".home.OrderDescActivity"></activity>
     </application>
 
 </manifest>

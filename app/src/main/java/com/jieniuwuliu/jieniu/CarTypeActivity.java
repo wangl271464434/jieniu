@@ -29,7 +29,7 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
     RecyclerView recyclerView;
     @BindView(R.id.sideBar)
     SideBar sideBar;
-    LinearLayoutManager manager;
+    private LinearLayoutManager manager;
     private SortAdapter adapter;
     private List<Object> objects;
     private List<SortModel> SourceDateList;

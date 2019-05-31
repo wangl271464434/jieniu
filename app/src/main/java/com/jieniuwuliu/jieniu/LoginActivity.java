@@ -24,6 +24,7 @@ import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.peisongyuan.PeisongHomeActivity;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +58,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.tv_phone)
     TextView tvPhone;
     private boolean flag = false;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -64,7 +66,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void init() {
-
+        loading = new MyLoading(this,R.style.CustomDialog);
     }
 
     @OnClick({R.id.back, R.id.tv_register,R.id.img_eye, R.id.tv_forget, R.id.login,R.id.tv_phone, R.id.tv_agreement})
@@ -124,6 +126,7 @@ public class LoginActivity extends BaseActivity {
      * 登录方法
      */
     private void login(String phone, String pwd) {
+        loading.show();
         Map<String, Object> map = new HashMap();
         map.put("phone", phone);
         map.put("password", pwd);
@@ -133,44 +136,41 @@ public class LoginActivity extends BaseActivity {
         observable.enqueue(new Callback<LoginBean>() {
             @Override
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
-                switch (response.code()) {
-                    case 200:
-                        if (response.body().getStatus() == 0) {
-                            //token
-                            SPUtil.put(getApplicationContext(), Constant.TOKEN, Constant.TOKEN, response.body().getToken());
-                            //是否认证
-                            SPUtil.put(getApplicationContext(), Constant.ISCERTIFY, Constant.ISCERTIFY, response.body().getData().getAuth());
-                            //用户类型
-                            SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
-                            if (response.body().getData().getPersonType() == 5 ||response.body().getData().getPersonType() == 6) {
-                                 startAcy(PeisongHomeActivity.class);
-                                finish();
-                            } else {
-                                startAcy(MainActivity.class);
-                                finish();
+                loading.dismiss();
+                try {
+                    switch (response.code()) {
+                        case 200:
+                            if (response.body().getStatus() == 0) {
+                                //token
+                                SPUtil.put(getApplicationContext(), Constant.TOKEN, Constant.TOKEN, response.body().getToken());
+                                //是否认证
+                                SPUtil.put(getApplicationContext(), Constant.ISCERTIFY, Constant.ISCERTIFY, response.body().getData().getAuth());
+                                //用户类型
+                                SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
+                                if (response.body().getData().getPersonType() == 5 ||response.body().getData().getPersonType() == 6) {
+                                    startAcy(PeisongHomeActivity.class);
+                                    finish();
+                                } else {
+                                    startAcy(MainActivity.class);
+                                    finish();
+                                }
                             }
-
-                        }
-                        break;
-                    case 400:
-                        try {
+                            break;
+                        case 400:
                             String s = response.errorBody().string();
                             JSONObject object = new JSONObject(s);
                             MyToast.show(LoginActivity.this, object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    MyToast.show(getApplicationContext(),e.toString());
                 }
-                     /*  String s = response.body().getData();
-                       Log.w("JWT",JwtUtil.JWTParse(s));*/
             }
-
             @Override
             public void onFailure(Call<LoginBean> call, Throwable t) {
-
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),"网络连接失败，请重试");
             }
         });
     }

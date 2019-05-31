@@ -113,20 +113,13 @@
                     android:padding="@dimen/size_10dp"
                     >
                     <TextView
+                        android:id="@+id/tv_call_fahuo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="联系人"
-                        android:textSize="@dimen/size_15sp"
-                        android:textColor="@color/black"
-                        />
-                    <TextView
-                        android:id="@+id/tv_fahuo_contact"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="名字"
+                        android:text="联系他"
                         android:layout_alignParentRight="true"
                         android:textSize="@dimen/size_15sp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/orange"
                         />
                 </RelativeLayout>
             </LinearLayout>
@@ -189,20 +182,13 @@
                     android:padding="@dimen/size_10dp"
                     >
                     <TextView
+                        android:id="@+id/tv_call_shouhuo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="联系人"
-                        android:textSize="@dimen/size_15sp"
-                        android:textColor="@color/black"
-                        />
-                    <TextView
-                        android:id="@+id/tv_shouhuo_contact"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="名字"
+                        android:text="联系他"
                         android:layout_alignParentRight="true"
                         android:textSize="@dimen/size_15sp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/orange"
                         />
                 </RelativeLayout>
             </LinearLayout>
