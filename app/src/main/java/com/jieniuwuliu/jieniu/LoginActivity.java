@@ -159,7 +159,7 @@ public class LoginActivity extends BaseActivity {
                         case 400:
                             String s = response.errorBody().string();
                             JSONObject object = new JSONObject(s);
-                            MyToast.show(LoginActivity.this, object.getString("msg"));
+                            MyToast.show(LoginActivity.this, "用户名或者密码错误");
                             break;
                     }
                 } catch (Exception e) {

@@ -1,17 +1,14 @@
 package com.jieniuwuliu.jieniu.peisongyuan;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +38,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,6 +57,10 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
     TextView tvPosition;
     @BindView(R.id.et_search)
     EditText etSearch;
+    @BindView(R.id.tv_start_date)
+    TextView tvStartDate;
+    @BindView(R.id.tv_end_date)
+    TextView tvEndDate;
     private RenwuAdapter adapter;
     private Intent intent;
     private String type = "paisong";// daijie,paisong  wancheng
@@ -70,7 +72,7 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
     private AMapLocationClient mLocationClient = null;
     //声明mLocationOption对象，定位参数
     public AMapLocationClientOption mLocationOption = null;
-    private String address = "";//当前位置
+    private String startTime = "",endTime = "",address = "";//当前位置
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.psy_home;
@@ -168,7 +170,7 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_scan,R.id.tv_position,R.id.img_search,R.id.radio_btn1, R.id.radio_btn2, R.id.radio_btn3})
+    @OnClick({R.id.tv_scan,R.id.tv_start_date,R.id.tv_end_date,R.id.tv_position,R.id.img_search,R.id.radio_btn1, R.id.radio_btn2, R.id.radio_btn3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_scan:
@@ -178,6 +180,12 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
                 break;
             case R.id.tv_position:
                 MyToast.show(getActivity(),"当前位置为："+address);
+                break;
+            case R.id.tv_start_date://日期
+                showDateDialog(1);
+                break;
+            case R.id.tv_end_date://日期
+                showDateDialog(2);
                 break;
             case R.id.radio_btn1://未接单
                 type = "daijie";
@@ -199,11 +207,51 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
                 break;
             case R.id.img_search://搜索
                 String info = etSearch.getText().toString();
-                selectOrder(info);
+                selectOrder( info,"","");
                 KeyboardUtil.hideSoftKeyboard(getActivity());
                 break;
         }
     }
+    /**
+     * 日期选择框
+     *
+     * @param type*/
+    private void showDateDialog(int type) {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String time = "";
+                if ((month+1)<10){
+                    if (dayOfMonth<10){
+                        time = year+"-0"+(month+1)+"-0"+dayOfMonth;
+                    }else{
+                        time = year+"-0"+(month+1)+"-"+dayOfMonth;                    }
+                }else{
+                    if (dayOfMonth<10){
+                        time = year+"-"+(month+1)+"-0"+dayOfMonth;
+                    }else{
+                        time = year+"-"+(month+1)+"-"+dayOfMonth;
+                    }
+                }
+                switch (type){
+                    case 1:
+                        startTime = time;
+                        tvStartDate.setText(startTime);
+                        break;
+                    case 2:
+                        endTime = time;
+                        tvEndDate.setText(endTime);
+                        break;
+                }
+                if (!startTime.equals("")&&!endTime.equals("")){
+                    selectOrder("",startTime,endTime);
+                }
+            }
+        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
+    }
+
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
@@ -264,12 +312,12 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
     /**
      * 查询某个订单
      * */
-    private void selectOrder(String info) {
+    private void selectOrder(String info, String startTime,String endTime) {
         etSearch.setText("");
         list.clear();
         Log.i("length",""+list.size());
         loading.show();
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getPSSelectOrder(type,info);
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getPSSelectOrder(type,info,startTime,endTime);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -282,8 +330,10 @@ public class PsyHomeFragment extends BaseFragment implements OnItemClickListener
                                 refreshLayout.finishRefresh();
                             }
                             PSOrderInfo psOrderInfo = (PSOrderInfo) GsonUtil.praseJsonToModel(response.body().string(),PSOrderInfo.class);
-                            list.add(psOrderInfo.getData().get(0));
-                            Log.i("length",""+list.size());
+                            if (psOrderInfo.getData().size()!=0){
+                                list.addAll(psOrderInfo.getData());
+                                Log.i("length",""+list.size());
+                            }
                             adapter.notifyDataSetChanged();
                             refreshLayout.setNoMoreData(true);
                             break;

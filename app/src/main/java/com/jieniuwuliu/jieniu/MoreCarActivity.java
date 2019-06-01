@@ -40,6 +40,7 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
      * 根据拼音来排列RecyclerView里面的数据类
      */
     private PinyinComparator pinyinComparator;
+    private String json;
 
     @Override
     protected int getLayoutId() {
@@ -60,10 +61,15 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
                 }
             }
         });
-        String json = LocalFileUtil.readTextFromSDcard(this);
-        json = json.replace(" ", "");
-        objects = GsonUtil.praseJsonToList(json, SortModel.class);
         SourceDateList = new ArrayList<>();
+        json = LocalFileUtil.readTextFromSDcard(this);
+        json = json.replace(" ", "");
+        setData(json);
+    }
+
+    private void setData(String json) {
+        SourceDateList.clear();
+        objects = GsonUtil.praseJsonToList(json, SortModel.class);
         for (Object object : objects) {
             SourceDateList.add((SortModel) object);
         }
@@ -86,8 +92,22 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
     }
 
 
-    @OnClick(R.id.close)
-    public void onViewClicked() {
-        finish();
+    @OnClick({R.id.close,R.id.big_car_btn,R.id.small_car_btn})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.close:
+                finish();
+                break;
+            case R.id.big_car_btn://大型汽车
+                json = LocalFileUtil.readKaCar(this);
+                json = json.replace(" ", "");
+                setData(json);
+                break;
+            case R.id.small_car_btn://小型汽车
+                json = LocalFileUtil.readTextFromSDcard(this);
+                json = json.replace(" ", "");
+                setData(json);
+                break;
+        }
     }
 }

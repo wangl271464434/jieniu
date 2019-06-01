@@ -199,7 +199,7 @@ public interface HttpApi {
      * @type   daijie paisong  wancheng
      * */
     @GET("users/order/kuaidi/{type}")
-    Call<ResponseBody> getPSSelectOrder(@Path("type")String type,@Query("order_number")String orderNo);
+    Call<ResponseBody> getPSSelectOrder(@Path("type")String type,@Query("order_number")String orderNo,@Query("startdate")String start,@Query("enddate")String end);
     /**
      * 寄件列表
      * type 1寄件 2 收件 3 不限

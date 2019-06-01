@@ -32,4 +32,27 @@ public class LocalFileUtil {
         }
         return resultString;
     }
+    public static String readKaCar(Context context) {
+        String resultString = "";
+        InputStreamReader inputStreamReader;
+        try {
+            inputStreamReader = new InputStreamReader(context.getAssets().open("ka.json"), "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(
+                    inputStreamReader);
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            inputStreamReader.close();
+            bufferedReader.close();
+            resultString = stringBuilder.toString();
+            Log.i("TAG", stringBuilder.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultString;
+    }
 }

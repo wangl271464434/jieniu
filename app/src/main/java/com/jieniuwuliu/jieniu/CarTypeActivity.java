@@ -39,7 +39,7 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
      * 根据拼音来排列RecyclerView里面的数据类
      */
     private PinyinComparator pinyinComparator;
-
+    private String json,type;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_car_type;
@@ -49,6 +49,7 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
     protected void init() {
         list = new ArrayList<>();
         chooseList = (List<SortModel>) getIntent().getSerializableExtra("list");
+        type = getIntent().getStringExtra("type");
         pinyinComparator = new PinyinComparator();
         //设置右侧SideBar触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -61,7 +62,11 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
                 }
             }
         });
-        String json = LocalFileUtil.readTextFromSDcard(this);
+        if (type.equals("小型汽车")){
+            json = LocalFileUtil.readTextFromSDcard(this);
+        }else{
+            json = LocalFileUtil.readKaCar(this);
+        }
         json = json.replace(" ", "");
         objects = GsonUtil.praseJsonToList(json, SortModel.class);
         SourceDateList = new ArrayList<>();

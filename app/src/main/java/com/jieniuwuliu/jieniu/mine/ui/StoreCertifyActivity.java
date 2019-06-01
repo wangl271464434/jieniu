@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,9 +87,6 @@ public class StoreCertifyActivity extends BaseActivity {
     private String token,storeUrl = "",zizhiUrl = "";
     private List<Car> cars;//服务车型数组
     private List<String> carTypeList;//服务车型数组
-    private String province = "陕西省";
-    private String city = "西安市";
-    private String country = "雁塔区";
     private List<SortModel> list;//车型
     private List<WorkType> workTypes;//业务
     private  Intent intent;
@@ -164,10 +163,7 @@ public class StoreCertifyActivity extends BaseActivity {
                startAcy(WorkTypeActivity.class);
                 break;
             case R.id.layout2://服务车型
-                intent = new Intent();
-                intent.setClass(StoreCertifyActivity.this,CarTypeActivity.class);
-                intent.putExtra("list", (Serializable) list);
-                startActivity(intent);
+                showCarType();
                 break;
             case R.id.tv_city:
                 KeyboardUtil.hideSoftKeyboard(this);
@@ -227,6 +223,56 @@ public class StoreCertifyActivity extends BaseActivity {
         }
     }
     /**
+     * 车型选择弹框
+     * */
+    private void showCarType() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
+        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.7);
+        window.setAttributes(params);
+        dialog.setContentView(R.layout.car_type_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+        TextView tvSmall = dialog.findViewById(R.id.tv_small_car);
+        TextView tvBig = dialog.findViewById(R.id.tv_big_car);
+        tvSmall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (carType.equals("大型汽车")){
+                    list.clear();
+                }
+                carType = "小型汽车";
+                dialog.dismiss();
+                intent = new Intent();
+                intent.setClass(StoreCertifyActivity.this,CarTypeActivity.class);
+                intent.putExtra("list", (Serializable) list);
+                intent.putExtra("type",carType);
+                startActivity(intent);
+            }
+        });
+        tvBig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (carType.equals("小型汽车")){
+                    list.clear();
+                }
+                carType = "大型汽车";
+                dialog.dismiss();
+                intent = new Intent();
+                intent.setClass(StoreCertifyActivity.this,CarTypeActivity.class);
+                intent.putExtra("list", (Serializable) list);
+                intent.putExtra("type",carType);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
      * 门店类型
      * */
     private void showTypeDialog() {
@@ -279,48 +325,6 @@ public class StoreCertifyActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
-    }
-
-    /**
-     * 城市选择
-     * */
-    private void inintCityPicker() {
-        CityPicker cityPicker = new CityPicker.Builder(this)
-                .textSize(20).title("地址选择")
-                .backgroundPop(0xa0000000)
-                .titleBackgroundColor("#0CB6CA")
-                .titleTextColor("#000000")
-                .backgroundPop(0xa0000000)
-                .confirTextColor("#000000")
-                .cancelTextColor("#000000")
-                .province(province)
-                .city(city)
-                .district(country)
-                .textColor(Color.parseColor("#000000"))//滚轮文字的颜色
-                .provinceCyclic(true)//省份滚轮是否循环显示
-                .cityCyclic(false)//城市滚轮是否循环显示
-                .districtCyclic(false)//地区（县）滚轮是否循环显示
-                .visibleItemsCount(7)//滚轮显示的item个数
-                .itemPadding(10)//滚轮item间距
-                .onlyShowProvinceAndCity(false)
-                .build();
-            cityPicker.show();
-            cityPicker.setOnCityItemClickListener(new CityPicker.OnCityItemClickListener() {
-                @Override
-                public void onSelected(String... citySelected) {
-                    //省份
-                    province = citySelected[0];
-                    //城市
-                    city = citySelected[1];
-                    //区县（如果设定了两级联动，那么该项返回空）
-                    country = citySelected[2];
-                    tvCity.setText(province+city+country);
-                }
-                @Override
-                public void onCancel() {
-
-                }
-            });
     }
     @Override
     protected void onDestroy() {
