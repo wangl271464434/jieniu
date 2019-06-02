@@ -27,6 +27,7 @@
     <dimen name="size_360dp">360dp</dimen>
     <!--文本内容的大小-->
     <dimen name="size_6sp">6sp</dimen>
+    <dimen name="size_8sp">8sp</dimen>
     <dimen name="size_10sp">10sp</dimen>
     <dimen name="size_11sp">11sp</dimen>
     <dimen name="size_12sp">12sp</dimen>

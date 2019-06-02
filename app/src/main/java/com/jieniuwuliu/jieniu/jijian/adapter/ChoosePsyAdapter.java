@@ -9,11 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.DistanceResult;
+import com.amap.api.services.route.DistanceSearch;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.bean.PSYUser;
+import com.jieniuwuliu.jieniu.home.QXActivity;
+import com.jieniuwuliu.jieniu.jijian.ChoosePsyActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,7 +52,14 @@ public class ChoosePsyAdapter extends RecyclerView.Adapter<ChoosePsyAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
-        viewHolder.tvName.setText(list.get(i).getNickname());
+        PSYUser.DataBean item = list.get(i);
+        viewHolder.tvName.setText(item.getNickname());
+        if (item.getDistance()>1000){
+            DecimalFormat decimalFomat = new DecimalFormat("#0.00");
+            viewHolder.tvRange.setText(decimalFomat.format(item.getDistance()/1000)+"km");
+        }else{
+            viewHolder.tvRange.setText(item.getDistance()+"m");
+        }
     }
 
     @Override
@@ -63,6 +77,8 @@ public class ChoosePsyAdapter extends RecyclerView.Adapter<ChoosePsyAdapter.View
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)
         TextView tvName;
+        @BindView(R.id.tv_range)
+        TextView tvRange;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -40,7 +40,7 @@ public class PSYUser {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Comparable<DataBean>{
         /**
          * id : 43
          * CreatedAt : 2019-04-20T03:50:10Z
@@ -88,6 +88,15 @@ public class PSYUser {
         private String region;
         private int todayCount;
         private int totalCount;
+        private double distance;
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public void setDistance(double distance) {
+            this.distance = distance;
+        }
 
         public int getId() {
             return id;
@@ -263,6 +272,11 @@ public class PSYUser {
 
         public void setTotalCount(int totalCount) {
             this.totalCount = totalCount;
+        }
+
+        @Override
+        public int compareTo(DataBean o) {
+            return (int) (this.distance-o.getDistance());
         }
 
         public static class AddressBean {
