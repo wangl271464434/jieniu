@@ -74,14 +74,31 @@
                 android:layout_marginLeft="@dimen/size_30dp"
                 android:orientation="vertical"
                 >
-                <TextView
-                    android:id="@+id/tv_fa_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="李先生"
-                    android:textSize="@dimen/size_14sp"
-                    android:textColor="@color/black"
-                    />
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:id="@+id/img_ji_vip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_center_vip"
+                        android:layout_marginRight="@dimen/size_5dp"
+                        android:visibility="gone"
+                        />
+                    <TextView
+                        android:id="@+id/tv_fa_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="李先生"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:ems="11"
+                        android:textSize="@dimen/size_14sp"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/tv_fa_phone"
                     android:layout_width="wrap_content"
@@ -149,13 +166,30 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 >
-                <TextView
-                    android:id="@+id/tv_shou_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/size_14sp"
-                    android:textColor="@color/black"
-                    />
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:id="@+id/img_shou_vip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_center_vip"
+                        android:layout_marginRight="@dimen/size_5dp"
+                        android:visibility="gone"
+                        />
+                    <TextView
+                        android:id="@+id/tv_shou_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/size_14sp"
+                        android:textColor="@color/black"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:ems="11"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/tv_shou_phone"
                     android:layout_width="wrap_content"

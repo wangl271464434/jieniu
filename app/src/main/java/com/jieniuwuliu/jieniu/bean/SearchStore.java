@@ -71,7 +71,25 @@ public class SearchStore {
         private String yewu;
         private String photos;
         private boolean isFollow;
+        private boolean vip;
+        private String vipTime;
         private List<?> fuwuCar;
+
+        public String getVipTime() {
+            return vipTime;
+        }
+
+        public void setVipTime(String vipTime) {
+            this.vipTime = vipTime;
+        }
+
+        public boolean isVip() {
+            return vip;
+        }
+
+        public void setVip(boolean vip) {
+            this.vip = vip;
+        }
 
         public int getUid() {
             return uid;

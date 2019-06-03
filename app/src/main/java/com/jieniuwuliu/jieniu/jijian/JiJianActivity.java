@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -97,6 +98,10 @@ public class JiJianActivity extends BaseActivity {
     CheckBox checkBox;
     @BindView(R.id.tv_psy)
     TextView tvPsy;
+    @BindView(R.id.img_ji_vip)
+    ImageView imgJiVip;
+    @BindView(R.id.img_shou_vip)
+    ImageView imgShouVip;
     private String type = "";
     private String weightType = "";
     private Coupon.DataBean data;
@@ -149,6 +154,11 @@ public class JiJianActivity extends BaseActivity {
                     case 200://成功
                         if (response.body().getStatus() == 0){
                             user = response.body().getData();
+                            if (user.isVip()){
+                                imgJiVip.setVisibility(View.VISIBLE);
+                            }else {
+                                imgJiVip.setVisibility(View.GONE);
+                            }
                             tvFaName.setText(user.getNickname());
                             tvFaPhone.setText(user.getAddress().getPhone());
                             tvFaAddress.setText(user.getAddress().getAddress());
@@ -224,13 +234,20 @@ public class JiJianActivity extends BaseActivity {
             end = new LatLng(event.getContactInfo().getLat(),event.getContactInfo().getLng());
             //计算收货地址和发货地址的驾车距离
             double distance = AMapUtils.calculateLineDistance(start,end);
-            if (user.getPersonType() ==2){//判断是否是汽修厂
-                juliPrice = 5;
+            if (event.getContactInfo().isVip()){
+                imgShouVip.setVisibility(View.VISIBLE);
+                flag = true;
             }else{
-                juliPrice = 15;
-            }
-            if (distance/1000>=20){
-                juliPrice = juliPrice+((int)(distance/1000)-20);
+                imgShouVip.setVisibility(View.GONE);
+                flag = false;
+                if (user.getPersonType() ==2){//判断是否是汽修厂
+                    juliPrice = 5;
+                }else{
+                    juliPrice = 15;
+                }
+                if (distance/1000>=20){
+                    juliPrice = juliPrice+((int)(distance/1000)-20);
+                }
             }
             tvMoney.setText(""+getYunFeiPrice());
             tvTotalMoney.setText(""+getTotalPrice());

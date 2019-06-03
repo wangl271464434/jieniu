@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -40,7 +41,7 @@ public class MyService extends Service implements AMapLocationListener {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new Binder();
     }
 
     @Override
@@ -52,6 +53,11 @@ public class MyService extends Service implements AMapLocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("service","service is start");
+        updata();
+//        location();
+        return START_STICKY;
+    }
+    private void updata() {
         new Thread(){
             @Override
             public void run() {
@@ -67,9 +73,8 @@ public class MyService extends Service implements AMapLocationListener {
                 }
             }
         }.start();
-//        location();
-        return START_STICKY;
     }
+
     private void location() {
         //初始化定位
         mLocationClient = new AMapLocationClient(getApplicationContext());
@@ -109,7 +114,6 @@ public class MyService extends Service implements AMapLocationListener {
         if (aMapLocation != null) {
             longitude = aMapLocation.getLongitude();
             latitude = aMapLocation.getLatitude();
-//            MyToast.show(getApplicationContext(),"service 经度：" + longitude + "维度：" + latitude);
             Log.i("lat+long", "service 经度：" + longitude + "维度：" + latitude);
             int userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
             if (userType == 5){
@@ -127,20 +131,17 @@ public class MyService extends Service implements AMapLocationListener {
         map.put("lat",latitude);
         map.put("lng",longitude);
         String json = GsonUtil.mapToJson(map);
-//        MyToast.show(getApplicationContext(),"上報數據："+json);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<UserBean> call =HttpUtil.getInstance().getApi(token).modifyUserInfo(body);
         call.enqueue(new Callback<UserBean>() {
             @Override
             public void onResponse(Call<UserBean> call, Response<UserBean> response) {
                 Log.i("result","上报的经纬度返回："+response.body().getMsg());
-//                MyToast.show(getApplicationContext(),"服務器返回狀態碼："+response.code());
             }
 
             @Override
             public void onFailure(Call<UserBean> call, Throwable t) {
                 Log.i("fail",t.toString());
-//                MyToast.show(getApplicationContext(),"網絡請求錯誤："+t.toString());
             }
         });
     }

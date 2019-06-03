@@ -81,6 +81,7 @@ public class EditShouAdrActivity extends BaseActivity {
     private List<SearchStore.DataBean> list;
     private SearchStoreAdapter adapter;
     private PopupWindow popupWindow;
+    private boolean isVip;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_edit_shou_adr;
@@ -178,6 +179,7 @@ public class EditShouAdrActivity extends BaseActivity {
             public void onItemClick(View view, int position) {
                 popupWindow.dismiss();
                 SearchStore.DataBean item = list.get(position);
+                isVip = item.isVip();
                 etCompany.setText(item.getNickname());
                 etCompany.setSelection(etCompany.getText().length());
                 etName.setText(item.getAddress().getName());
@@ -243,6 +245,7 @@ public class EditShouAdrActivity extends BaseActivity {
                 contactInfo.setPhone(phone);
                 contactInfo.setLat(lat);
                 contactInfo.setLng(lng);
+                contactInfo.setVip(isVip);
                 WeightEvent event = new WeightEvent();
                 event.setContactInfo(contactInfo);
                 EventBus.getDefault().post(event);
