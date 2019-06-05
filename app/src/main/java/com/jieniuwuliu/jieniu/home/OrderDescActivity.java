@@ -67,6 +67,8 @@ public class OrderDescActivity extends AppCompatActivity {
     TextView tvPhone;
     @BindView(R.id.tv_num)
     TextView tvNum;
+    @BindView(R.id.tv_pay)
+    TextView tvPay;
     @BindView(R.id.title)
     TextView title;
     private OrderInfo orderWuliuInfo;
@@ -90,6 +92,18 @@ public class OrderDescActivity extends AppCompatActivity {
         } else {
             layoutImg.setVisibility(View.GONE);
         }
+        switch (orderWuliuInfo.getPayType()){
+            case 1:
+                tvPay.setText("微信支付");
+                break;
+            case 2:
+                tvPay.setText("支付宝支付");
+                break;
+            case 3:
+                tvPay.setText("货到付款");
+                break;
+        }
+        tvPay.setText("");
         tvNum.setText(orderWuliuInfo.getNumber() + "件");
         tvBaojia.setText("¥ " + (orderWuliuInfo.getBaojiaMoney() / 100));
         tvBaojiaMoney.setText("¥ " + (orderWuliuInfo.getBaojiajine() / 100));
