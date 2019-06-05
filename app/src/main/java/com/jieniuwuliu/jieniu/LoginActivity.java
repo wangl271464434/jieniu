@@ -148,8 +148,7 @@ public class LoginActivity extends BaseActivity {
                                 //用户类型
                                 SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
                                 if (response.body().getData().getPersonType() == 5 ||response.body().getData().getPersonType() == 6) {
-                                    startAcy(PeisongHomeActivity.class);
-                                    finish();
+                                    MyToast.show(LoginActivity.this, "用户名或者密码错误");
                                 } else {
                                     startAcy(MainActivity.class);
                                     finish();

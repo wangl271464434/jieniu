@@ -109,7 +109,7 @@ public class JiJianActivity extends BaseActivity {
     private UserBean.DataBean user;
     private LatLng start,end;
     private int yunfei = 0;
-    private int baojiaPrice = 0,weightPrice = 0,juliPrice = 0,youhuiPrice = 0,daishouPrice = 0,baojiaMoney = 0;
+    private int baojiaPrice = 0,weightPrice = 0,juliPrice = 0,numPrice=0,youhuiPrice = 0,daishouPrice = 0,baojiaMoney = 0;
     private boolean flag = false;//判断是否免运费
     private MyLoading loading;
     private String info = "";
@@ -222,6 +222,9 @@ public class JiJianActivity extends BaseActivity {
             tvTotalMoney.setText(""+getTotalPrice());
         }
         if (event.getNum() != 0) {
+            if (event.getNum()>1){
+                numPrice = (event.getNum()-1)*5;
+            }
             tvNum.setText(event.getNum() + "件");
             tvMoney.setText(""+getYunFeiPrice());
             tvTotalMoney.setText(""+getTotalPrice());
@@ -509,7 +512,7 @@ public class JiJianActivity extends BaseActivity {
             if (user.isVip()){
                 return 0;
             }else{
-                yunfei = juliPrice+weightPrice-youhuiPrice;
+                yunfei = juliPrice+weightPrice+numPrice-youhuiPrice;
                 return yunfei;
             }
         }
