@@ -103,7 +103,6 @@ public class OrderDescActivity extends AppCompatActivity {
                 tvPay.setText("货到付款");
                 break;
         }
-        tvPay.setText("");
         tvNum.setText(orderWuliuInfo.getNumber() + "件");
         tvBaojia.setText("¥ " + (orderWuliuInfo.getBaojiaMoney() / 100));
         tvBaojiaMoney.setText("¥ " + (orderWuliuInfo.getBaojiajine() / 100));
