@@ -53,7 +53,7 @@ import retrofit2.Response;
 /**
  * 寄件查询
  */
-public class JiJianSelectActivity extends BaseActivity implements OnItemClickListener, View.OnClickListener, OnRefreshListener, OnLoadMoreListener{
+public class JiJianSelectActivity extends BaseActivity implements OnItemClickListener, View.OnClickListener, OnRefreshListener, OnLoadMoreListener, JiJianSelectAdater.CallBack {
     @BindView(R.id.tv_shaixuan)
     TextView tvShaixuan;
     @BindView(R.id.et_search)
@@ -86,6 +86,7 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
         adapter = new JiJianSelectAdater(this,list);
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
+        adapter.setCallBack(this);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         getData();
     }
@@ -271,5 +272,41 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
                 MyToast.show(getApplicationContext(),"网络原因，获取失败");
             }
         });
+    }
+
+    @Override
+    public void cancel(int position) {
+        loading.show();
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).cancelOrder(list.get(position).getOrderNumber());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                loading.dismiss();
+                try{
+                    switch (response.code()){
+                        case 200:
+                              String json = response.body().string();
+                              adapter.notifyItemChanged(position);
+                            MyToast.show(getApplicationContext(),"取消订单成功");
+                            break;
+                        case 400:
+                            String s = response.errorBody().string();
+                            JSONObject object = new JSONObject(s);
+                            MyToast.show(getApplicationContext(), object.getString("msg"));
+                            break;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    MyToast.show(getApplicationContext(),"数据异常");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),"网络连接失败，请检查网络");
+            }
+        });
+//        MyToast.show(getApplicationContext(),"取消订单");
     }
 }

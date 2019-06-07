@@ -270,4 +270,9 @@ public interface HttpApi {
      * */
     @GET("users/wangdian")
     Call<ResponseBody> getWangDianList();
+    /**
+     * 取消订单
+     * */
+    @PUT("users/order/cancel/{oid}")
+    Call<ResponseBody> cancelOrder(@Path("oid")String orderNo);
 }

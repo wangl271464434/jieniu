@@ -34,8 +34,26 @@ public class OrderInfo implements Serializable{
     private String finishPhoto;
     private int kuaidiID;
     private String info;
+    private boolean isCancel;//能不能取消取消
+    private boolean cancelStatus;//是否取消
     private boolean isInvoice = false;//是否开发票
     private List<OrderListBean> orderList;
+
+    public boolean isCancel() {
+        return isCancel;
+    }
+
+    public void setCancel(boolean cancel) {
+        isCancel = cancel;
+    }
+
+    public boolean isCancelStatus() {
+        return cancelStatus;
+    }
+
+    public void setCancelStatus(boolean cancelStatus) {
+        this.cancelStatus = cancelStatus;
+    }
 
     public String getFinishPhoto() {
         return finishPhoto;

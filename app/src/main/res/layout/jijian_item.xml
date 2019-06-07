@@ -110,12 +110,28 @@
                 android:textColor="@color/red"
                 android:textSize="@dimen/size_18sp" />
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/layout_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_5dp"
+            >
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:text="取消订单"
+                android:layout_marginRight="@dimen/size_15dp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/size_18sp" />
+        </RelativeLayout>
     </LinearLayout>
     <ImageView
         android:id="@+id/img_finish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_send_finished"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/size_50dp"
         android:layout_marginTop="@dimen/size_50dp"

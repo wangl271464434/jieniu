@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
@@ -26,6 +27,11 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
     private Context context;
     private OnItemClickListener listener;
     private List<OrderInfo> list;
+    private CallBack callBack;
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
 
     public JiJianSelectAdater(Context context, List<OrderInfo> list) {
         this.context = context;
@@ -62,9 +68,27 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
             viewHolder.tvPrice.setText("¥ "+String.format("%.2f",price));
             if (list.get(i).getStatus() ==5){
                 viewHolder.imgFinish.setVisibility(View.VISIBLE);
+                viewHolder.imgFinish.setImageResource(R.mipmap.ic_send_finished);
             }else{
                 viewHolder.imgFinish.setVisibility(View.GONE);
             }
+            if (list.get(i).isCancel()){//先进性判断能不能被取消
+                if (list.get(i).isCancelStatus()){//判断是否取消
+                    viewHolder.layoutCancel.setVisibility(View.GONE);
+                    viewHolder.imgFinish.setVisibility(View.VISIBLE);
+                    viewHolder.imgFinish.setImageResource(R.mipmap.icon_yiquxiao);
+                }else{
+                    viewHolder.layoutCancel.setVisibility(View.VISIBLE);
+                }
+            }else{
+                viewHolder.layoutCancel.setVisibility(View.GONE);
+            }
+            viewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   callBack.cancel(i);
+                }
+            });
         }
 
     }
@@ -94,9 +118,16 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         TextView tvNum;
         @BindView(R.id.tv_price)
         TextView tvPrice;
+        @BindView(R.id.layout_cancel)
+        RelativeLayout layoutCancel;
+        @BindView(R.id.tv_cancel)
+        TextView tvCancel;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
+    }
+    public interface CallBack{
+        void cancel(int position);
     }
 }
