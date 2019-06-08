@@ -86,7 +86,9 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
             viewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   callBack.cancel(i);
+                    list.get(i).setCancel(true);
+                    list.get(i).setCancelStatus(true);
+                    callBack.cancel(i);
                 }
             });
         }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -87,6 +88,7 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
         adapter.setCallBack(this);
+        ((SimpleItemAnimator)rv.getItemAnimator()).setSupportsChangeAnimations(false);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         getData();
     }
@@ -285,7 +287,7 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
                 try{
                     switch (response.code()){
                         case 200:
-                              String json = response.body().string();
+//                              String json = response.body().string();
                               adapter.notifyItemChanged(position);
                             MyToast.show(getApplicationContext(),"取消订单成功");
                             break;
