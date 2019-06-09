@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.mine.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -52,6 +53,7 @@ public class ModifyPwdActivity extends BaseActivity {
     private String oldPwd, newPwd, againPwd;
     private boolean flag1 = false,flag2 = false,flag3=false;
     private MyLoading loading;
+    private Intent intent;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_change_pwd;
@@ -141,6 +143,10 @@ public class ModifyPwdActivity extends BaseActivity {
                 int status = response.body().getStatus();
                 if (status == 0) {
                     MyToast.show(ModifyPwdActivity.this, "修改密码成功");
+                    intent = new Intent();
+                    intent.setClass(ModifyPwdActivity.this,LoginActivity.class);
+                    intent.putExtra("restart",true);
+                    startActivity(intent);
                     finish();
                 }
             }
