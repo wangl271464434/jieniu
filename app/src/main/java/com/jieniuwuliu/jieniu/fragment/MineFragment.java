@@ -28,6 +28,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.UpLoadFileUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseFragment;
@@ -43,7 +44,6 @@ import com.jieniuwuliu.jieniu.mine.ui.AddressListActivity;
 import com.jieniuwuliu.jieniu.jijian.JiJianSelectActivity;
 import com.jieniuwuliu.jieniu.mine.ui.FeedBackActivity;
 import com.jieniuwuliu.jieniu.mine.ui.MyFollowActivity;
-import com.jieniuwuliu.jieniu.mine.ui.MyStoreActivity;
 import com.jieniuwuliu.jieniu.mine.ui.StoreCertifyActivity;
 import com.jieniuwuliu.jieniu.mine.ui.StoreInfoActivity;
 import com.jieniuwuliu.jieniu.mine.ui.SuoQuFaPiaoActivity;
@@ -154,72 +154,74 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
      * @param token*/
     private void getUserInfo(String token) {
         Call<UserBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getUserInfo();
-        call.enqueue(new Callback<UserBean>() {
+        call.enqueue(new SimpleCallBack<UserBean>(getActivity()) {
             @Override
-            public void onResponse(Call<UserBean> call, Response<UserBean> response) {
-                switch (response.code()){
-                    case 200://成功
-                        if (response.body().getStatus() == 0){
-                            user = response.body().getData();
-                            if (user.isVip()){
-                                imgVip.setVisibility(View.VISIBLE);
-                            }else{
-                                imgVip.setVisibility(View.GONE);
-                            }
-                            GlideUtil.setUserImgUrl(getActivity(),user.getShopPhoto(),headImg);
-                            switch (user.getPersonType()){
-                                case 0:
-                                    tvType.setVisibility(View.GONE);
-                                    break;
-                                case 1:
-                                    type = "配件商";
-                                    break;
-                                case 2:
-                                    type = "汽修厂";
-                                    break;
-                                case 3:
-                                    type = "汽车用品";
-                                    break;
-                                case 4:
-                                    type = "汽保工具";
-                                    break;
-                            }
-                            tvType.setText(type);
-                            isCertify = user.getAuth();
-                            //是否认证
-                            SPUtil.put(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,isCertify);
-                            adapter.notifyItemChanged(0);
-                            tvNickName.setText(user.getNickname());
-                            if (user.getAddress()!=null){
-                                tvAddress.setText(user.getAddress().getAddress());
-                                tvName.setText(user.getAddress().getName());
-                                tvPhone.setText(user.getAddress().getPhone());
-                            }else{
-                                tvPhone.setText("");
-                                tvName.setText("");
-                                tvAddress.setText("");
-                            }
-                            scoreNo.setText(String.valueOf(user.getPoint()));
-                            ticketNo.setText(String.valueOf(user.getCouponNum()));
+            public void onSuccess(Response<UserBean> response) {
+                try{
+                    if (response.body().getStatus() == 0){
+                        user = response.body().getData();
+                        if (user.isVip()){
+                            imgVip.setVisibility(View.VISIBLE);
+                        }else{
+                            imgVip.setVisibility(View.GONE);
                         }
-                        break;
-                    case 400://错误
-                        try {
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        GlideUtil.setUserImgUrl(getActivity(),user.getShopPhoto(),headImg);
+                        switch (user.getPersonType()){
+                            case 0:
+                                tvType.setVisibility(View.GONE);
+                                break;
+                            case 1:
+                                type = "配件商";
+                                break;
+                            case 2:
+                                type = "汽修厂";
+                                break;
+                            case 3:
+                                type = "汽车用品";
+                                break;
+                            case 4:
+                                type = "汽保工具";
+                                break;
                         }
-                        break;
+                        tvType.setText(type);
+                        isCertify = user.getAuth();
+                        //是否认证
+                        SPUtil.put(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,isCertify);
+                        adapter.notifyItemChanged(0);
+                        tvNickName.setText(user.getNickname());
+                        if (user.getAddress()!=null){
+                            tvAddress.setText(user.getAddress().getAddress());
+                            tvName.setText(user.getAddress().getName());
+                            tvPhone.setText(user.getAddress().getPhone());
+                        }else{
+                            tvPhone.setText("");
+                            tvName.setText("");
+                            tvAddress.setText("");
+                        }
+                        scoreNo.setText(String.valueOf(user.getPoint()));
+                        ticketNo.setText(String.valueOf(user.getCouponNum()));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserBean> call, Throwable t) {
+            public void onFail(int errorCode, Response<UserBean> response) {
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(getActivity(),s);
             }
         });
     }

@@ -15,12 +15,14 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
 import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONObject;
 
@@ -69,6 +71,7 @@ public class StoreInfoActivity extends BaseActivity {
     private Intent intent;
     private String token;
     private int id;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_store_info;
@@ -76,6 +79,7 @@ public class StoreInfoActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         id = getIntent().getIntExtra("id",0);
     }
@@ -90,77 +94,81 @@ public class StoreInfoActivity extends BaseActivity {
      * 获取门店信息
      * */
     private void getStoreInfo() {
+        loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getStoreInfo(id);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(StoreInfoActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
                 try {
-                    switch (response.code()){
-                        case 200:
-                            ResponseBody body = response.body();
-                            String json = body.string();
-                            storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"),StoreInfoBean.class);
-                            etStoreName.setText(storeBean.getNickname());
-                            etContact.setText(storeBean.getAddress().getName());
-                            etPhone.setText(storeBean.getAddress().getPhone());
-                            etWeixin.setText(storeBean.getWechat());
-                            etAddress.setText(storeBean.getAddress().getAddress());
-                            switch (storeBean.getPersonType()){
-                                case 1://汽配商
-                                    tvType.setText("配件商");
-                                    layout1.setVisibility(View.GONE);
-                                    layout2.setVisibility(View.VISIBLE);
-                                    String s = "";
-                                    if (storeBean.getFuwuCar()!=null){
-                                        for (int i =0;i<storeBean.getFuwuCar().size();i++){
-                                            if (i!=0){
-                                                s += ","+storeBean.getFuwuCar().get(i).getName();
-                                            }else{
-                                                s += storeBean.getFuwuCar().get(i).getName();
-                                            }
-                                        }
+                    ResponseBody body = response.body();
+                    String json = body.string();
+                    storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"),StoreInfoBean.class);
+                    etStoreName.setText(storeBean.getNickname());
+                    etContact.setText(storeBean.getAddress().getName());
+                    etPhone.setText(storeBean.getAddress().getPhone());
+                    etWeixin.setText(storeBean.getWechat());
+                    etAddress.setText(storeBean.getAddress().getAddress());
+                    switch (storeBean.getPersonType()){
+                        case 1://汽配商
+                            tvType.setText("配件商");
+                            layout1.setVisibility(View.GONE);
+                            layout2.setVisibility(View.VISIBLE);
+                            String s = "";
+                            if (storeBean.getFuwuCar()!=null){
+                                for (int i =0;i<storeBean.getFuwuCar().size();i++){
+                                    if (i!=0){
+                                        s += ","+storeBean.getFuwuCar().get(i).getName();
+                                    }else{
+                                        s += storeBean.getFuwuCar().get(i).getName();
                                     }
-                                    tvCarType.setText(s);
-                                    break;
-                                case 2://汽修商
-                                    tvType.setText("汽修厂");
-                                    layout1.setVisibility(View.VISIBLE);
-                                    layout2.setVisibility(View.GONE);
-                                    tvYeWu.setText("主营业务：");
-                                    etContext.setText(storeBean.getYewu());
-                                    break;
-                                case 3://汽车用品
-                                    tvType.setText("汽车用品");
-                                    layout1.setVisibility(View.VISIBLE);
-                                    layout2.setVisibility(View.GONE);
-                                    tvYeWu.setText("经营范围：");
-                                    etContext.setText(storeBean.getYewu());
-                                    break;
-                                case 4://汽保工具
-                                    tvType.setText("汽保工具");
-                                    layout1.setVisibility(View.VISIBLE);
-                                    layout2.setVisibility(View.GONE);
-                                    tvYeWu.setText("经营范围：");
-                                    etContext.setText(storeBean.getYewu());
-                                    break;
+                                }
                             }
-
+                            tvCarType.setText(s);
                             break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(StoreInfoActivity.this, object.getString("msg"));
+                        case 2://汽修商
+                            tvType.setText("汽修厂");
+                            layout1.setVisibility(View.VISIBLE);
+                            layout2.setVisibility(View.GONE);
+                            tvYeWu.setText("主营业务：");
+                            etContext.setText(storeBean.getYewu());
+                            break;
+                        case 3://汽车用品
+                            tvType.setText("汽车用品");
+                            layout1.setVisibility(View.VISIBLE);
+                            layout2.setVisibility(View.GONE);
+                            tvYeWu.setText("经营范围：");
+                            etContext.setText(storeBean.getYewu());
+                            break;
+                        case 4://汽保工具
+                            tvType.setText("汽保工具");
+                            layout1.setVisibility(View.VISIBLE);
+                            layout2.setVisibility(View.GONE);
+                            tvYeWu.setText("经营范围：");
+                            etContext.setText(storeBean.getYewu());
                             break;
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(StoreInfoActivity.this, object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

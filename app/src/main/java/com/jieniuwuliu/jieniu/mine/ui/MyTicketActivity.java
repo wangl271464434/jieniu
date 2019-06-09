@@ -14,6 +14,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -22,6 +23,7 @@ import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
 import com.jieniuwuliu.jieniu.mine.adapter.TicketAdater;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -56,6 +58,7 @@ public class MyTicketActivity extends BaseActivity implements OnItemClickListene
     private List<Coupon.DataBean> list;
     private String token;
     private int page = 1,pageNum = 10;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_my_ticket;
@@ -64,6 +67,7 @@ public class MyTicketActivity extends BaseActivity implements OnItemClickListene
     @Override
     protected void init() {
         title.setText("优惠券");
+        loading = new MyLoading(this,R.style.CustomDialog);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
@@ -79,32 +83,22 @@ public class MyTicketActivity extends BaseActivity implements OnItemClickListene
      * 获取优惠券列表
      * */
     private void getCoupons() {
+        loading.show();
         Call<Coupon> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getCoupons(page,pageNum);
-        call.enqueue(new Callback<Coupon>() {
+        call.enqueue(new SimpleCallBack<Coupon>(MyTicketActivity.this) {
             @Override
-            public void onResponse(Call<Coupon> call, Response<Coupon> response) {
+            public void onSuccess(Response<Coupon> response) {
+                loading.dismiss();
                 try{
                     if (refreshLayout!=null){
                         refreshLayout.finishRefresh();
                         refreshLayout.finishLoadMore();
                     }
-                    switch (response.code()){
-                        case 200:
-                            if (response.body().getData().size()!=0){
-                                list.addAll(response.body().getData());
-                                adapter.notifyDataSetChanged();
-                            }else{
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(MyTicketActivity.this, object.getString("msg"));
-                            break;
-                            default:
-                                Log.w("error",response.errorBody().string());
-                                break;
+                    if (response.body().getData().size()!=0){
+                        list.addAll(response.body().getData());
+                        adapter.notifyDataSetChanged();
+                    }else{
+                        refreshLayout.setNoMoreData(true);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -112,8 +106,25 @@ public class MyTicketActivity extends BaseActivity implements OnItemClickListene
             }
 
             @Override
-            public void onFailure(Call<Coupon> call, Throwable t) {
+            public void onFail(int errorCode, Response<Coupon> response) {
+                loading.dismiss();
+                try{
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                    }
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(MyTicketActivity.this, object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

@@ -13,6 +13,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -25,6 +26,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,35 +90,43 @@ public class MyFollowActivity extends BaseActivity implements OnItemClickListene
     private void getData() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getFollows(page,pageNum);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(MyFollowActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
                     loading.dismiss();
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishRefresh();
-                                refreshLayout.finishLoadMore();
-                            }
-                            String json = response.body().string();
-                            Follow follow = (Follow) GsonUtil.praseJsonToModel(json,Follow.class);
-                            if (follow.getData().size()==0||follow.getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            list.addAll(follow.getData());
-                            adapter.notifyDataSetChanged();
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
+                    String json = response.body().string();
+                    Follow follow = (Follow) GsonUtil.praseJsonToModel(json,Follow.class);
+                    if (follow.getData().size()==0||follow.getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(follow.getData());
+                    adapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    loading.dismiss();
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(),"网络请求错误");
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

@@ -28,6 +28,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -134,7 +135,7 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
     private void getData() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getSingleForum(msgData.getFid());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(LuntanInfoActivity.this) {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
@@ -234,10 +235,113 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
                 }
             }
 
+
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
-                Log.i("error","error reason is:"+t.toString());
+                try {
+                    data = (Forum) GsonUtil.praseJsonToModel(response.body().string(),Forum.class);
+                    name.setText(data.getData().getName());
+                    if (data.getData().getInfo().equals("")){
+                        context.setVisibility(View.GONE);
+                    }else{
+                        context.setVisibility(View.VISIBLE);
+                        context.setText(data.getData().getInfo());
+                    }
+                    time = data.getData().getCreatedAt();
+                    tvTime.setText(TimeUtil.getShowString(TimeUtil.getMiliSecond(time)));
+                    if (data.getData().getPhoto()!=null){
+                        if (!data.getData().getPhoto().equals("")){
+                            GlideUtil.setUserImgUrl(LuntanInfoActivity.this,data.getData().getPhoto(),headImg);
+                        }
+                    }
+                    pics = new ArrayList<>();
+                    switch (data.getData().getType()){
+                        case 1:
+                            rv.setVisibility(View.GONE);
+                            layoutImg.setVisibility(View.GONE);
+                            String json = data.getData().getPhotos();
+                            if (!json.equals("")){
+                                try {
+                                    JSONArray array = new JSONArray(json);
+                                    for (int j = 0;j<array.length();j++){
+                                        pics.add(array.get(j).toString());
+                                    }
+                                    ViewGroup.LayoutParams lp = iv.getLayoutParams();
+                                    lp.width = 360;
+                                    lp.height = 480;
+                                    iv.setLayoutParams(lp);
+                                    iv.setMaxHeight(lp.height);
+                                    iv.setMaxWidth(lp.width);
+                                    GlideUtil.setImgUrl(LuntanInfoActivity.this,pics.get(0),iv);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                iv.setVisibility(View.GONE);
+                            }
+                            break;
+                        case 2:
+                            iv.setVisibility(View.GONE);
+                            layoutImg.setVisibility(View.GONE);
+                            String jsonpic = data.getData().getPhotos();
+                            if (!jsonpic.equals("")){
+                                try {
+                                    JSONArray array = new JSONArray(jsonpic);
+                                    for (int j = 0;j<array.length();j++){
+                                        pics.add(array.get(j).toString());
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            GridLayoutManager manager = new GridLayoutManager(LuntanInfoActivity.this, 3);
+                            rv.setLayoutManager(manager);
+                            LuntanPicAdapter adapter = new LuntanPicAdapter(LuntanInfoActivity.this, pics);
+                            rv.setAdapter(adapter);
+                            adapter.setListener(new OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+                                    Intent intent = new Intent();
+                                    intent.setClass(LuntanInfoActivity.this,LookPicActivity.class);
+                                    intent.putStringArrayListExtra("list", pics);
+                                    intent.putExtra("index", position);
+                                    startActivity(intent);
+                                }
+                            });
+                            break;
+                        case 3:
+                            iv.setVisibility(View.GONE);
+                            rv.setVisibility(View.GONE);
+                            GlideUtil.setVideoImg(LuntanInfoActivity.this,data.getData().getVideoImage(),img);
+                            break;
+                    }
+                    setDianZan();
+                    if (data.getData().getPinglun().size()>0){
+                        list.addAll(data.getData().getPinglun());
+                        adapter.notifyDataSetChanged();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                try {
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(LuntanInfoActivity.this, object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -306,38 +410,41 @@ public class LuntanInfoActivity extends BaseActivity implements OnItemClickListe
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addPingLun(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(LuntanInfoActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            etInfo.setText("");
-                            PingLun  pingLun = new PingLun();
-                            pingLun.setInfo(info);
-                            pingLun.setName(data.getData().getName());
-                            pingLun.setRuid(currentUid);
-                            pingLun.setRname(currentName);
-                            list.add(pingLun);
-                            rv.smoothScrollToPosition(list.size());//将列表移到最后一条
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
+                    etInfo.setText("");
+                    PingLun  pingLun = new PingLun();
+                    pingLun.setInfo(info);
+                    pingLun.setName(data.getData().getName());
+                    pingLun.setRuid(currentUid);
+                    pingLun.setRname(currentName);
+                    list.add(pingLun);
+                    rv.smoothScrollToPosition(list.size());//将列表移到最后一条
+                    adapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("error","fail reason is:"+t.toString());
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

@@ -12,12 +12,14 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Address;
 import com.jieniuwuliu.jieniu.bean.AddressList;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.mine.adapter.AddressAdater;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONObject;
 
@@ -49,6 +51,7 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
     private List<Address> list;
     private AddressAdater adapter;
     private String token;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_address_list;
@@ -58,6 +61,7 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
     protected void init() {
         title.setText("我的地址");
         right.setText("新增");
+        loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         list = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -78,33 +82,35 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
      * 获取地址列表
      * */
     private void getData() {
+        loading.show();
         Call<AddressList> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getAddressList();
-        call.enqueue(new Callback<AddressList>() {
+        call.enqueue(new SimpleCallBack<AddressList>(AddressListActivity.this) {
             @Override
-            public void onResponse(Call<AddressList> call, Response<AddressList> response) {
+            public void onSuccess(Response<AddressList> response) {
+                loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            list.addAll(response.body().getData());
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(AddressListActivity.this, object.getString("msg"));
-                            break;
-                            default:
-                                Log.w("error",response.errorBody().string());
-                                break;
-                    }
+                    list.addAll(response.body().getData());
+                    adapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<AddressList> call, Throwable t) {
-                Log.w("error",t.toString());
+            public void onFail(int errorCode, Response<AddressList> response) {
+                loading.dismiss();
+                try{
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(AddressListActivity.this, object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -129,33 +135,33 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
             MyToast.show(getApplicationContext(),"默认地址不能删除");
             return;
         }
+        loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).deleteAddress(list.get(position).getId());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(AddressListActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),"删除成功");
+                list.remove(list.get(position));
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
                 try {
-                    switch (response.code()){
-                        case 200:
-                            MyToast.show(getApplicationContext(),"删除成功");
-                            list.remove(list.get(position));
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                            default:
-                                break;
-                    }
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -182,31 +188,33 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
      * 设置默认地址
      * */
     private void updateDefault(final int position) {
+        loading.show();
         Map<String,Object> map = new HashMap<>();
         map.put("default",true);
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).updateAddress(list.get(position).getId(),body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(AddressListActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
-                    case 200:
-                        list.get(position).setDefaultX(true);
-                        adapter.notifyDataSetChanged();
-                        MyToast.show(getApplicationContext(),"设置成功");
-                        break;
-                    case 400:
-                        list.get(position).setDefaultX(false);
-                        adapter.notifyDataSetChanged();
-                        MyToast.show(getApplicationContext(),"设置失败");
-                        break;
-                }
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
+                list.get(position).setDefaultX(true);
+                adapter.notifyDataSetChanged();
+                MyToast.show(getApplicationContext(),"设置成功");
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                list.get(position).setDefaultX(false);
+                adapter.notifyDataSetChanged();
+                MyToast.show(getApplicationContext(),"设置失败");
+            }
 
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -215,31 +223,33 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
      * 取消默认地址
      * */
     private void cancelDefault(final int position) {
+        loading.show();
         Map<String,Object> map = new HashMap<>();
         map.put("default",false);
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).updateAddress(list.get(position).getId(),body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(AddressListActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
-                    case 200:
-                        list.get(position).setDefaultX(false);
-                        adapter.notifyDataSetChanged();
-                        MyToast.show(getApplicationContext(),"取消成功");
-                        break;
-                    case 400:
-                        list.get(position).setDefaultX(true);
-                        adapter.notifyDataSetChanged();
-                        MyToast.show(getApplicationContext(),"取消失败");
-                        break;
-                }
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
+                list.get(position).setDefaultX(false);
+                adapter.notifyDataSetChanged();
+                MyToast.show(getApplicationContext(),"取消成功");
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                list.get(position).setDefaultX(true);
+                adapter.notifyDataSetChanged();
+                MyToast.show(getApplicationContext(),"取消失败");
+            }
 
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

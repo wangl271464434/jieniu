@@ -13,6 +13,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.UserBean;
@@ -133,38 +134,36 @@ public class ModifyPwdActivity extends BaseActivity {
         map.put("oldPassword", oldPwd);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));
         Call<UserBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).modifyUserInfo(body);
-        observable.enqueue(new Callback<UserBean>() {
+        observable.enqueue(new SimpleCallBack<UserBean>(ModifyPwdActivity.this) {
             @Override
-            public void onResponse(Call<UserBean> call, Response<UserBean> response) {
+            public void onSuccess(Response<UserBean> response) {
                 loading.dismiss();
-                switch (response.code()) {
-                    case 200:
-                        int status = response.body().getStatus();
-                        if (status == 0) {
-                            MyToast.show(ModifyPwdActivity.this, "修改密码成功");
-                            finish();
-                        }
-                        break;
-                    case 400:
-                        try {
-                            String s = response.errorBody().string();
-                            Log.w("result", s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(ModifyPwdActivity.this, object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+                int status = response.body().getStatus();
+                if (status == 0) {
+                    MyToast.show(ModifyPwdActivity.this, "修改密码成功");
+                    finish();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserBean> call, Throwable t) {
-                Log.w("error", t.toString());
+            public void onFail(int errorCode, Response<UserBean> response) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(),"网络请求错误，请再试一次");
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result", s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(ModifyPwdActivity.this, object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

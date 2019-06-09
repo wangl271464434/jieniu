@@ -16,6 +16,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
@@ -115,40 +116,43 @@ public class MonthCardPayActivity extends BaseActivity {
      * */
     private void zfbPay() {
         loading.show();
-        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo("0.01","",Constant.MONTH_CARD);
-        call.enqueue(new Callback<AliPayResult>() {
+        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo(money,"",Constant.MONTH_CARD);
+        call.enqueue(new SimpleCallBack<AliPayResult>(MonthCardPayActivity.this) {
             @Override
-            public void onResponse(Call<AliPayResult> call, Response<AliPayResult> response) {
+            public void onSuccess(Response<AliPayResult> response) {
                 loading.dismiss();
                 try {
-                    switch (response.code()){
-                        case 200:
-                            String privateKey = response.body().getData().getPrivateKey();
-                            String appId = response.body().getData().getAppid();
-                            String notify = response.body().getData().getNotify();
-                            String order_no = response.body().getData().getOut_trade_no();
-                            Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.MONTH_CARD,"0.01",order_no,notify);
-                            String orderParam = AliPayUtil.buildOrderParam(map);
-                            String sign =  AliPayUtil.pay(privateKey,map);
-                            String orderInfo = orderParam +"&"+sign;
-                            aliPay(orderInfo);
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
+                    String privateKey = response.body().getData().getPrivateKey();
+                    String appId = response.body().getData().getAppid();
+                    String notify = response.body().getData().getNotify();
+                    String order_no = response.body().getData().getOut_trade_no();
+                    Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.MONTH_CARD,money,order_no,notify);
+                    String orderParam = AliPayUtil.buildOrderParam(map);
+                    String sign =  AliPayUtil.pay(privateKey,map);
+                    String orderInfo = orderParam +"&"+sign;
+                    aliPay(orderInfo);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<AliPayResult> call, Throwable t) {
+            public void onFail(int errorCode, Response<AliPayResult> response) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(), "网络连接失败，请检查网络");
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

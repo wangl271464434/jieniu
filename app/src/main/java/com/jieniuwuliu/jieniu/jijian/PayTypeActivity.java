@@ -15,6 +15,7 @@ import com.jieniuwuliu.jieniu.Util.AliPayUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
@@ -60,6 +61,7 @@ public class PayTypeActivity extends BaseActivity {
     private int price;//价格单位分；
     private MyLoading loading;
     private static final int SDK_PAY_FLAG = 1;
+    private  String money;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_pay_type;
@@ -127,30 +129,30 @@ public class PayTypeActivity extends BaseActivity {
             String json = object.toString();
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateOrder(orderNo,body);
-            call.enqueue(new Callback<ResponseBody>() {
+            call.enqueue(new SimpleCallBack<ResponseBody>(PayTypeActivity.this) {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onSuccess(Response<ResponseBody> response) {
+                    loading.dismiss();
+                    finish();
+                }
+
+                @Override
+                public void onFail(int errorCode, Response<ResponseBody> response) {
                     loading.dismiss();
                     try {
-                        switch (response.code()){
-                            case 200:
-                                finish();
-                                break;
-                            case 400:
-                                String s = response.errorBody().string();
-                                Log.w("result",s);
-                                JSONObject object = new JSONObject(s);
-                                MyToast.show(getApplicationContext(), object.getString("msg"));
-                                break;
-                        }
+                        String s = response.errorBody().string();
+                        Log.w("result",s);
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(), object.getString("msg"));
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
+
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onNetError(String s) {
                     loading.dismiss();
-                    MyToast.show(getApplicationContext(), "网络错误，请重试");
+                    MyToast.show(getApplicationContext(), s);
                 }
             });
         } catch (JSONException e) {
@@ -171,40 +173,45 @@ public class PayTypeActivity extends BaseActivity {
      * */
     private void zfbPay() {
         loading.show();
-        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo("0.01",orderNo,Constant.JIJIAN);
-        call.enqueue(new Callback<AliPayResult>() {
+        money = tvMoney.getText().toString();
+        money = money.replace("¥","").replace(" ","");
+        Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo(money,orderNo,Constant.JIJIAN);
+        call.enqueue(new SimpleCallBack<AliPayResult>(PayTypeActivity.this) {
             @Override
-            public void onResponse(Call<AliPayResult> call, Response<AliPayResult> response) {
+            public void onSuccess(Response<AliPayResult> response) {
                 loading.dismiss();
                 try {
-                    switch (response.code()){
-                        case 200:
-                            String privateKey = response.body().getData().getPrivateKey();
-                            String appId = response.body().getData().getAppid();
-                            String notify = response.body().getData().getNotify();
-                            String order_no = response.body().getData().getOut_trade_no();
-                            Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.JIJIAN,"0.01",order_no,notify);
-                            String orderParam = AliPayUtil.buildOrderParam(map);
-                            String sign =  AliPayUtil.pay(privateKey,map);
-                            String orderInfo = orderParam +"&"+sign;
-                            aliPay(orderInfo);
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
+                    String privateKey = response.body().getData().getPrivateKey();
+                    String appId = response.body().getData().getAppid();
+                    String notify = response.body().getData().getNotify();
+                    String order_no = response.body().getData().getOut_trade_no();
+                    Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.JIJIAN,money,order_no,notify);
+                    String orderParam = AliPayUtil.buildOrderParam(map);
+                    String sign =  AliPayUtil.pay(privateKey,map);
+                    String orderInfo = orderParam +"&"+sign;
+                    aliPay(orderInfo);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<AliPayResult> call, Throwable t) {
+            public void onFail(int errorCode, Response<AliPayResult> response) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(), "网络连接失败，请检查网络");
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(), s);
             }
         });
     }

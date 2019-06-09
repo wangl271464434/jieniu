@@ -28,6 +28,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -146,45 +147,46 @@ public class JiJianActivity extends BaseActivity {
 
     private void getUserInfo() {
         Call<UserBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getUserInfo();
-        call.enqueue(new Callback<UserBean>() {
+        call.enqueue(new SimpleCallBack<UserBean>(JiJianActivity.this) {
             @Override
-            public void onResponse(Call<UserBean> call, Response<UserBean> response) {
+            public void onSuccess(Response<UserBean> response) {
                 loading.dismiss();
-                switch (response.code()){
-                    case 200://成功
-                        if (response.body().getStatus() == 0){
-                            user = response.body().getData();
-                            if (user.isVip()){
-                                imgJiVip.setVisibility(View.VISIBLE);
-                            }else {
-                                imgJiVip.setVisibility(View.GONE);
-                            }
-                            tvFaName.setText(user.getNickname());
-                            tvFaPhone.setText(user.getAddress().getPhone());
-                            tvFaAddress.setText(user.getAddress().getAddress());
-                            start = new LatLng(user.getAddress().getLat(),user.getAddress().getLng());
-                            tvMoney.setText(""+getYunFeiPrice());
-                            tvTotalMoney.setText(""+getTotalPrice());
+                try{
+                    if (response.body().getStatus() == 0){
+                        user = response.body().getData();
+                        if (user.isVip()){
+                            imgJiVip.setVisibility(View.VISIBLE);
+                        }else {
+                            imgJiVip.setVisibility(View.GONE);
                         }
-                        break;
-                    case 400://错误
-                        try {
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+                        tvFaName.setText(user.getNickname());
+                        tvFaPhone.setText(user.getAddress().getPhone());
+                        tvFaAddress.setText(user.getAddress().getAddress());
+                        start = new LatLng(user.getAddress().getLat(),user.getAddress().getLng());
+                        tvMoney.setText(""+getYunFeiPrice());
+                        tvTotalMoney.setText(""+getTotalPrice());
+                    }
+                }catch (Exception e){e.printStackTrace();}
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<UserBean> response) {
+                loading.dismiss();
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserBean> call, Throwable t) {
+            public void onNetError(String s) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(),"网错错误");
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -358,43 +360,42 @@ public class JiJianActivity extends BaseActivity {
         String json = GsonUtil.objectToJson(order);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addOrder(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(JiJianActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            String json = response.body().string();
-                            Log.i("json",json);
-                            OrderBean orderBean = (OrderBean) GsonUtil.praseJsonToModel(json,OrderBean.class);
-                            Intent intent = new Intent();
-                            intent.setClass(JiJianActivity.this,PayTypeActivity.class);
-                            intent.putExtra("orderNo",orderBean.getData().getOrderNumber());
-                            intent.putExtra("price",orderBean.getData().getTotalMoney());
-                            startActivity(intent);
-                            finish();
-//                            MyToast.show(getApplicationContext(), "下单成功");
-                         /*   startAcy(PayTypeActivity.class);
-                            finish();*/
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
+                    String json = response.body().string();
+                    Log.i("json",json);
+                    OrderBean orderBean = (OrderBean) GsonUtil.praseJsonToModel(json,OrderBean.class);
+                    Intent intent = new Intent();
+                    intent.setClass(JiJianActivity.this,PayTypeActivity.class);
+                    intent.putExtra("orderNo",orderBean.getData().getOrderNumber());
+                    intent.putExtra("price",orderBean.getData().getTotalMoney());
+                    startActivity(intent);
+                    finish();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
-                Log.i("error",t.toString());
-                MyToast.show(getApplicationContext(),"网络出现错误");
+                try{
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

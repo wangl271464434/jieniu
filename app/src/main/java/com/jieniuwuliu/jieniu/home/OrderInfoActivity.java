@@ -47,6 +47,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
@@ -154,36 +155,39 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private void getOrderInfo() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getOrderInfo(orderNo);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(OrderInfoActivity.this) {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try {
-                    switch (response.code()) {
-                        case 200:
-                            String json = new JSONObject(response.body().string()).getString("data");
-                            orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
-                            tvState.setText("正在发货中");
-                            list.addAll(orderWuliuInfo.getOrderList());
-                            adapter.notifyDataSetChanged();
-                            setLine();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
+                    String json = new JSONObject(response.body().string()).getString("data");
+                    orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
+                    tvState.setText("正在发货中");
+                    list.addAll(orderWuliuInfo.getOrderList());
+                    adapter.notifyDataSetChanged();
+                    setLine();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(), "网络请求失败");
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

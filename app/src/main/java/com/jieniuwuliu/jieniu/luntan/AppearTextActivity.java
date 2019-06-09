@@ -28,6 +28,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.UpLoadFileUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -239,36 +240,38 @@ public class AppearTextActivity extends BaseActivity implements OnItemClickListe
         String json = GsonUtil.objectToJson(lunTanBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).addForums(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(AppearTextActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
                     loading.dismiss();
-                    switch (response.code()){
-                        case 200:
-                            MyToast.show(getApplicationContext(), "发表成功");
-                            LuntanEvent event = new LuntanEvent();
-                            event.setSuccess(true);
-                            EventBus.getDefault().post(event);
-                            finish();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
+                    MyToast.show(getApplicationContext(), "发表成功");
+                    LuntanEvent event = new LuntanEvent();
+                    event.setSuccess(true);
+                    EventBus.getDefault().post(event);
+                    finish();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("error","fail is reason:"+t.toString());
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    loading.dismiss();
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(),"网络请求失败");
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

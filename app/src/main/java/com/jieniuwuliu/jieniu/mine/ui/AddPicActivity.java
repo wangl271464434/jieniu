@@ -24,6 +24,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.UpLoadFileUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -120,36 +121,37 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
      * 提交数据
      * */
     private void update() {
+        dialog.show();
         String json = GsonUtil.objectToJson(storeCerity);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).modifyStoreInfo(body);
-        observable.enqueue(new Callback<ResponseBody>() {
+        observable.enqueue(new SimpleCallBack<ResponseBody>(AddPicActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
-                dialog.cancel();
-                switch (response.code()) {
-                    case 200:
-                        MyToast.show(AddPicActivity.this,"提交成功");
-                        finish();
-                        break;
-                    case 400:
-                        try {
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(AddPicActivity.this, object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                        break;
+            public void onSuccess(Response<ResponseBody> response) {
+                dialog.dismiss();
+                MyToast.show(AddPicActivity.this,"提交成功");
+                finish();
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                dialog.dismiss();
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(AddPicActivity.this, object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (JSONException e){
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.w("error", t.toString());
+            public void onNetError(String s) {
+                dialog.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -327,7 +329,7 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
                     case 1:
                         zizhiImgUrl =  pictureFile.getPath();
                         Log.w("img",zizhiImgUrl);
-                        GlideUtil.setLocalImgUrl(AddPicActivity.this,storeImgUrl,storeImg);
+                        GlideUtil.setLocalImgUrl(AddPicActivity.this,zizhiImgUrl,zizhiImg);
                         break;
                 }
                 break;

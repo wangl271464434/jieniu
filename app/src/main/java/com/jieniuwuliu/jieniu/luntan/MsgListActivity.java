@@ -17,6 +17,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -89,31 +90,22 @@ public class MsgListActivity extends BaseActivity implements OnRefreshListener, 
     private void getUnReadMsgList() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getUnReadList(page,num);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(MsgListActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try {
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishLoadMore();
-                                refreshLayout.finishRefresh();
-                            }
-                            UnReadMsg unReadMsg = (UnReadMsg) GsonUtil.praseJsonToModel(response.body().string(),UnReadMsg.class);
-                            if (unReadMsg.getData()!=null){
-                                if (unReadMsg.getData().size()<10){
-                                    refreshLayout.setNoMoreData(true);
-                                }
-                                list.addAll(unReadMsg.getData());
-                                adapter.notifyDataSetChanged();
-                            }
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(MsgListActivity.this, object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                    }
+                    UnReadMsg unReadMsg = (UnReadMsg) GsonUtil.praseJsonToModel(response.body().string(),UnReadMsg.class);
+                    if (unReadMsg.getData()!=null){
+                        if (unReadMsg.getData().size()<10){
+                            refreshLayout.setNoMoreData(true);
+                        }
+                        list.addAll(unReadMsg.getData());
+                        adapter.notifyDataSetChanged();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -121,8 +113,21 @@ public class MsgListActivity extends BaseActivity implements OnRefreshListener, 
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
+                try {
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(MsgListActivity.this, object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -164,35 +169,34 @@ public class MsgListActivity extends BaseActivity implements OnRefreshListener, 
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getReadMsg(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(MsgListActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
+                Intent intent = new Intent();
+                intent.setClass(MsgListActivity.this,LuntanInfoActivity.class);
+                intent.putExtra("data",dataBean);
+                startActivity(intent);
+                list.remove(dataBean);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
                 try {
-                    switch (response.code()){
-                        case 200:
-                            Intent intent = new Intent();
-                            intent.setClass(MsgListActivity.this,LuntanInfoActivity.class);
-                            intent.putExtra("data",dataBean);
-                            startActivity(intent);
-                            list.remove(dataBean);
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(MsgListActivity.this, object.getString("msg"));
-                            break;
-                    }
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(MsgListActivity.this, object.getString("msg"));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onNetError(String s) {
                 loading.dismiss();
-                Log.i("ERROR","error is:"+t.toString());
+                MyToast.show(getApplicationContext(),s);
             }
         });
 

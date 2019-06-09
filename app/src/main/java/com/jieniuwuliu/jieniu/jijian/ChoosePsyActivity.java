@@ -25,6 +25,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.PSYUser;
@@ -127,7 +128,7 @@ public class ChoosePsyActivity extends BaseActivity implements OnItemClickListen
     private void getData() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getWangDianList();
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(ChoosePsyActivity.this) {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
@@ -173,11 +174,59 @@ public class ChoosePsyActivity extends BaseActivity implements OnItemClickListen
                 }
             }
 
+
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
-                Log.e("fail","error："+t.toString());
-                MyToast.show(ChoosePsyActivity.this,"网络状况不好，请检查网络连接");
+                try{
+                    PSYUser psyUser = (PSYUser) GsonUtil.praseJsonToModel(response.body().string(),PSYUser.class);
+                    list.addAll(psyUser.getData());
+                    List<LatLonPoint> points = new ArrayList<>();
+                    for (int i =0;i<psyUser.getData().size();i++){
+                        PSYUser.DataBean dataBean = psyUser.getData().get(i);
+                        points.add(new LatLonPoint(dataBean.getLat(),dataBean.getLng()));
+                    }
+                    LatLonPoint end = new LatLonPoint(lat,lng);
+                    DistanceSearch search = new DistanceSearch(ChoosePsyActivity.this);
+                    DistanceSearch.DistanceQuery query = new DistanceSearch.DistanceQuery();
+                    query.setOrigins(points);//支持多起点
+                    query.setDestination(end);
+                    //设置测量方式，支持直线和驾车
+                    query.setType(DistanceSearch.TYPE_DRIVING_DISTANCE);//设置为直线
+                    search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
+                        @Override
+                        public void onDistanceSearched(DistanceResult distanceResult, int i) {
+                            for (int j = 0;j<list.size();j++){
+                                Double distance = Double.valueOf(distanceResult.getDistanceResults().get(j).getDistance());
+                                list.get(j).setDistance(distance);
+                            }
+                            Collections.sort(list);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                    search.calculateRouteDistanceAsyn(query);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                try{
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(ChoosePsyActivity.this,s);
             }
         });
     }

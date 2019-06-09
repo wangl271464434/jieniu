@@ -13,11 +13,13 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.UserBean;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,7 @@ public class EditInfoActivity extends BaseActivity {
     EditText etContext;
     private String title,info,token;
     private int aid;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_edit_info;
@@ -53,6 +56,7 @@ public class EditInfoActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        loading = new MyLoading(this,R.style.CustomDialog);
         title = getIntent().getStringExtra("title");
         info = getIntent().getStringExtra("info");
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
@@ -89,6 +93,7 @@ public class EditInfoActivity extends BaseActivity {
      * 修改联系电话和联系人
      * */
     private void updateAdr(final String context) {
+        loading.show();
         Map<String,Object> map = new HashMap<>();
         switch (title){
             case "联系电话":
@@ -101,33 +106,38 @@ public class EditInfoActivity extends BaseActivity {
         map.put("default",true);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).updateAddress(aid,body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(EditInfoActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            Log.w("json",response.body().toString());
-                            Intent intent = new Intent();
-                            intent.putExtra("info",context);
-                            setResult(RESULT_OK,intent);
-                            finish();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result", s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(EditInfoActivity.this, object.getString("msg"));
-                            break;
-                    }
+                    Log.w("json",response.body().toString());
+                    Intent intent = new Intent();
+                    intent.putExtra("info",context);
+                    setResult(RESULT_OK,intent);
+                    finish();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.w("error",t.toString());
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                try{
+                    String s = response.errorBody().string();
+                    Log.w("result", s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(EditInfoActivity.this, object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }
@@ -136,6 +146,7 @@ public class EditInfoActivity extends BaseActivity {
      * 修改主营业务和微信
      * */
     private void update(final String context) {
+        loading.show();
         Map<String,Object> map = new HashMap<>();
         switch (title){
             case "主营业务":
@@ -147,34 +158,35 @@ public class EditInfoActivity extends BaseActivity {
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).modifyStoreInfo(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(EditInfoActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
-                    case 200:
-                        Intent intent = new Intent();
-                        intent.putExtra("info",context);
-                        setResult(RESULT_OK,intent);
-                        finish();
-                        break;
-                    case 400:
-                        try {
-                            String s = response.errorBody().string();
-                            Log.w("result", s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(EditInfoActivity.this, object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
+                Intent intent = new Intent();
+                intent.putExtra("info",context);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result", s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(EditInfoActivity.this, object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.w("error",t.toString());
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
 

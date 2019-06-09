@@ -1,8 +1,5 @@
 package com.jieniuwuliu.jieniu.jijian;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -12,34 +9,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.geocoder.GeocodeQuery;
-import com.amap.api.services.geocoder.GeocodeResult;
-import com.amap.api.services.geocoder.GeocodeSearch;
-import com.amap.api.services.geocoder.RegeocodeResult;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.Address;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.ContactInfo;
 import com.jieniuwuliu.jieniu.bean.SearchStore;
+import com.jieniuwuliu.jieniu.jijian.adapter.SearchStoreAdapter;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
-import com.jieniuwuliu.jieniu.mine.ui.AddPicActivity;
 import com.jieniuwuliu.jieniu.mine.ui.ChooseAddressActivity;
-import com.jieniuwuliu.jieniu.mine.ui.StoreCertifyActivity;
 import com.jieniuwuliu.jieniu.view.MyLoading;
-import com.lljjcoder.citypickerview.widget.CityPicker;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,11 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -124,25 +111,15 @@ public class EditShouAdrActivity extends BaseActivity {
      * */
     private void search(String info) {
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).searchStore(info);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(EditShouAdrActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try {
-                    switch (response.code()){
-                        case 200:
-                            list.clear();
-                            SearchStore searchStore = (SearchStore) GsonUtil.praseJsonToModel(response.body().string(),SearchStore.class);
-                            if (searchStore.getData().size()>0){
-                                list.addAll(searchStore.getData());
-                                showSearchList();
-                            }
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
+                    list.clear();
+                    SearchStore searchStore = (SearchStore) GsonUtil.praseJsonToModel(response.body().string(),SearchStore.class);
+                    if (searchStore.getData().size()>0){
+                        list.addAll(searchStore.getData());
+                        showSearchList();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -150,8 +127,20 @@ public class EditShouAdrActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("error",t.toString());
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

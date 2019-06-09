@@ -33,6 +33,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.bean.Car;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -161,38 +162,41 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
     private void getStoreList(int i) {
         loading.show();
         Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(i,page,pageNum);
-        call.enqueue(new Callback<StoreBean>() {
+        call.enqueue(new SimpleCallBack<StoreBean>(getActivity()) {
             @Override
-            public void onResponse(Call<StoreBean> call, Response<StoreBean> response) {
+            public void onSuccess(Response<StoreBean> response) {
                 loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishRefresh();
-                                refreshLayout.finishLoadMore();
-                            }
-                            if (response.body().getData().size()==0||response.body().getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            list.addAll(response.body().getData());
-                            listAdapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
+                    if (response.body().getData().size()==0||response.body().getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(response.body().getData());
+                    listAdapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<StoreBean> call, Throwable t) {
+            public void onFail(int errorCode, Response<StoreBean> response) {
                 loading.dismiss();
-                MyToast.show(getActivity(),"网络请求失败");
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getActivity(),s);
             }
         });
     }
@@ -214,37 +218,41 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
     private void getStoreList() {
         loading.show();
         Call<StoreBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getQPSList(type,storeName,page,pageNum);
-        call.enqueue(new Callback<StoreBean>() {
+        call.enqueue(new SimpleCallBack<StoreBean>(getActivity()) {
             @Override
-            public void onResponse(Call<StoreBean> call, Response<StoreBean> response) {
+            public void onSuccess(Response<StoreBean> response) {
                 try{
                     loading.dismiss();
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishRefresh();
-                                refreshLayout.finishLoadMore();
-                            }
-                            if (response.body().getData().size()==0||response.body().getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            list.addAll(response.body().getData());
-                            listAdapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
+                    if (response.body().getData().size()==0||response.body().getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(response.body().getData());
+                    listAdapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<StoreBean> call, Throwable t) {
+            public void onFail(int errorCode, Response<StoreBean> response) {
+                try{
+                    loading.dismiss();
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
                 loading.dismiss();
+                MyToast.show(getActivity(),s);
             }
         });
     }

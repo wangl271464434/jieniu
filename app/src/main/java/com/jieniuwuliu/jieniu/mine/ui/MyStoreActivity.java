@@ -10,6 +10,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -76,46 +77,27 @@ public class MyStoreActivity extends BaseActivity {
      */
     private void getStoreInfo(String token) {
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getStoreInfo(id);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(MyStoreActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
-                    case 200:
-                       /* storeBean = response.body().getData();
-                        tvName.setText(storeBean.getNickname());
-                        name.setText(storeBean.getAddress().getName());
-                        phone.setText(storeBean.getAddress().getPhone());
-                        switch (storeBean.getPersonType()){
-                            case 1://汽配商
-                                layoutCar.setVisibility(View.VISIBLE);
-                                layoutYewu.setVisibility(View.GONE);
-                                break;
-                            case 2://汽修商
-                                layoutYewu.setVisibility(View.VISIBLE);
-                                layoutCar.setVisibility(View.GONE);
-                                tvContext.setText(storeBean.getYewu());
-                                break;
-                        }
-                        GlideUtil.setImgUrl(MyStoreActivity.this,storeBean.getShopPhoto(),img);
-                        address.setText(storeBean.getAddress().getAddress());*/
+            public void onSuccess(Response<ResponseBody> response) {
 
-                        break;
-                    case 400:
-                        try {
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(MyStoreActivity.this, object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(MyStoreActivity.this, object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onNetError(String s) {
 
             }
         });

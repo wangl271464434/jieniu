@@ -10,12 +10,14 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.AddAdr;
 import com.jieniuwuliu.jieniu.bean.Address;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,6 +49,7 @@ public class AddAddressActivity extends BaseActivity {
     private String name,phone,address;
     private double lat,lng;
     private String token;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_add_address;
@@ -55,6 +58,7 @@ public class AddAddressActivity extends BaseActivity {
     @Override
     protected void init() {
         title.setText("编辑地址");
+        loading = new MyLoading(this,R.style.CustomDialog);
         EventBus.getDefault().register(this);
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
     }
@@ -93,6 +97,7 @@ public class AddAddressActivity extends BaseActivity {
      * 提交数据
      * */
     private void update() {
+        loading.show();
         Address adr = new Address();
         adr.setAddress(address+etAddress.getText().toString());
         adr.setName(name);
@@ -102,29 +107,28 @@ public class AddAddressActivity extends BaseActivity {
         String json = GsonUtil.objectToJson(adr);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         Call<AddAdr> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).addAddress(body);
-        call.enqueue(new Callback<AddAdr>() {
+        call.enqueue(new SimpleCallBack<AddAdr>(AddAddressActivity.this) {
             @Override
-            public void onResponse(Call<AddAdr> call, Response<AddAdr> response) {
-                Log.w("result",response.toString());
-                try{
-                    switch (response.code()){
-                        case 200:
-                            MyToast.show(getApplicationContext(), "添加成功");
-                            finish();
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
-                    }
-                }catch (Exception e){e.printStackTrace();}
-
+            public void onSuccess(Response<AddAdr> response) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(), "添加成功");
+                finish();
             }
 
             @Override
-            public void onFailure(Call<AddAdr> call, Throwable t) {
+            public void onFail(int errorCode, Response<AddAdr> response) {
+                loading.dismiss();
+                try{
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){e.printStackTrace();}
+            }
 
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

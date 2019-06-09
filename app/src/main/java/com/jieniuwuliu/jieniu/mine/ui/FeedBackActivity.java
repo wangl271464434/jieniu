@@ -9,9 +9,11 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class FeedBackActivity extends BaseActivity {
     @BindView(R.id.et_context)
     EditText etContext;
     private String token;
+    private MyLoading loading;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_feed_back;
@@ -40,6 +43,7 @@ public class FeedBackActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
     }
 
@@ -64,28 +68,30 @@ public class FeedBackActivity extends BaseActivity {
        *
        * @param info*/
     private void submit(String info) {
+        loading.show();
         Map<String,Object> map = new HashMap<>();
         map.put("info",info);
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).feedBack(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(FeedBackActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
-                    case 200:
-                        MyToast.show(getApplicationContext(),"提交成功");
-                        finish();
-                        break;
-                    case 400:
-                        MyToast.show(getApplicationContext(),"提交失败");
-                        break;
-                }
+            public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),"提交成功");
+                finish();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                MyToast.show(getApplicationContext(),"请求失败");
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),"提交失败");
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

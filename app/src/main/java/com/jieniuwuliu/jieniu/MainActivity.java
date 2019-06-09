@@ -29,6 +29,7 @@ import com.jieniuwuliu.jieniu.Util.AppUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.StringUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -100,25 +101,24 @@ public class MainActivity extends BaseActivity{
      * */
     private void getNotice() {
         Call<Notice> call = HttpUtil.getInstance().getApi(token).getNotice();
-        call.enqueue(new Callback<Notice>() {
+        call.enqueue(new SimpleCallBack<Notice>(activity) {
             @Override
-            public void onResponse(Call<Notice> call, Response<Notice> response) {
-                try {
-                    switch (response.code()){
-                        case 200:
-                            String info = response.body().getData().get(0).getInfo();
-                            if (response.body().getData().get(0).isStatus()){//判断是否弹出公告
-                                showNotice(info);
-                            }
-                            break;
-                    }
-                }catch (Exception e){
+            public void onSuccess(Response<Notice> response) {
+                try{ String info = response.body().getData().get(0).getInfo();
+                    if (response.body().getData().get(0).isStatus()){//判断是否弹出公告
+                        showNotice(info);
+                    }}catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<Notice> call, Throwable t) {
+            public void onFail(int errorCode, Response<Notice> response) {
+
+            }
+
+            @Override
+            public void onNetError(String s) {
 
             }
         });

@@ -33,6 +33,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseFragment;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
@@ -55,6 +56,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,30 +139,32 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
      * */
     private void getRecomList() {
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getRecomStoreList();
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    switch (response.code()){
-                        case 200:
-                            RecomStore recomStore = (RecomStore) GsonUtil.praseJsonToModel(response.body().string(),RecomStore.class);
-                            recomList.addAll(recomStore.getData());
-                            recomStoreAdapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
-                    }
+            public void onSuccess(Response<ResponseBody> response) {
+                try{
+                    RecomStore recomStore = (RecomStore) GsonUtil.praseJsonToModel(response.body().string(),RecomStore.class);
+                    recomList.addAll(recomStore.getData());
+                    recomStoreAdapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("error","recomlist error is:"+t.toString());
+            public void onNetError(String s) {
+
             }
         });
     }
@@ -286,35 +290,26 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     private void getData() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getHomeOrderList(page,pageNum);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishRefresh();
-                                refreshLayout.finishLoadMore();
-                            }
-                            String json = response.body().string();
-                            OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
-                            if (orderResult.getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            if (orderResult.getData().size()!=0){
-                                tvEmpty.setVisibility(View.GONE);
-                                list.addAll(orderResult.getData());
-                                adapter.notifyDataSetChanged();
-                            }else{
-                                tvEmpty.setVisibility(View.VISIBLE);
-                            }
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                    }
+                    String json = response.body().string();
+                    OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
+                    if (orderResult.getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    if (orderResult.getData().size()!=0){
+                        tvEmpty.setVisibility(View.GONE);
+                        list.addAll(orderResult.getData());
+                        adapter.notifyDataSetChanged();
+                    }else{
+                        tvEmpty.setVisibility(View.VISIBLE);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -323,9 +318,20 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
-                MyToast.show(getActivity(),"网络出现错误");
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getActivity(),s);
             }
         });
     }
@@ -348,36 +354,38 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         etSearch.setText("");
         list.clear();
         Call<ResponseBody> call =HttpUtil.getInstance().getApi(token).selectOrder(info);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishRefresh();
-                                refreshLayout.finishLoadMore();
-                            }
-                            String json = new JSONObject(response.body().string()).getString("data");
-                            OrderInfo dataBean = (OrderInfo) GsonUtil.praseJsonToModel(json,OrderInfo.class);
-                            list.add(dataBean);
-                            adapter.notifyDataSetChanged();
-                            refreshLayout.setNoMoreData(true);
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
+                    String json = new JSONObject(response.body().string()).getString("data");
+                    OrderInfo dataBean = (OrderInfo) GsonUtil.praseJsonToModel(json,OrderInfo.class);
+                    list.add(dataBean);
+                    adapter.notifyDataSetChanged();
+                    refreshLayout.setNoMoreData(true);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                MyToast.show(getActivity(),"网络原因，获取失败");
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(getActivity(),s);
             }
         });
     }

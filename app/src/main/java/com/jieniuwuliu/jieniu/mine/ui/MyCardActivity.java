@@ -10,6 +10,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.UserBean;
@@ -62,39 +63,36 @@ public class MyCardActivity extends BaseActivity {
      */
     private void getData() {
         Call<UserBean> call = HttpUtil.getInstance().getApi(token).getUserInfo();
-        call.enqueue(new Callback<UserBean>() {
+        call.enqueue(new SimpleCallBack<UserBean>(MyCardActivity.this) {
             @Override
-            public void onResponse(Call<UserBean> call, Response<UserBean> response) {
-                switch (response.code()) {
-                    case 200://成功
-                        user = response.body().getData();
-                        if (user.isVip()) {
-                            tvTime.setVisibility(View.VISIBLE);
-                            btn.setVisibility(View.GONE);
-                            tvTime.setText("有效期至："+user.getVipTime());
-                        }else{
-                            tvTime.setVisibility(View.GONE);
-                            btn.setVisibility(View.VISIBLE);
-                        }
-
-                        break;
-                    case 400://错误
-                        try {
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+            public void onSuccess(Response<UserBean> response) {
+                user = response.body().getData();
+                if (user.isVip()) {
+                    tvTime.setVisibility(View.VISIBLE);
+                    btn.setVisibility(View.GONE);
+                    tvTime.setText("有效期至："+user.getVipTime());
+                }else{
+                    tvTime.setVisibility(View.GONE);
+                    btn.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
-            public void onFailure(Call<UserBean> call, Throwable t) {
+            public void onFail(int errorCode, Response<UserBean> response) {
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

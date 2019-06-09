@@ -59,6 +59,7 @@ public class LoginActivity extends BaseActivity {
     TextView tvPhone;
     private boolean flag = false;
     private MyLoading loading;
+    private boolean isRestart;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -66,6 +67,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        isRestart = getIntent().getBooleanExtra("restart",false);
         loading = new MyLoading(this,R.style.CustomDialog);
     }
 
@@ -150,8 +152,12 @@ public class LoginActivity extends BaseActivity {
                                 if (response.body().getData().getPersonType() == 5 ||response.body().getData().getPersonType() == 6) {
                                     MyToast.show(LoginActivity.this, "用户名或者密码错误");
                                 } else {
-                                    startAcy(MainActivity.class);
-                                    finish();
+                                    if (isRestart){
+                                        finish();
+                                    }else{
+                                        startAcy(MainActivity.class);
+                                        finish();
+                                    }
                                 }
                             }
                             break;

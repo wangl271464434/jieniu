@@ -36,6 +36,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.adapter.ListAdapter;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -51,6 +52,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -291,7 +294,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
     private void getData() {
         loading.show();
         Call<StoreBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getQXSList(latitude,longitude,page,num,region,distance,yewu);
-        call.enqueue(new Callback<StoreBean>() {
+        call.enqueue(new SimpleCallBack<StoreBean>(QXActivity.this) {
             @Override
             public void onResponse(Call<StoreBean> call, Response<StoreBean> response) {
                 loading.dismiss();
@@ -316,10 +319,41 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 }
             }
 
+
             @Override
-            public void onFailure(Call<StoreBean> call, Throwable t) {
+            public void onSuccess(Response<StoreBean> response) {
                 loading.dismiss();
-                Log.i("error",t.toString());
+                try {
+                    if (refreshLayout!=null){
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                    }
+                    if (response.body().getData().size()==0||response.body().getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(response.body().getData());
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<StoreBean> response) {
+                loading.dismiss();
+                try {
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

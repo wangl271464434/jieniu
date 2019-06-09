@@ -23,6 +23,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
@@ -98,40 +99,42 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
     private void getData() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getMyOrderList(type,state,page,pageNum);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(JiJianSelectActivity.this) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try{
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishRefresh();
-                                refreshLayout.finishLoadMore();
-                            }
-                            String json = response.body().string();
-                            OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
-                            if (orderResult.getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            list.addAll(orderResult.getData());
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getApplicationContext(), object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
+                    String json = response.body().string();
+                    OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
+                    if (orderResult.getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(orderResult.getData());
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-               loading.dismiss();
-                MyToast.show(getApplicationContext(),"网络请求错误");
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
             }
         });
     }

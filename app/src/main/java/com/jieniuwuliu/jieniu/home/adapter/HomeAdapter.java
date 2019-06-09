@@ -78,12 +78,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             viewHolder.imgEnd.setVisibility(View.INVISIBLE);
             viewHolder.bar.setSecondaryProgress(0);
         }
-
-//        viewHolder.img.setImageResource(R.mipmap.ic_home_jijian);
-//        viewHolder.bar.setProgress(100);
-//        viewHolder.imgStart.setVisibility(View.VISIBLE);
-//        viewHolder.imgMiddle.setVisibility(View.VISIBLE);
-//        viewHolder.imgEnd.setVisibility(View.VISIBLE);
     }
 
     @Override

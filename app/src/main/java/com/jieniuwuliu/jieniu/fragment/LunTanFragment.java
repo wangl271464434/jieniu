@@ -42,6 +42,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.UpLoadFileUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseFragment;
@@ -53,7 +54,6 @@ import com.jieniuwuliu.jieniu.bean.UnReadMsg;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.luntan.AppearTextActivity;
-import com.jieniuwuliu.jieniu.luntan.CameraActivity;
 import com.jieniuwuliu.jieniu.luntan.MsgListActivity;
 import com.jieniuwuliu.jieniu.luntan.VideoActivity;
 import com.jieniuwuliu.jieniu.luntan.adapter.LuntanAdater;
@@ -213,6 +213,12 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
         getUnReadMsgList();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        overallXScroll = 0;
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(final LuntanEvent event) {
         Log.i("luntan",event.toString());
@@ -226,39 +232,38 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
      * 未读消息列表
      * */
     private void getUnReadMsgList() {
-        loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getUnReadList(msgPage,msgNum);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                loading.dismiss();
-                try {
-                    switch (response.code()){
-                        case 200:
-                            UnReadMsg unReadMsg = (UnReadMsg) GsonUtil.praseJsonToModel(response.body().string(),UnReadMsg.class);
-                            if (unReadMsg.getData()!=null){
-                                if (unReadMsg.getData().size()>0){
-                                    badge.setBadgeNumber(-1);
-                                }else {
-                                    badge.hide(true);
-                                    MainActivity.badge.hide(true);
-                                }
-                            }
-                            break;
-                        case 400:
-                            String error = response.errorBody().string();
-                            JSONObject object = new JSONObject(error);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+            public void onSuccess(Response<ResponseBody> response) {
+                try{
+                    UnReadMsg unReadMsg = (UnReadMsg) GsonUtil.praseJsonToModel(response.body().string(),UnReadMsg.class);
+                    if (unReadMsg.getData()!=null){
+                        if (unReadMsg.getData().size()>0){
+                            badge.setBadgeNumber(-1);
+                        }else {
+                            badge.hide(true);
+                            MainActivity.badge.hide(true);
+                        }
                     }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try {
+                    String error = response.errorBody().string();
+                    JSONObject object = new JSONObject(error);
+                    MyToast.show(getActivity(), object.getString("msg"));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                loading.dismiss();
+            public void onNetError(String s) {
+
             }
         });
     }
@@ -268,41 +273,44 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     private void getLunTanList() {
         loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getForumsList(page,pageNum);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
                     loading.dismiss();
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishLoadMore();
-                                refreshLayout.finishRefresh();
-                            }
-                            String json = response.body().string();
-                            LunTanResult result = (LunTanResult) GsonUtil.praseJsonToModel(json,LunTanResult.class);
-                            if (result.getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            list.addAll(result.getData());
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            Log.w("result",s);
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    if (refreshLayout!=null){
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
                     }
+                    String json = response.body().string();
+                    LunTanResult result = (LunTanResult) GsonUtil.praseJsonToModel(json,LunTanResult.class);
+                    if (result.getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(result.getData());
+                    adapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-               Log.i("error","fail reason is :"+t.toString());
-               loading.dismiss();
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    loading.dismiss();
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getActivity(),s);
             }
         });
     }
@@ -312,34 +320,34 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
      * */
     private void getUserInfo() {
         Call<UserBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getUserInfo();
-        call.enqueue(new Callback<UserBean>() {
+        call.enqueue(new SimpleCallBack<UserBean>(getActivity()) {
             @Override
-            public void onResponse(Call<UserBean> call, Response<UserBean> response) {
-                switch (response.code()){
-                    case 200://成功
-                        if (response.body().getStatus() == 0){
-                            user = response.body().getData();
-                            adapter.setUser(user);
-                            adapter.notifyDataSetChanged();
-                        }
-                        break;
-                    case 400://错误
-                        try {
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+            public void onSuccess(Response<UserBean> response) {
+                try{
+                    if (response.body().getStatus() == 0){
+                        user = response.body().getData();
+                        adapter.setUser(user);
+                        adapter.notifyDataSetChanged();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserBean> call, Throwable t) {
-
+            public void onFail(int errorCode, Response<UserBean> response) {
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onNetError(String s) {
             }
         });
     }
@@ -571,33 +579,34 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addDianZan(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    switch (response.code()){
-                        case 200:
-                            String json = response.body().string();
-                            Log.i("dianzan",json);
-                            DianZan dianZan = new DianZan();
-                            dianZan.setName(user.getNickname());
-                            list.get(position).getDianzan().add(dianZan);
-                            adapter.notifyItemChanged(position+1);
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
-                    }
+                    String json = response.body().string();
+                    Log.i("dianzan",json);
+                    DianZan dianZan = new DianZan();
+                    dianZan.setName(user.getNickname());
+                    list.get(position).getDianzan().add(dianZan);
+                    adapter.notifyItemChanged(position+1);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
 
             }
         });
@@ -608,33 +617,34 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     @Override
     public void cancelDianZan(final int position) {
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).deleteDianZan(list.get(position).getId());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    switch (response.code()){
-                        case 200:
-                           for (DianZan dianZan:list.get(position).getDianzan()){
-                               if (dianZan.getName().equals(user.getNickname())){
-                                   list.get(position).getDianzan().remove(dianZan);
-                               }
-                           }
-                            adapter.notifyItemChanged(position+1);
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    for (DianZan dianZan:list.get(position).getDianzan()){
+                        if (dianZan.getName().equals(user.getNickname())){
+                            list.get(position).getDianzan().remove(dianZan);
+                        }
                     }
+                    adapter.notifyItemChanged(position+1);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("error","fail reason is:"+t.toString());
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onNetError(String s) {
+
             }
         });
     }
@@ -702,38 +712,40 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
         String json = GsonUtil.mapToJson(map);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addPingLun(body);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    switch (response.code()){
-                        case 200:
-                            PingLun  pingLun = new PingLun();
-                            pingLun.setInfo(info);
-                            if (type == 2){
-                                pingLun.setRuid(Integer.valueOf(ruid));
-                                pingLun.setRname(list.get(position).getPinglun().get(userPosition).getName());
-                            }else {
-                                pingLun.setRname("");
-                            }
-                            pingLun.setName(user.getNickname());
-                            list.get(position).getPinglun().add(pingLun);
-                            adapter.notifyItemChanged(position+1);
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
+                    PingLun  pingLun = new PingLun();
+                    pingLun.setInfo(info);
+                    if (type == 2){
+                        pingLun.setRuid(Integer.valueOf(ruid));
+                        pingLun.setRname(list.get(position).getPinglun().get(userPosition).getName());
+                    }else {
+                        pingLun.setRname("");
                     }
+                    pingLun.setName(user.getNickname());
+                    list.get(position).getPinglun().add(pingLun);
+                    adapter.notifyItemChanged(position+1);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("error","fail reason is:"+t.toString());
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+
             }
         });
     }
@@ -764,30 +776,32 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     public void deleteLunTan(final int position) {
         UpLoadFileUtil.getIntance(getActivity()).deleteList(list.get(position));
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).deleteForums(list.get(position).getId());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    switch (response.code()){
-                        case 200:
-                            list.remove(position);
-                            adapter.notifyDataSetChanged();
-                            MyToast.show(getActivity(), "删除成功");
-                            break;
-                        case 400:
-                            String s = response.errorBody().string();
-                            JSONObject object = new JSONObject(s);
-                            MyToast.show(getActivity(), object.getString("msg"));
-                            break;
-                    }
+                    list.remove(position);
+                    adapter.notifyDataSetChanged();
+                    MyToast.show(getActivity(), "删除成功");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                MyToast.show(getActivity(), "网络问题请重试");
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getActivity(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(getActivity(), s);
             }
         });
     }
