@@ -8,7 +8,6 @@ import android.support.multidex.MultiDex;
 
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.peisongyuan.PeisongHomeActivity;
-import com.jieniuwuliu.jieniu.service.MyService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -48,8 +47,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Intent intent = new Intent(this, MyService.class);
-        startService(intent);
         //初始化Bugly
         initBugly();
     }

@@ -138,17 +138,19 @@ public class SocketService extends Service {
         @Override
         public void run() {
             if (System.currentTimeMillis() - sendTime >= HEART_BEAT_RATE) {
-                boolean isSuccess = mWebSocket.send("{\"heart\":\"heart\"}");//主动发送一个消息给服务器，通过发送消息的成功失败来判断长连接的连接状态
-                if (!isSuccess) {//长连接已断开
-                    mHandler.removeCallbacks(heartBeatRunnable);
-                    mWebSocket.cancel();//取消掉以前的长连接
-                    new InitSocketThread().start();//创建一个新的连接
-                } else {//长连接处于连接状态
-                    Log.i("socket","socket is connect");
+                if (mWebSocket!=null){//判断socket是否为空0
+                    boolean isSuccess = mWebSocket.send("{\"heart\":\"heart\"}");//主动发送一个消息给服务器，通过发送消息的成功失败来判断长连接的连接状态
+                    if (!isSuccess) {//长连接已断开
+                        mHandler.removeCallbacks(heartBeatRunnable);
+                        mWebSocket.cancel();//取消掉以前的长连接
+                        new InitSocketThread().start();//创建一个新的连接
+                    } else {//长连接处于连接状态
+                        Log.i("socket","socket is connect");
+                    }
+                    sendTime = System.currentTimeMillis();
                 }
-                sendTime = System.currentTimeMillis();
-            }
-            mHandler.postDelayed(this, HEART_BEAT_RATE);//每隔一定的时间，对长连接进行一次心跳检测
+                mHandler.postDelayed(this, HEART_BEAT_RATE);//每隔一定的时间，对长连接进行一次心跳检测
+                }
         }
     };
 }

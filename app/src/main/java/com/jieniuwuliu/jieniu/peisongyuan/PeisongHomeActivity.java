@@ -25,7 +25,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AppUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.service.MyService;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -50,11 +49,6 @@ public class PeisongHomeActivity extends BaseActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!AppUtil.isServiceRunning(this,localService)){//判斷定位服務是否運行
-            Log.i("service","重新啟動定位服務");
-            Intent intent = new Intent(this, MyService.class);
-            startService(intent);
-        }
     }
 
     private void checkSDK() {

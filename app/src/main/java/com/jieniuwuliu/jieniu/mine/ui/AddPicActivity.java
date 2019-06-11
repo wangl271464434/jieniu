@@ -286,37 +286,39 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PIC_CODE://相册
-                String imgUrl;
-                Log.w("imgurl", "onActivityResult:相册 " + data.getData().toString());
-                ContentResolver resolver = getContentResolver();
-                try {
-                    InputStream inputStream = resolver.openInputStream(data.getData());
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                if (data!=null){
+                    String imgUrl;
+                    Log.w("imgurl", "onActivityResult:相册 " + data.getData().toString());
+                    ContentResolver resolver = getContentResolver();
+                    try {
+                        InputStream inputStream = resolver.openInputStream(data.getData());
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-                    Cursor cursor = getContentResolver().query(data.getData(),
-                            new String[]{MediaStore.Images.ImageColumns.DATA},//
-                            null, null, null);
-                    if (cursor == null){
-                        imgUrl = data.getData().getPath();
-                    }else {
-                        cursor.moveToFirst();
-                        int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                        imgUrl = cursor.getString(index);
-                        cursor.close();
-                    }
-                    switch (type){
-                        case 0:
-                            storeImgUrl = imgUrl;
-                            storeImg.setImageBitmap(bitmap);
-                            break;
-                        case 1:
-                            zizhiImgUrl = imgUrl;
-                            zizhiImg.setImageBitmap(bitmap);
-                            break;
-                    }
+                        Cursor cursor = getContentResolver().query(data.getData(),
+                                new String[]{MediaStore.Images.ImageColumns.DATA},//
+                                null, null, null);
+                        if (cursor == null){
+                            imgUrl = data.getData().getPath();
+                        }else {
+                            cursor.moveToFirst();
+                            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                            imgUrl = cursor.getString(index);
+                            cursor.close();
+                        }
+                        switch (type){
+                            case 0:
+                                storeImgUrl = imgUrl;
+                                storeImg.setImageBitmap(bitmap);
+                                break;
+                            case 1:
+                                zizhiImgUrl = imgUrl;
+                                zizhiImg.setImageBitmap(bitmap);
+                                break;
+                        }
 //                    mIvDispaly.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case CAMERA_CODE://相机

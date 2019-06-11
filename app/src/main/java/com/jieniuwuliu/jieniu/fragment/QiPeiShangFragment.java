@@ -210,10 +210,6 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
         list.clear();
         getStoreList();
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
     //汽配商
     private void getStoreList() {
         loading.show();
@@ -271,6 +267,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 list.clear();
                 getStoreList();
                 KeyboardUtil.hideSoftKeyboard(getActivity());
+                etSearch.setText("");
                 break;
         }
     }
@@ -280,6 +277,17 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
         intent.setClass(getActivity(),QPSORQXInfoActivity.class);
         intent.putExtra("id",list.get(position).getUid());
         startActivity(intent);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        type ="";
+        storeName = "";
+        page = 1;
+        pageNum = 10;
+        list.clear();
+        getStoreList();
     }
 
     @Override
@@ -333,13 +341,33 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         page++;
-        getStoreList();
+        switch (type){
+            case "汽车用品":
+                getStoreList(3);
+                break;
+            case "汽保工具":
+                getStoreList(4);
+                break;
+            default:
+                getStoreList();
+                break;
+        }
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
         list.clear();
-        getStoreList();
+        switch (type){
+            case "汽车用品":
+                getStoreList(3);
+                break;
+            case "汽保工具":
+                getStoreList(4);
+                break;
+            default:
+                getStoreList();
+                break;
+        }
     }
 }

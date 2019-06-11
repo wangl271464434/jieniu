@@ -58,10 +58,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <!-- 定时服务 -->
-        <service
-            android:name=".service.MyService"
-            android:process=":remote" />
         <!-- socket服务 -->
         <service
             android:name=".service.SocketService"
