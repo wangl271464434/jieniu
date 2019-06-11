@@ -57,7 +57,7 @@ public class WelcomeActivity extends BaseActivity {
         if (isGuide) {
             if (!token.equals("")) {
                 if (userType == 5||userType == 6) {
-                    MyToast.show(WelcomeActivity.this, "您登录的是配送员的账号");
+                    startAcy(LoginActivity.class);
                 } else {
                     startAcy(MainActivity.class);
                 }
