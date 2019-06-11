@@ -109,10 +109,17 @@ public class PayTypeActivity extends BaseActivity {
 //                        wxPay();
                         break;
                     case 2://支付宝
-                        zfbPay();
+                        money = tvMoney.getText().toString();
+                        money = money.replace("¥","").replace(" ","");//去掉特殊符号和空格
+                        if (money.equals("0.00")){
+                            MyToast.show(getApplicationContext(),"不能使用支付宝支付");
+                            return;
+                        }else{
+                            zfbPay();
+                        }
                         break;
                     case 3://货到付款
-                        update();
+                        update(payType);
                         break;
                 }
                 break;
@@ -121,7 +128,7 @@ public class PayTypeActivity extends BaseActivity {
     /**
      * 货到付款
      * */
-    private void update() {
+    private void update(int payType) {
         try {
             loading.show();
             JSONObject object = new JSONObject();
@@ -173,8 +180,6 @@ public class PayTypeActivity extends BaseActivity {
      * */
     private void zfbPay() {
         loading.show();
-        money = tvMoney.getText().toString();
-        money = money.replace("¥","").replace(" ","");
         Call<AliPayResult> call = HttpUtil.getInstance().getApi(token).getAliInfo(money,orderNo,Constant.JIJIAN);
         call.enqueue(new SimpleCallBack<AliPayResult>(PayTypeActivity.this) {
             @Override
@@ -214,6 +219,7 @@ public class PayTypeActivity extends BaseActivity {
                 MyToast.show(getApplicationContext(), s);
             }
         });
+
     }
     @SuppressLint("CheckResult")
     void aliPay(final String payInfo) {

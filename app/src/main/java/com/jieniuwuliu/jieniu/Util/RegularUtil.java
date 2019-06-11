@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 public class RegularUtil {
 
 	public static boolean isMobileNO(String mobiles) {
-		Pattern p = Pattern.compile("^((13[0-9])|(147)|(15[^4,\\D])|(17[6-8])|(18[0-9]))\\d{8}$");
+//		Pattern p = Pattern.compile("^((13[0-9])|(147)|(15[^4,\\D])|(17[6-8])|(18[0-9]))|(19[0-9])\\d{8}$");
+		Pattern p = Pattern.compile("^[1]([3-9])[0-9]{9}$");//不严谨的手机号码校验，存在不存在的号码段
 		Matcher m = p.matcher(mobiles);
 		return m.matches();
 //		130、131、132、133、134、135、136、137、138、139

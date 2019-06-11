@@ -69,6 +69,7 @@ public class EditShouAdrActivity extends BaseActivity {
     private SearchStoreAdapter adapter;
     private PopupWindow popupWindow;
     private boolean isVip;
+    private int id = 0;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_edit_shou_adr;
@@ -178,6 +179,7 @@ public class EditShouAdrActivity extends BaseActivity {
                 tvCity.setText(item.getAddress().getAddress());
                 lat = item.getAddress().getLat();
                 lng = item.getAddress().getLng();
+                id = item.getUid();
                 etCompany.setFocusable(true);
                 etCompany.setFocusableInTouchMode(true);
                 etCompany.requestFocus();
@@ -235,6 +237,7 @@ public class EditShouAdrActivity extends BaseActivity {
                 contactInfo.setLat(lat);
                 contactInfo.setLng(lng);
                 contactInfo.setVip(isVip);
+                contactInfo.setId(id);
                 WeightEvent event = new WeightEvent();
                 event.setContactInfo(contactInfo);
                 EventBus.getDefault().post(event);

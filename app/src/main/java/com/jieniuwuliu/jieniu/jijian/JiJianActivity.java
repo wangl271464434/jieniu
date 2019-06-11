@@ -114,7 +114,7 @@ public class JiJianActivity extends BaseActivity {
     private boolean flag = false;//判断是否免运费
     private MyLoading loading;
     private String info = "";
-    private int kuaidiId;
+    private int kuaidiId,toUid = 0;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_ji_jian;
@@ -254,6 +254,7 @@ public class JiJianActivity extends BaseActivity {
                     juliPrice = juliPrice+((int)(distance/1000)-20);
                 }
             }
+            toUid = event.getContactInfo().getId();
             tvMoney.setText(""+getYunFeiPrice());
             tvTotalMoney.setText(""+getTotalPrice());
         }
@@ -334,6 +335,7 @@ public class JiJianActivity extends BaseActivity {
         }else{
             order.setSendType(2);
         }
+        order.setToUid(toUid);
         order.setToName(tvShouName.getText().toString());
         order.setToLat(end.latitude);
         order.setToLng(end.longitude);

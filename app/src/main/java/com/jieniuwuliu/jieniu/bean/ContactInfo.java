@@ -10,6 +10,15 @@ public class ContactInfo implements Serializable {
     private double lat;
     private double lng;
     private boolean isVip;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean isVip() {
         return isVip;

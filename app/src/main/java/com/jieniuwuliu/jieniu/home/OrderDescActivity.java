@@ -93,6 +93,9 @@ public class OrderDescActivity extends AppCompatActivity {
             layoutImg.setVisibility(View.GONE);
         }
         switch (orderWuliuInfo.getPayType()){
+            case 0:
+                tvPay.setText("未支付");
+                break;
             case 1:
                 tvPay.setText("微信支付");
                 break;

@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:hint="@string/phone_hint"
-            android:maxLength="15"
+            android:maxLength="11"
             android:textSize="@dimen/size_14sp"
             android:textColor="@color/edit_text"
             android:paddingTop="@dimen/size_10dp"
