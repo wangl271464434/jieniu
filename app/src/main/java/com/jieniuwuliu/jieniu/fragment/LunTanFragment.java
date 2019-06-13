@@ -286,6 +286,8 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                     LunTanResult result = (LunTanResult) GsonUtil.praseJsonToModel(json,LunTanResult.class);
                     if (result.getData().size()<10){
                         refreshLayout.setNoMoreData(true);
+                    }else{
+                        refreshLayout.setNoMoreData(false);
                     }
                     list.addAll(result.getData());
                     adapter.notifyDataSetChanged();

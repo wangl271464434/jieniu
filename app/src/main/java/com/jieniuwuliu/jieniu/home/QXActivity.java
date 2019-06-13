@@ -32,6 +32,9 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.DistanceResult;
+import com.amap.api.services.route.DistanceSearch;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
@@ -41,8 +44,10 @@ import com.jieniuwuliu.jieniu.adapter.ListAdapter;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.PSYUser;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.home.adapter.QXAdapter;
+import com.jieniuwuliu.jieniu.jijian.ChoosePsyActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.mine.ui.ChooseAddressActivity;
 import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
@@ -57,6 +62,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -100,6 +106,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
     private String province = "陕西省",city = "西安市",district = "雁塔区";
     private List<String> distList,yewuList;
     private MyLoading loading;
+    private boolean isSort = true;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qx;
@@ -171,6 +178,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 region = "";
                 tvArea.setText("区域");
                 list.clear();
+                isSort = false;
                 getData();
                 break;
             case R.id.tv_area:
@@ -212,6 +220,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 }else{
                     yewu = yewuList.get(position);
                 }
+                isSort = true;
                 list.clear();
                 getData();
                 dialog.dismiss();
@@ -253,6 +262,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 //区县（如果设定了两级联动，那么该项返回空）
                 district = citySelected[2];
                 tvArea.setText(district);
+                isSort = true;
                 distance = "";
                 latitude = 0.0 ;
                 longitude = 0.0;
@@ -296,31 +306,6 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
         Call<StoreBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getQXSList(latitude,longitude,page,num,region,distance,yewu);
         call.enqueue(new SimpleCallBack<StoreBean>(QXActivity.this) {
             @Override
-            public void onResponse(Call<StoreBean> call, Response<StoreBean> response) {
-                loading.dismiss();
-                try {
-                    switch (response.code()){
-                        case 200:
-                            if (refreshLayout!=null){
-                                refreshLayout.finishLoadMore();
-                                refreshLayout.finishRefresh();
-                            }
-                            if (response.body().getData().size()==0||response.body().getData().size()<10){
-                                refreshLayout.setNoMoreData(true);
-                            }
-                            list.addAll(response.body().getData());
-                            adapter.notifyDataSetChanged();
-                            break;
-                        case 400:
-                            break;
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-
-            @Override
             public void onSuccess(Response<StoreBean> response) {
                 loading.dismiss();
                 try {
@@ -330,9 +315,36 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                     }
                     if (response.body().getData().size()==0||response.body().getData().size()<10){
                         refreshLayout.setNoMoreData(true);
+                    }else{
+                        refreshLayout.setNoMoreData(false);
                     }
                     list.addAll(response.body().getData());
-                    adapter.notifyDataSetChanged();
+                    List<LatLonPoint> points = new ArrayList<>();
+                    for (int i =0;i<list.size();i++){
+                        StoreBean.DataBean storeBean =list.get(i);
+                        points.add(new LatLonPoint(storeBean.getAddress().getLat(),storeBean.getAddress().getLng()));
+                    }
+                    LatLonPoint end = new LatLonPoint(currentLat,currentLng);
+                    DistanceSearch search = new DistanceSearch(QXActivity.this);
+                    DistanceSearch.DistanceQuery query = new DistanceSearch.DistanceQuery();
+                    query.setOrigins(points);//支持多起点
+                    query.setDestination(end);
+                    //设置测量方式，支持直线和驾车
+                    query.setType(DistanceSearch.TYPE_DRIVING_DISTANCE);//设置为直线
+                    search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
+                        @Override
+                        public void onDistanceSearched(DistanceResult distanceResult, int i) {
+                            for (int j = 0;j<list.size();j++){
+                                Double distance = Double.valueOf(distanceResult.getDistanceResults().get(j).getDistance());
+                                list.get(j).setDistance(distance);
+                            }
+                            if (isSort){
+                                Collections.sort(list);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                    search.calculateRouteDistanceAsyn(query);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

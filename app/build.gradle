@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'com.jakewharton.butterknife'
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmmss")
+}
 android {
     signingConfigs {
         config {
@@ -39,6 +42,12 @@ android {
         }
         debug {
             signingConfig signingConfigs.config
+        }
+    }
+    //配置app打包后的名字
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "jieniu_${releaseTime()}_${variant.versionName}.${variant.versionCode}.apk"
         }
     }
     dexOptions {

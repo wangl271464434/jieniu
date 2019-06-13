@@ -67,30 +67,16 @@ public class QXAdapter extends RecyclerView.Adapter<QXAdapter.ViewHolder> implem
         viewHolder.name.setText(item.getNickname());
         viewHolder.address.setText("地址："+item.getAddress().getAddress());
         viewHolder.yewu.setText("主营业务："+item.getYewu());
-        LatLonPoint start = new LatLonPoint(QXActivity.currentLat,QXActivity.currentLng);
-        LatLonPoint end = new LatLonPoint(item.getAddress().getLat(),item.getAddress().getLng());
-//        DistanceUtil.getDistance(context,start,end,DistanceSearch.TYPE_DISTANCE);
-        List<LatLonPoint> list = new ArrayList<>();
-        list.add(start);
-        DistanceSearch search = new DistanceSearch(context);
-        DistanceSearch.DistanceQuery query = new DistanceSearch.DistanceQuery();
-        query.setOrigins(list);//支持多起点
-        query.setDestination(end);
-        //设置测量方式，支持直线和驾车
-        query.setType(DistanceSearch.TYPE_DRIVING_DISTANCE);//设置为直线
-        search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
-            @Override
-            public void onDistanceSearched(DistanceResult distanceResult, int i) {
-                Double distance = Double.valueOf(distanceResult.getDistanceResults().get(0).getDistance());
-                if (distance>1000){
-                    DecimalFormat decimalFomat = new DecimalFormat("#0.00");
-                    viewHolder.distance.setText(decimalFomat.format(distance/1000)+"km");
-                }else{
-                    viewHolder.distance.setText(distance+"m");
-                }
+        if (item.getDistance()>1000){
+            DecimalFormat decimalFomat = new DecimalFormat("#0.00");
+            viewHolder.distance.setText(decimalFomat.format(item.getDistance()/1000)+"km");
+        }else{
+            if (item.getDistance()<100){
+                viewHolder.distance.setText("<100m");
+            }else{
+                viewHolder.distance.setText(item.getDistance()+"m");
             }
-        });
-        search.calculateRouteDistanceAsyn(query);
+        }
         viewHolder.tvGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -112,6 +112,8 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
                     OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
                     if (orderResult.getData().size()<10){
                         refreshLayout.setNoMoreData(true);
+                    }else{
+                        refreshLayout.setNoMoreData(false);
                     }
                     list.addAll(orderResult.getData());
                     adapter.notifyDataSetChanged();

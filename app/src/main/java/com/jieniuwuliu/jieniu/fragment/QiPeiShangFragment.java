@@ -129,6 +129,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 type = cars.get(position).getName();
                 page = 1;
                 pageNum = 10;
+                storeName = "";
                 list.clear();
                 switch (type){
                     case "汽车用品":
@@ -161,7 +162,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
      * */
     private void getStoreList(int i) {
         loading.show();
-        Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(i,page,pageNum);
+        Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(i,storeName,page,pageNum);
         call.enqueue(new SimpleCallBack<StoreBean>(getActivity()) {
             @Override
             public void onSuccess(Response<StoreBean> response) {
@@ -265,7 +266,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 storeName = etSearch.getText().toString();
                 type = "";
                 list.clear();
-                getStoreList();
+                getStoreList(0);
                 KeyboardUtil.hideSoftKeyboard(getActivity());
                 etSearch.setText("");
                 break;

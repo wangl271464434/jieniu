@@ -42,7 +42,7 @@ public class StoreBean {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean  implements Comparable<DataBean>{
         /**
          * uid : 2
          * CreatedAt : 2019-04-20T03:50:10Z
@@ -72,6 +72,15 @@ public class StoreBean {
         private String yewu;
         private String wechat;
         private List<Car> fuwuCar;
+        private double distance;
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public void setDistance(double distance) {
+            this.distance = distance;
+        }
 
         public int getUid() {
             return uid;
@@ -175,6 +184,11 @@ public class StoreBean {
 
         public void setFuwuCar(List<Car> fuwuCar) {
             this.fuwuCar = fuwuCar;
+        }
+
+        @Override
+        public int compareTo(DataBean o) {
+            return (int) (this.distance-o.getDistance());
         }
 
         public static class AddressBean {

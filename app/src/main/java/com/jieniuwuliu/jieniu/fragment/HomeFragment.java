@@ -303,6 +303,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                     OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
                     if (orderResult.getData().size()<10){
                         refreshLayout.setNoMoreData(true);
+                    }else{
+                        refreshLayout.setNoMoreData(false);
                     }
                     if (orderResult.getData().size()!=0){
                         tvEmpty.setVisibility(View.GONE);
