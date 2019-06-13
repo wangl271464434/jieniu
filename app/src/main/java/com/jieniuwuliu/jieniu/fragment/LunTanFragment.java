@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -138,6 +139,7 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     private int height = 400;// 滑动开始变色的高,真实项目中此高度是由广告轮播或其他首页view高度决定
     private int overallXScroll = 0;
     private Badge badge;
+    private boolean isFresh = false;
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.luntan;
@@ -171,7 +173,6 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
         }
         fragment = this;
         badge = new QBadgeView(getActivity()).bindTarget(layoutMsg);
-        loading = new MyLoading(getActivity(),R.style.CustomDialog);
         list = new ArrayList<>();
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -223,9 +224,12 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
     public void Event(final LuntanEvent event) {
         Log.i("luntan",event.toString());
         if (event.isSuccess()){
-            list.clear();
+//            isFresh = true;
             page = 1;
+            list.clear();
+            adapter.notifyDataSetChanged();
             getLunTanList();
+//            getLunTanList();
         }
     }
     /**
@@ -260,7 +264,6 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onNetError(String s) {
 
@@ -271,26 +274,27 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
      * 获取论坛列表
      * */
     private void getLunTanList() {
-        loading.show();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getForumsList(page,pageNum);
         call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    loading.dismiss();
                     if (refreshLayout!=null){
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                     }
                     String json = response.body().string();
                     LunTanResult result = (LunTanResult) GsonUtil.praseJsonToModel(json,LunTanResult.class);
-                    if (result.getData().size()<10){
-                        refreshLayout.setNoMoreData(true);
-                    }else{
-                        refreshLayout.setNoMoreData(false);
+                    if (result.getData().size()!=0){
+                        if (result.getData().size()<10){
+                            refreshLayout.setNoMoreData(true);
+                        }else{
+                            refreshLayout.setNoMoreData(false);
+                        }
+                        list.addAll(result.getData());
+                        adapter.notifyDataSetChanged();
                     }
-                    list.addAll(result.getData());
-                    adapter.notifyDataSetChanged();
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -299,7 +303,6 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
             @Override
             public void onFail(int errorCode, Response<ResponseBody> response) {
                 try{
-                    loading.dismiss();
                     String s = response.errorBody().string();
                     Log.w("result",s);
                     JSONObject object = new JSONObject(s);
@@ -311,7 +314,6 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
 
             @Override
             public void onNetError(String s) {
-                loading.dismiss();
                 MyToast.show(getActivity(),s);
             }
         });
@@ -450,6 +452,7 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
         tvPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popupWindow.dismiss();
                 if (Build.VERSION.SDK_INT >= 23) {
                     int read = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
                     if (read != PackageManager.PERMISSION_GRANTED){
@@ -473,12 +476,12 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                         .thumbnailScale(0.75f)  //图片缩放比例
                         .imageEngine(new GlideEngine())  //选择图片加载引擎
                         .forResult(PIC_CODE);
-                popupWindow.dismiss();
             }
         });
         tvPicVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                popupWindow.dismiss();
                 if (Build.VERSION.SDK_INT >= 23) {
                     int read = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
                     if (read != PackageManager.PERMISSION_GRANTED){
@@ -502,7 +505,6 @@ public class LunTanFragment extends BaseFragment implements  LuntanAdater.CallBa
                         .thumbnailScale(0.75f)  //图片缩放比例
                         .imageEngine(new GlideEngine())  //选择图片加载引擎
                         .forResult(PIC_VIDEO_CODE);
-                popupWindow.dismiss();
             }
         });
     }

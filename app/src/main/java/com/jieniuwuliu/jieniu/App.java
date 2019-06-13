@@ -1,10 +1,13 @@
 package com.jieniuwuliu.jieniu;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.support.multidex.MultiDex;
+import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.peisongyuan.PeisongHomeActivity;
@@ -18,7 +21,11 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.interfaces.BetaPatchListener;
+import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 import com.tencent.bugly.crashreport.CrashReport;
+
+import java.util.Locale;
 
 public class App extends Application {
     static {
@@ -103,5 +110,10 @@ public class App extends Application {
         Beta.canShowUpgradeActs.add(PeisongHomeActivity.class);
         Bugly.init(getApplicationContext(), Constant.BuglyId, false);
 //        CrashReport.initCrashReport(getApplicationContext(), Constant.BuglyId, false);
+    }
+    @TargetApi(9)
+    protected void setStrictMode() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
     }
 }

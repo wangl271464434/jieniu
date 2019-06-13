@@ -63,6 +63,7 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private ViewPicHolder picHolder;
     private VideoViewHolder videoViewHolder;
     private String time;
+
     public void setUser(UserBean.DataBean user) {
         this.user = user;
     }
@@ -71,7 +72,7 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.callBack = callBack;
     }
 
-    public LuntanAdater(Context context, List<LunTanResult.DataBean> list) {
+    public LuntanAdater(Context context,List<LunTanResult.DataBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -180,38 +181,38 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }else{
                     holder.context.setVisibility(View.VISIBLE);
                     holder.context.setText(list.get(i-1).getInfo());
-                }
-                String json = list.get(i-1).getPhotos();
-                final ArrayList<String> pics = new ArrayList<>();
-                if (!json.equals("")){
-                    holder.iv.setVisibility(View.VISIBLE);
-                    ViewGroup.LayoutParams lp =   holder.iv.getLayoutParams();
-                    lp.width = 360;
-                    lp.height = 480;
-                    holder.iv.setLayoutParams(lp);
-                    holder.iv.setMaxHeight(lp.height);
-                    holder.iv.setMaxWidth(lp.width);
-                    try {
-                        JSONArray array = new JSONArray(json);
-                        for (int j = 0;j<array.length();j++){
-                            pics.add(array.get(j).toString());
+                    String json = list.get(i-1).getPhotos();
+                    final ArrayList<String> pics = new ArrayList<>();
+                    if (!json.equals("")){
+                        holder.iv.setVisibility(View.VISIBLE);
+                        ViewGroup.LayoutParams lp =   holder.iv.getLayoutParams();
+                        lp.width = 360;
+                        lp.height = 480;
+                        holder.iv.setLayoutParams(lp);
+                        holder.iv.setMaxHeight(lp.height);
+                        holder.iv.setMaxWidth(lp.width);
+                        try {
+                            JSONArray array = new JSONArray(json);
+                            for (int j = 0;j<array.length();j++){
+                                pics.add(array.get(j).toString());
+                            }
+                            GlideUtil.setImgUrl(context,pics.get(0),R.mipmap.loading,holder.iv);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        GlideUtil.setImgUrl(context,pics.get(0),R.mipmap.loading,holder.iv);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }else{
+                        holder.iv.setVisibility(View.GONE);
                     }
-                }else{
-                    holder.iv.setVisibility(View.GONE);
+                    holder.iv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent();
+                            intent.setClass(context,LookPicActivity.class);
+                            intent.putStringArrayListExtra("list", pics);
+                            context.startActivity(intent);
+                        }
+                    });
                 }
-                holder.iv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(context,LookPicActivity.class);
-                        intent.putStringArrayListExtra("list", pics);
-                        context.startActivity(intent);
-                    }
-                });
                 if (list.get(i-1).isShow()){
                     holder.layoutComment.setVisibility(View.VISIBLE);
                 }else{

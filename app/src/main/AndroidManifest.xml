@@ -47,7 +47,6 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
         <!-- 获取临时读取存储权限 -->
         <provider
             android:name="android.support.v4.content.FileProvider"

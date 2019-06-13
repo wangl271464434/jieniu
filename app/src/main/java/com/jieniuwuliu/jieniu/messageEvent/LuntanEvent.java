@@ -12,4 +12,11 @@ public class LuntanEvent {
     public void setSuccess(boolean success) {
         this.success = success;
     }
+
+    @Override
+    public String toString() {
+        return "LuntanEvent{" +
+                "success=" + success +
+                '}';
+    }
 }

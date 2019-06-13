@@ -245,11 +245,11 @@ public class AppearTextActivity extends BaseActivity implements OnItemClickListe
             public void onSuccess(Response<ResponseBody> response) {
                 try{
                     loading.dismiss();
-                    MyToast.show(getApplicationContext(), "发表成功");
                     LuntanEvent event = new LuntanEvent();
                     event.setSuccess(true);
                     EventBus.getDefault().post(event);
                     finish();
+                    MyToast.show(getApplicationContext(), "发表成功");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
