@@ -96,6 +96,7 @@ public class SocketService extends Service {
                 Log.i("socket","接收到websocket的消息为："+text);
                 if (!text.equals("hello")){
                     mWebSocket.send("ok");//回应服务端接收到推送消息
+                    Log.i("socket","向服务器发送：ok表示已经收到消息");
                     //发送广播
                     Intent intent = new Intent();
                     intent.putExtra("msg", text);

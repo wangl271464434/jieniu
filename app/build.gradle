@@ -123,5 +123,6 @@ dependencies {
     implementation files('libs/CPCLA300_V1.01.22.01PRO.jar')
     //badgeView消息提示
     implementation 'q.rorbin:badgeview:1.1.3'
-
+    //加载gif图片
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.10'
 }

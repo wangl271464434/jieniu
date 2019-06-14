@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity{
         //启动接收推送服务
         Intent intent = new Intent(this, SocketService.class);
         startService(intent);
-        MyToast.show(getApplicationContext(),"启动接受消息服务");
+//        MyToast.show(getApplicationContext(),"启动接受消息服务");
         //接收消息广播
         receiver = new MsgReceiver();
         IntentFilter filter = new IntentFilter();
@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity{
         super.onResume();
         if (!AppUtil.isServiceRunning(this,scoketService)){
             Log.i("service","重新启动推送服务");
-            MyToast.show(getApplicationContext(),"启动接受消息服务");
+//            MyToast.show(getApplicationContext(),"启动接受消息服务");
             Intent intent = new Intent(this, SocketService.class);
             startService(intent);
         }
