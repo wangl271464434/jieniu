@@ -13,7 +13,6 @@ import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.AddAdr;
 import com.jieniuwuliu.jieniu.bean.Address;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
@@ -27,14 +26,14 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 添加地址
+ * 修改地址
  */
-public class AddAddressActivity extends BaseActivity {
+public class ModifyAddressActivity extends BaseActivity {
 
     @BindView(R.id.title)
     TextView title;
@@ -50,7 +49,7 @@ public class AddAddressActivity extends BaseActivity {
     private double lat,lng;
     private String token;
     private MyLoading loading;
-    @Override
+    private Address adr;
     protected int getLayoutId() {
         return R.layout.activity_add_address;
     }
@@ -61,6 +60,15 @@ public class AddAddressActivity extends BaseActivity {
         loading = new MyLoading(this,R.style.CustomDialog);
         EventBus.getDefault().register(this);
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
+        adr = (Address) getIntent().getSerializableExtra("address");
+        etName.setText(adr.getName());
+        etName.setSelection(adr.getName().length());
+        etPhone.setText(adr.getPhone());
+        etPhone.setSelection(adr.getPhone().length());
+        tvAddress.setText(adr.getAddress());
+        lat = adr.getLat();
+        lng = adr.getLng();
+
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(CarEvent event) {
@@ -68,7 +76,7 @@ public class AddAddressActivity extends BaseActivity {
         if (event.getType().equals("address")){
             lng = event.getPoint().getLongitude();
             lat = event.getPoint().getLatitude();
-            tvAddress.setText(event.getAddress());
+            tvAddress.setText(event.getAddress().replace("陕西省",""));
         }
     }
 
@@ -98,7 +106,6 @@ public class AddAddressActivity extends BaseActivity {
      * */
     private void update() {
         loading.show();
-        Address adr = new Address();
         adr.setAddress(address+etAddress.getText().toString());
         adr.setName(name);
         adr.setPhone(phone);
@@ -106,17 +113,17 @@ public class AddAddressActivity extends BaseActivity {
         adr.setLng(lng);
         String json = GsonUtil.objectToJson(adr);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        Call<AddAdr> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).addAddress(body);
-        call.enqueue(new SimpleCallBack<AddAdr>(AddAddressActivity.this) {
+        Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).updateAddress(adr.getId(),body);
+        call.enqueue(new SimpleCallBack<ResponseBody>(ModifyAddressActivity.this) {
             @Override
-            public void onSuccess(Response<AddAdr> response) {
+            public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(), "添加成功");
+                MyToast.show(getApplicationContext(), "修改成功");
                 finish();
             }
 
             @Override
-            public void onFail(int errorCode, Response<AddAdr> response) {
+            public void onFail(int errorCode, Response<ResponseBody> response) {
                 loading.dismiss();
                 try{
                     String error = response.errorBody().string();

@@ -42,6 +42,7 @@ import com.jieniuwuliu.jieniu.messageEvent.MessageEvent;
 import com.jieniuwuliu.jieniu.mine.ui.AddPicActivity;
 import com.jieniuwuliu.jieniu.mine.ui.AddressListActivity;
 import com.jieniuwuliu.jieniu.jijian.JiJianSelectActivity;
+import com.jieniuwuliu.jieniu.mine.ui.BindWechatActivity;
 import com.jieniuwuliu.jieniu.mine.ui.FeedBackActivity;
 import com.jieniuwuliu.jieniu.mine.ui.MyFollowActivity;
 import com.jieniuwuliu.jieniu.mine.ui.StoreCertifyActivity;
@@ -125,9 +126,10 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
         dialog = new MyLoading(getActivity(),R.style.CustomDialog);
         list = new ArrayList<>();
         list.add(new MenuItem("我的门店", R.mipmap.ic_center_mendian));
-        list.add(new MenuItem("月卡", R.mipmap.ic_center_yueka));
+        list.add(new MenuItem("绑定微信", R.mipmap.wechat));
+        list.add(new MenuItem("我的订单", R.mipmap.ic_center_jijianchaxun));
         list.add(new MenuItem("优惠券", R.mipmap.ic_center_youhuiquan));
-        list.add(new MenuItem("寄件查询", R.mipmap.ic_center_jijianchaxun));
+        list.add(new MenuItem("月卡", R.mipmap.ic_center_yueka));
         list.add(new MenuItem("意见反馈", R.mipmap.ic_center_tousujianyi));
         list.add(new MenuItem("索取发票", R.mipmap.ic_center_suoqufapiao));
         list.add(new MenuItem("我的积分", R.mipmap.ic_center_wodejifen));
@@ -190,7 +192,7 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
                         adapter.notifyItemChanged(0);
                         tvNickName.setText(user.getNickname());
                         if (user.getAddress()!=null){
-                            tvAddress.setText(user.getAddress().getAddress());
+                            tvAddress.setText(user.getAddress().getAddress().replace("陕西省",""));
                             tvName.setText(user.getAddress().getName());
                             tvPhone.setText(user.getAddress().getPhone());
                         }else{
@@ -243,38 +245,45 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
                     MyToast.show(getActivity(),"认证中，请耐心等待……");
                 }
                 break;
-            case 1://月卡
+            case 1:
                 intent = new Intent();
-                intent.setClass(getActivity(),MyCardActivity.class);
+                intent.setClass(getActivity(),BindWechatActivity.class);
+                intent.putExtra("wxName",user.getWxName());
+                intent.putExtra("unionid",user.getUnionid());
                 getActivity().startActivity(intent);
                 break;
-            case 2://优惠券
-                intent = new Intent();
-                intent.setClass(getActivity(),MyTicketActivity.class);
-                getActivity().startActivity(intent);
-                break;
-            case 3://寄件查询
+            case 2://我的订单
                 intent = new Intent();
                 intent.setClass(getActivity(),JiJianSelectActivity.class);
                 getActivity().startActivity(intent);
                 break;
-            case 4://投诉建议
+            case 3://优惠券
+                intent = new Intent();
+                intent.setClass(getActivity(),MyTicketActivity.class);
+                getActivity().startActivity(intent);
+                break;
+            case 4://月卡
+                intent = new Intent();
+                intent.setClass(getActivity(),MyCardActivity.class);
+                getActivity().startActivity(intent);
+                break;
+            case 5://投诉建议
                 intent = new Intent();
                 intent.setClass(getActivity(),FeedBackActivity.class);
                 getActivity().startActivity(intent);
                 break;
-            case 5://索取发票
+            case 6://索取发票
                 intent = new Intent();
                 intent.setClass(getActivity(),SuoQuFaPiaoActivity.class);
                 getActivity().startActivity(intent);
                 break;
-            case 6://我的积分
+            case 7://我的积分
                 intent = new Intent();
                 intent.setClass(getActivity(),MyScoreActivity.class);
                 intent.putExtra("score",user.getPoint());
                 getActivity().startActivity(intent);
                 break;
-            case 7://在线客服
+            case 8://在线客服
                 setDialog();
                 break;
         }

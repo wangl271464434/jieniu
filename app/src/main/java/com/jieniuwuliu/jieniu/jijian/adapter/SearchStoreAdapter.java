@@ -6,9 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.bean.SearchStore;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
@@ -44,6 +46,8 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
         viewHolder.name.setText(list.get(i).getNickname());
+        GlideUtil.setImgUrl(context,list.get(i).getShopPhoto(),viewHolder.img);
+        viewHolder.address.setText(list.get(i).getAddress().getAddress().replace("陕西省",""));
     }
 
     @Override
@@ -58,8 +62,12 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.img)
+        ImageView img;
         @BindView(R.id.name)
         TextView name;
+        @BindView(R.id.address)
+        TextView address;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

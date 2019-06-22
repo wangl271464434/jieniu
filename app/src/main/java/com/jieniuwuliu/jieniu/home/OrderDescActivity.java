@@ -115,9 +115,9 @@ public class OrderDescActivity extends AppCompatActivity {
         tvInfo.setText(orderWuliuInfo.getInfo());
         tvFahuoName.setText(orderWuliuInfo.getFromName());
         tvFahuoPhone.setText(orderWuliuInfo.getFromPhone());
-        tvFahuoAddress.setText(orderWuliuInfo.getFromAddress());
+        tvFahuoAddress.setText(orderWuliuInfo.getFromAddress().replace("陕西省",""));
         tvShouhuoName.setText(orderWuliuInfo.getToName());
-        tvShouhuoAddress.setText(orderWuliuInfo.getToAddress());
+        tvShouhuoAddress.setText(orderWuliuInfo.getToAddress().replace("陕西省",""));
         tvShouhuoPhone.setText(orderWuliuInfo.getToPhone());
         if (orderWuliuInfo.getOrderList() != null) {
             if (orderWuliuInfo.getOrderList().size() != 0) {

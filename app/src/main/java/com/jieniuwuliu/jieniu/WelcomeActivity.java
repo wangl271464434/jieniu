@@ -1,18 +1,12 @@
 package com.jieniuwuliu.jieniu;
 
-import android.os.Bundle;
-import android.os.CountDownTimer;
-
-import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.peisongyuan.PeisongHomeActivity;
 import com.jieniuwuliu.jieniu.view.Action;
 import com.jieniuwuliu.jieniu.view.CountdownView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**

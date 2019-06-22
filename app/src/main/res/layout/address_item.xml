@@ -5,13 +5,6 @@
     android:layout_margin="@dimen/size_10dp"
     android:background="@color/white"
     >
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/checkbox"
-        android:layout_margin="@dimen/size_10dp"
-        />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,22 +15,12 @@
         android:orientation="vertical"
         >
         <TextView
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="删除"
-            android:drawablePadding="@dimen/size_5dp"
-            android:drawableLeft="@mipmap/delete"
-            />
-        <CheckBox
             android:id="@+id/tv_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_10dp"
             android:textSize="@dimen/size_15sp"
             android:textColor="@color/black"
-            android:text="设为默认地址"
-            android:button="@null"
+            android:text="修改地址"
             />
     </LinearLayout>
 
@@ -47,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/checkbox"
         android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginLeft="@dimen/size_10dp"
         android:orientation="vertical"
         >
         <TextView

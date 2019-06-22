@@ -161,7 +161,7 @@ public class JiJianActivity extends BaseActivity {
                         }
                         tvFaName.setText(user.getNickname());
                         tvFaPhone.setText(user.getAddress().getPhone());
-                        tvFaAddress.setText(user.getAddress().getAddress());
+                        tvFaAddress.setText(user.getAddress().getAddress().replace("陕西省",""));
                         start = new LatLng(user.getAddress().getLat(),user.getAddress().getLng());
                         tvMoney.setText(""+getYunFeiPrice());
                         tvTotalMoney.setText(""+getTotalPrice());
@@ -224,9 +224,7 @@ public class JiJianActivity extends BaseActivity {
             tvTotalMoney.setText(""+getTotalPrice());
         }
         if (event.getNum() != 0) {
-            if (event.getNum()>1){
-                numPrice = (event.getNum()-1)*5;
-            }
+            numPrice = (event.getNum()-1)*5;
             tvNum.setText(event.getNum() + "件");
             tvMoney.setText(""+getYunFeiPrice());
             tvTotalMoney.setText(""+getTotalPrice());
@@ -234,7 +232,7 @@ public class JiJianActivity extends BaseActivity {
         if (event.getContactInfo()!=null){
             layoutShou.setVisibility(View.VISIBLE);
             tvShouName.setText(event.getContactInfo().getCompany());
-            tvShouAddress.setText(event.getContactInfo().getAddress());
+            tvShouAddress.setText(event.getContactInfo().getAddress().replace("陕西省",""));
             tvShouPhone.setText(event.getContactInfo().getPhone());
             end = new LatLng(event.getContactInfo().getLat(),event.getContactInfo().getLng());
             //计算收货地址和发货地址的驾车距离

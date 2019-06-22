@@ -51,47 +51,18 @@ public class AddressAdater extends RecyclerView.Adapter<AddressAdater.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
         Address item = list.get(i);
-        if (item.isDefaultX()){
-            viewHolder.checkbox.setChecked(true);
-        }else {
-            viewHolder.checkbox.setChecked(false);
-        }
-        viewHolder.tvAddress.setText(item.getAddress());
+        viewHolder.tvAddress.setText(item.getAddress().replace("陕西省",""));
         viewHolder.tvInfo.setText(item.getName()+"  "+item.getPhone());
-        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callBack.delete(i);
-            }
-        });
-        if (item.isDefaultX()){
-            viewHolder.tvDefault.setChecked(true);
-            viewHolder.tvDefault.setText("取消默认地址");
-        }else{
-            viewHolder.tvDefault.setChecked(false);
-            viewHolder.tvDefault.setText("设为默认地址");
-        }
-        viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isPressed()){
-                    callBack.setDefault(i,isChecked);
-                }
-            }
-        });
-        viewHolder.tvDefault.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isPressed()){
-                    callBack.setDefault(i,isChecked);
-                }
+                callBack.modify(i);
             }
         });
 
     }
     public interface CallBack{
-        void delete(int position);
-        void setDefault(int position,boolean isChecked);
+        void modify(int position);
     }
     @Override
     public int getItemCount() {
@@ -106,16 +77,12 @@ public class AddressAdater extends RecyclerView.Adapter<AddressAdater.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.checkbox)
-        CheckBox checkbox;
         @BindView(R.id.tv_address)
         TextView tvAddress;
         @BindView(R.id.tv_info)
         TextView tvInfo;
-        @BindView(R.id.delete)
-        TextView delete;
         @BindView(R.id.tv_default)
-        CheckBox tvDefault;
+        TextView tvDefault;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -91,8 +91,16 @@ public class JiJianSelectActivity extends BaseActivity implements OnItemClickLis
         adapter.setCallBack(this);
         ((SimpleItemAnimator)rv.getItemAnimator()).setSupportsChangeAnimations(false);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        list.clear();
+        page = 1;
         getData();
     }
+
     /**
      * 获取我的寄件列表
      * */

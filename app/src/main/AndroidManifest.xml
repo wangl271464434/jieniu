@@ -5,9 +5,9 @@
 
     <!-- 允许程序打开网络套接字 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -44,9 +44,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
         <!-- 获取临时读取存储权限 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -175,7 +176,7 @@
             android:name=".mine.ui.MyStoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".mine.ui.AddAddressActivity"
+            android:name=".mine.ui.ModifyAddressActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.LuntanInfoActivity"
@@ -192,7 +193,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.QXActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".mine.ui.WorkTypeActivity"
             android:screenOrientation="portrait" />
@@ -204,14 +206,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.CameraActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".peisongyuan.PeisongHomeActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
-        <activity
-            android:name=".peisongyuan.RenwuInfoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.EditFapiaoActivity"
@@ -230,13 +224,7 @@
             android:name=".jijian.PayTypeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".peisongyuan.PSYListActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".luntan.MsgListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".peisongyuan.PrintActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
@@ -245,9 +233,18 @@
             android:screenOrientation="behind" />
         <activity android:name=".mine.ui.MonthCardPayActivity" />
         <activity android:name=".home.QPShopActivity" />
-        <activity android:name=".peisongyuan.FinishRenwuActivity" />
         <activity android:name=".jijian.ChoosePsyActivity" />
-        <activity android:name=".home.OrderDescActivity"></activity>
+        <activity android:name=".home.OrderDescActivity" />
+        <activity android:name=".mine.ui.BindWechatActivity" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:taskAffinity="net.sourceforge.simcpux"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:name=".jijian.SearchStoreActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
     </application>
 
 </manifest>

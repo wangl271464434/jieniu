@@ -108,7 +108,7 @@ public class StoreInfoActivity extends BaseActivity {
                     etContact.setText(storeBean.getAddress().getName());
                     etPhone.setText(storeBean.getAddress().getPhone());
                     etWeixin.setText(storeBean.getWechat());
-                    etAddress.setText(storeBean.getAddress().getAddress());
+                    etAddress.setText(storeBean.getAddress().getAddress().replace("陕西省",""));
                     switch (storeBean.getPersonType()){
                         case 1://汽配商
                             tvType.setText("配件商");
@@ -174,7 +174,7 @@ public class StoreInfoActivity extends BaseActivity {
     }
 
     @OnClick({R.id.back, R.id.tv_certify, R.id.et_store_name,R.id.tv_type,R.id.et_context,
-            R.id.tv_car_type, R.id.et_address, R.id.layout_img, R.id.et_contact, R.id.et_phone,
+            R.id.tv_car_type, R.id.et_address, R.id.et_contact, R.id.et_phone,
             R.id.et_weixin,R.id.layout_add_pic})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -198,9 +198,6 @@ public class StoreInfoActivity extends BaseActivity {
                 break;
             case R.id.et_address:
                 startAcy(AddressListActivity.class);
-                break;
-            case R.id.layout_img:
-                MyToast.show(StoreInfoActivity.this,"请重新进行认证");
                 break;
             case R.id.et_contact://联系人
                 intent = new Intent();

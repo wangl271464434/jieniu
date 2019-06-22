@@ -176,6 +176,9 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                         refreshLayout.setNoMoreData(true);
                     }
                     list.addAll(response.body().getData());
+                    if (list.size()==0){
+                        MyToast.show(getActivity(),"未获取到内容");
+                    }
                     listAdapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -266,7 +269,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 storeName = etSearch.getText().toString();
                 type = "";
                 list.clear();
-                getStoreList(0);
+                getStoreList(5);
                 KeyboardUtil.hideSoftKeyboard(getActivity());
                 etSearch.setText("");
                 break;

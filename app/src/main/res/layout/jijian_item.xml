@@ -117,6 +117,16 @@
             android:layout_marginTop="@dimen/size_5dp"
             >
             <TextView
+                android:id="@+id/tv_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:text="去支付"
+                android:layout_toLeftOf="@id/tv_cancel"
+                android:layout_marginRight="@dimen/size_10dp"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/size_18sp" />
+            <TextView
                 android:id="@+id/tv_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

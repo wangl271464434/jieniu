@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.bean.AddressItem;
 import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
@@ -22,8 +24,8 @@ import butterknife.ButterKnife;
 public class MapAddressAdapter extends RecyclerView.Adapter<MapAddressAdapter.ViewHolder> implements View.OnClickListener {
     private Context context;
     private OnItemClickListener listener;
-    private List<PoiItem> list;
-    public MapAddressAdapter(Context context, List<PoiItem> list) {
+    private List<AddressItem> list;
+    public MapAddressAdapter(Context context, List<AddressItem> list) {
         this.context = context;
         this.list = list;
     }
@@ -43,8 +45,13 @@ public class MapAddressAdapter extends RecyclerView.Adapter<MapAddressAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
-        PoiItem poiItem = list.get(i);
-        Log.w("poiItem",poiItem.getAdName());
+        PoiItem poiItem = list.get(i).getPoiItem();
+        if (list.get(i).isChecked()){
+            viewHolder.img.setImageResource(R.mipmap.ic_fapiao_checked);
+        }else{
+            viewHolder.img.setImageResource(R.mipmap.ic_fapiao_unchecked);
+
+        }
         viewHolder.tvAddress.setText(poiItem.getAdName()+poiItem.toString());
     }
 
@@ -63,6 +70,8 @@ public class MapAddressAdapter extends RecyclerView.Adapter<MapAddressAdapter.Vi
     static class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.tv_address)
         TextView tvAddress;
+        @BindView(R.id.img)
+        ImageView img;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

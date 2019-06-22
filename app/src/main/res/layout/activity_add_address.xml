@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/line_gray"
-    tools:context=".mine.ui.AddAddressActivity">
+    tools:context=".mine.ui.ModifyAddressActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_1dp"
             android:background="@color/white"
-            android:padding="@dimen/size_15dp"
+            android:padding="@dimen/size_10dp"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_1dp"
             android:background="@color/white"
-            android:padding="@dimen/size_15dp"
+            android:padding="@dimen/size_10dp"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_1dp"
             android:background="@color/white"
-            android:padding="@dimen/size_15dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/size_10dp"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -91,7 +92,7 @@
                 android:textColor="@color/light_black"
                 android:background="@color/white"
                 android:text="点击选择"
-                android:singleLine="true"
+                android:ems="17"
                 android:padding="@dimen/size_5dp"
                 android:layout_marginLeft="@dimen/size_10dp"
                 />
@@ -101,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_1dp"
             android:background="@color/white"
-            android:padding="@dimen/size_15dp"
+            android:padding="@dimen/size_10dp"
             >
             <TextView
                 android:layout_width="wrap_content"

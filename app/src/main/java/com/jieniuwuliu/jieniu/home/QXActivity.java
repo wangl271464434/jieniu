@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import com.amap.api.services.route.DistanceResult;
 import com.amap.api.services.route.DistanceSearch;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
+import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
@@ -76,16 +78,14 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
 
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.title)
-    TextView title;
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.tv_area)
     TextView tvArea;
     @BindView(R.id.tv_yewu)
     TextView tvYewu;
-    @BindView(R.id.right)
-    TextView right;
+    @BindView(R.id.et_search)
+    EditText etSearch;
     private QXAdapter adapter;
     private List<StoreBean.DataBean> list;
     private String token;
@@ -114,7 +114,6 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
 
     @Override
     protected void init() {
-        title.setText("捷牛快修");
         loading = new MyLoading(this,R.style.CustomDialog);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
@@ -164,11 +163,21 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
         //启动定位
         mLocationClient.startLocation();
     }
-    @OnClick({R.id.back,R.id.tv_all_area, R.id.tv_area, R.id.tv_yewu})
+    @OnClick({R.id.back,R.id.img_search,R.id.tv_all_area, R.id.tv_area, R.id.tv_yewu})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.img_search://搜索
+                String name = etSearch.getText().toString();
+                if (!name.isEmpty()){
+                    KeyboardUtil.hideSoftKeyboard(QXActivity.this);
+                    list.clear();
+                    search(name);
+                }else {
+                    MyToast.show(getApplicationContext(),"请输入您要搜索的店名");
+                }
                 break;
             case R.id.tv_all_area:
                 district = "";
@@ -189,6 +198,52 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 break;
         }
     }
+    /**按照店名搜索*/
+    private void search(String name) {
+        loading.show();
+        Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(2,name,1,10);
+        call.enqueue(new SimpleCallBack<StoreBean>(QXActivity.this) {
+            @Override
+            public void onSuccess(Response<StoreBean> response) {
+                loading.dismiss();
+                try{
+                    if (refreshLayout!=null){
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                    }
+                    if (response.body().getData().size()==0||response.body().getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }
+                    list.addAll(response.body().getData());
+                    if (list.size()==0){
+                        MyToast.show(getApplicationContext(),"未搜索到内容");
+                    }
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<StoreBean> response) {
+                loading.dismiss();
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
+            }
+        });
+    }
+
     /***
      * 业务谈框
      * */

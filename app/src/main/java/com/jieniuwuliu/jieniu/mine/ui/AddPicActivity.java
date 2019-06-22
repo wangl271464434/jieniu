@@ -67,16 +67,12 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
 
     @BindView(R.id.store_img)
     ImageView storeImg;
-    @BindView(R.id.zizhi_img)
-    ImageView zizhiImg;
-
-    private int type;//0表示门店照片1表示营业执照
     private final int PIC_CODE = 1001;//请求系统相册的请求码
     private final int CAMERA_CODE = 1002;//请求相机的请求码
-    private String storeImgUrl="",zizhiImgUrl="";
+    private String storeImgUrl="";
     private static final String FILE_PROVIDER_AUTHORITY = "cn.fonxnickel.officialcamerademo.fileprovider";
     private StoreCerity storeCerity;
-    private String token,storeUrl = "",zizhiUrl = "";
+    private String token,storeUrl = "";
     private MyLoading dialog ;
     private  File pictureFile;
     @Override
@@ -94,28 +90,6 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event(MessageEvent messageEvent) {
-        Log.w("返回结果",messageEvent.toString());
-        switch (messageEvent.getType()){
-            case "store":
-                storeUrl = messageEvent.getStoreUrl();
-                break;
-            case "zizhi":
-                zizhiUrl = messageEvent.getZizhiUrl();
-                break;
-        }
-        if (!storeUrl.equals("")&&!zizhiUrl.equals("")){
-            storeCerity.setShopPhoto(storeUrl);
-            storeCerity.setZizhiPhoto(zizhiUrl);
-            storeCerity.setAuth(3);
-            update();
-        }
     }
     /**
      * 提交数据
@@ -156,15 +130,15 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
         });
     }
 
-    @OnClick({R.id.back, R.id.tv_sure, R.id.store_img, R.id.zizhi_img})
+    @OnClick({R.id.back, R.id.tv_sure, R.id.store_img})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
             case R.id.tv_sure://完成
-                if (storeImg.equals("")||zizhiImgUrl.equals("")){
-                    MyToast.show(AddPicActivity.this,"请选择门店照片和营业执照照片");
+                if (storeImg.equals("")){
+                    MyToast.show(AddPicActivity.this,"请选择门店照片");
                     return;
                 }
                 dialog.show();
@@ -174,28 +148,9 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
                     @Override
                     public void onSuccess(CosXmlRequest request, CosXmlResult result) {
                         Log.w("返回结果","Success: " +result.accessUrl);
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.setType("store");
-                        messageEvent.setStoreUrl(result.accessUrl);
-                        EventBus.getDefault().post(messageEvent);
-                    }
-
-                    @Override
-                    public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
-                        Log.w("返回结果", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
-                        MyToast.show(getApplicationContext(),(exception == null ? serviceException.getMessage() : exception.toString()));
-                    }
-                });
-                //上传营业执照
-                COSXMLUploadTask zizhiTask =  UpLoadFileUtil.getIntance(AddPicActivity.this).upload("img",new File(zizhiImgUrl).getName(),zizhiImgUrl);
-                zizhiTask.setCosXmlResultListener(new CosXmlResultListener() {
-                    @Override
-                    public void onSuccess(CosXmlRequest request, CosXmlResult result) {
-                        Log.w("返回结果","Success: " +result.accessUrl);
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.setType("zizhi");
-                        messageEvent.setZizhiUrl(result.accessUrl);
-                        EventBus.getDefault().post(messageEvent);
+                        storeCerity.setShopPhoto(result.accessUrl);
+                        storeCerity.setAuth(3);
+                        update();
                     }
 
                     @Override
@@ -206,11 +161,6 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
                 });
                 break;
             case R.id.store_img://添加门店照片
-                type = 0;
-                showPicDialog();
-                break;
-            case R.id.zizhi_img://添加资质照片
-                type = 1;
                 showPicDialog();
                 break;
         }
@@ -305,16 +255,8 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
                             imgUrl = cursor.getString(index);
                             cursor.close();
                         }
-                        switch (type){
-                            case 0:
-                                storeImgUrl = imgUrl;
-                                storeImg.setImageBitmap(bitmap);
-                                break;
-                            case 1:
-                                zizhiImgUrl = imgUrl;
-                                zizhiImg.setImageBitmap(bitmap);
-                                break;
-                        }
+                        storeImgUrl = imgUrl;
+                        storeImg.setImageBitmap(bitmap);
 //                    mIvDispaly.setImageBitmap(bitmap);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -322,18 +264,9 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
                 }
                 break;
             case CAMERA_CODE://相机
-                switch (type){
-                    case 0:
-                        storeImgUrl = pictureFile.getPath();
-                        Log.w("img",storeImgUrl);
-                       GlideUtil.setLocalImgUrl(AddPicActivity.this,storeImgUrl,storeImg);
-                        break;
-                    case 1:
-                        zizhiImgUrl =  pictureFile.getPath();
-                        Log.w("img",zizhiImgUrl);
-                        GlideUtil.setLocalImgUrl(AddPicActivity.this,zizhiImgUrl,zizhiImg);
-                        break;
-                }
+                storeImgUrl = pictureFile.getPath();
+                Log.w("img",storeImgUrl);
+                GlideUtil.setLocalImgUrl(AddPicActivity.this,storeImgUrl,storeImg);
                 break;
         }
     }
@@ -341,8 +274,5 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 }

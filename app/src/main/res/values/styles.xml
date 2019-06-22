@@ -36,7 +36,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/size_14sp</item>
+        <item name="android:textSize">@dimen/size_12sp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
         <item name="android:textColor">@drawable/regist_tab_sel</item>

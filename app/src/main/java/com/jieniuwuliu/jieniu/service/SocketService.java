@@ -148,7 +148,7 @@ public class SocketService extends Service {
                     } else {//长连接处于连接状态
                         Log.i("socket","socket is connect");
                     }
-                    sendTime = System.currentTimeMillis();
+                     sendTime = System.currentTimeMillis();
                 }
                 mHandler.postDelayed(this, HEART_BEAT_RATE);//每隔一定的时间，对长连接进行一次心跳检测
                 }

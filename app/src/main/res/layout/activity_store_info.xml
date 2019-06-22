@@ -189,40 +189,10 @@
                 android:background="@color/white"
                 android:padding="@dimen/size_5dp"
                 android:drawableRight="@mipmap/ic_center_more"
-                android:singleLine="true"
+                android:ems="15"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:textSize="@dimen/size_16sp"
                 android:textColor="@color/black"
-                />
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_1dp"
-            android:background="@color/line_gray"
-            />
-        <LinearLayout
-            android:id="@+id/layout_img"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/size_10dp"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="资质照片："
-                android:textSize="@dimen/size_16sp"
-                android:textColor="@color/black"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="@dimen/size_5dp"
-                android:layout_marginLeft="@dimen/size_10dp"
-                android:textSize="@dimen/size_16sp"
-                android:textColor="@color/line_gray"
-                android:text="去上传"
-                android:drawableRight="@mipmap/ic_center_more"
                 />
         </LinearLayout>
         <View

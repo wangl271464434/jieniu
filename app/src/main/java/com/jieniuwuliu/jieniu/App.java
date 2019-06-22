@@ -3,14 +3,11 @@ package com.jieniuwuliu.jieniu;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
-import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.peisongyuan.PeisongHomeActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -21,13 +18,11 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.beta.interfaces.BetaPatchListener;
-import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
-import com.tencent.bugly.crashreport.CrashReport;
-
-import java.util.Locale;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 public class App extends Application {
+    private IWXAPI api;
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
@@ -54,6 +49,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
+        api.registerApp(Constant.WXAPPID);
         //初始化Bugly
         initBugly();
     }
@@ -107,7 +104,6 @@ public class App extends Application {
          * 不设置会默认所有activity都可以显示弹窗;
          */
         Beta.canShowUpgradeActs.add(MainActivity.class);
-        Beta.canShowUpgradeActs.add(PeisongHomeActivity.class);
         Bugly.init(getApplicationContext(), Constant.BuglyId, false);
 //        CrashReport.initCrashReport(getApplicationContext(), Constant.BuglyId, false);
     }

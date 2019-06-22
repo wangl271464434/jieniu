@@ -51,6 +51,8 @@ public class EditShouAdrActivity extends BaseActivity {
 
     @BindView(R.id.title)
     TextView title;
+    @BindView(R.id.right)
+    TextView right;
     @BindView(R.id.et_company)
     EditText etCompany;
     @BindView(R.id.et_name)
@@ -64,10 +66,6 @@ public class EditShouAdrActivity extends BaseActivity {
     private String name,phone,address,company;
     private MyLoading loading;
     private double lat,lng;
-    private String token;
-    private List<SearchStore.DataBean> list;
-    private SearchStoreAdapter adapter;
-    private PopupWindow popupWindow;
     private boolean isVip;
     private int id = 0;
     @Override
@@ -78,134 +76,43 @@ public class EditShouAdrActivity extends BaseActivity {
     @Override
     protected void init() {
         title.setText("编辑收货地址");
+//        right.setText("门店搜索");
         EventBus.getDefault().register(this);
-        list = new ArrayList<>();
         loading = new MyLoading(this,R.style.CustomDialog);
-        token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
-        etCompany.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String info = etCompany.getText().toString();
-                Log.i("editinfo",info);
-                if (popupWindow == null){
-                    if (info.length()>1){
-                        search(info);
-                    }
-                }else{
-                    popupWindow = null;
-                }
-            }
-        });
     }
-    /**
-     * 根据公司名搜索
-     * */
-    private void search(String info) {
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).searchStore(info);
-        call.enqueue(new SimpleCallBack<ResponseBody>(EditShouAdrActivity.this) {
-            @Override
-            public void onSuccess(Response<ResponseBody> response) {
-                try {
-                    list.clear();
-                    SearchStore searchStore = (SearchStore) GsonUtil.praseJsonToModel(response.body().string(),SearchStore.class);
-                    if (searchStore.getData().size()>0){
-                        list.addAll(searchStore.getData());
-                        showSearchList();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFail(int errorCode, Response<ResponseBody> response) {
-                try {
-                    String s = response.errorBody().string();
-                    Log.w("result",s);
-                    JSONObject object = new JSONObject(s);
-                    MyToast.show(getApplicationContext(), object.getString("msg"));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onNetError(String s) {
-                MyToast.show(getApplicationContext(),s);
-            }
-        });
-    }
-    /**
-     * 显示
-     * */
-    private void showSearchList() {
-        View contentView = LayoutInflater.from(this).inflate(R.layout.search_store, null);
-        popupWindow = new PopupWindow(contentView,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(
-                R.drawable.bg_white_shape));
-        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
-        // 我觉得这里是API的一个bug
-        // 设置好参数之后再show
-        popupWindow.showAsDropDown(etCompany);
-        RecyclerView recyclerView = contentView.findViewById(R.id.rv);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
-        adapter = new SearchStoreAdapter(this,list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                popupWindow.dismiss();
-                SearchStore.DataBean item = list.get(position);
-                isVip = item.isVip();
-                etCompany.setText(item.getNickname());
-                etCompany.setSelection(etCompany.getText().length());
-                etName.setText(item.getAddress().getName());
-                etName.setSelection(etName.getText().length());
-                etPhone.setText(item.getAddress().getPhone());
-                etPhone.setSelection(etPhone.getText().length());
-                tvCity.setText(item.getAddress().getAddress());
-                lat = item.getAddress().getLat();
-                lng = item.getAddress().getLng();
-                id = item.getUid();
-                etCompany.setFocusable(true);
-                etCompany.setFocusableInTouchMode(true);
-                etCompany.requestFocus();
-                etCompany.requestFocusFromTouch();
-            }
-        });
-        etCompany.setFocusable(true);
-        etCompany.setFocusableInTouchMode(true);
-        etCompany.requestFocus();
-        etCompany.requestFocusFromTouch();
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(CarEvent event) {
         Log.w("address",event.toString());
-        if (event.getType().equals("address")){
-            lat = event.getPoint().getLatitude();
-            lng = event.getPoint().getLongitude();
-            tvCity.setText(event.getAddress());
+        if (event.getType()!=null){
+            if (event.getType().equals("address")){
+                lat = event.getPoint().getLatitude();
+                lng = event.getPoint().getLongitude();
+                tvCity.setText(event.getAddress());
+            }
+        }
+        if (event.getStore()!=null){
+            SearchStore.DataBean item = event.getStore();
+            isVip = item.isVip();
+            etCompany.setText(item.getNickname());
+            etCompany.setSelection(etCompany.getText().length());
+            etName.setText(item.getAddress().getName());
+            etName.setSelection(etName.getText().length());
+            etPhone.setText(item.getAddress().getPhone());
+            etPhone.setSelection(etPhone.getText().length());
+            tvCity.setText(item.getAddress().getAddress().replace("陕西省",""));
+            lat = item.getAddress().getLat();
+            lng = item.getAddress().getLng();
+            id = item.getUid();
         }
     }
-    @OnClick({R.id.back, R.id.tv_city, R.id.btn})
+    @OnClick({R.id.back,R.id.tv_store_search,R.id.tv_city, R.id.btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.tv_store_search:
+                startAcy(SearchStoreActivity.class);
                 break;
             case R.id.tv_city:
                 KeyboardUtil.hideSoftKeyboard(this);

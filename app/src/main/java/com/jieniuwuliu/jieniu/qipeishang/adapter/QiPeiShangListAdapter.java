@@ -58,6 +58,7 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
         String s = "";
         if (item.getFuwuCar().size()>0){
             viewHolder.rv.setVisibility(View.VISIBLE);
+            viewHolder.tvCars.setVisibility(View.GONE);
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(LinearLayoutManager.HORIZONTAL);
             viewHolder.rv.setLayoutManager(manager);

@@ -63,6 +63,7 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private ViewPicHolder picHolder;
     private VideoViewHolder videoViewHolder;
     private String time;
+    private LuntanInfoAdater adater;
 
     public void setUser(UserBean.DataBean user) {
         this.user = user;
@@ -269,28 +270,29 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }
                 });
                 //评论
-                if (list.get(i-1).getPinglun().size()>0){
-                    if (list.get(i-1).getDianzan().size()==0){
-                        holder.layoutDianZan.setVisibility(View.GONE);
-                    }else{
-                        holder.layoutDianZan.setVisibility(View.VISIBLE);
-                    }
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    holder.rvMsg.setLayoutManager(linearLayoutManager);
-                    LuntanInfoAdater adater = new LuntanInfoAdater(context,list.get(i-1).getPinglun());
-                    holder.rvMsg.setAdapter(adater);
-                    adater.setOnItemClickListener(new OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            if (user.getId()!=list.get(i-1).getPinglun().get(position).getUid()){
-                                callBack.msgToUser(i-1,position);
-                            }else{
-                                MyToast.show(context,"不能自己给自己回复");
-                            }
-
-                        }
-                    });
+                if (list.get(i-1).getDianzan().size()==0){
+                    holder.layoutDianZan.setVisibility(View.GONE);
+                }else{
+                    holder.layoutDianZan.setVisibility(View.VISIBLE);
                 }
+                LinearLayoutManager manager = new LinearLayoutManager(context);
+                holder.rvMsg.setLayoutManager(manager);
+                adater = new LuntanInfoAdater(context,list.get(i-1).getPinglun());
+                holder.rvMsg.setAdapter(adater);
+                adater.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (user.getId()!=list.get(i-1).getPinglun().get(position).getUid()){
+                            callBack.msgToUser(i-1,position);
+                        }else{
+                            MyToast.show(context,"不能自己给自己回复");
+                        }
+
+                    }
+                });
+             /*   if (list.get(i-1).getPinglun().size()>0){
+
+                }*/
                 holder.tvComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -344,8 +346,8 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }
                 }
 
-                GridLayoutManager manager = new GridLayoutManager(context, 3);
-                picHolder.rv.setLayoutManager(manager);
+                GridLayoutManager gridManager = new GridLayoutManager(context, 3);
+                picHolder.rv.setLayoutManager(gridManager);
                 LuntanPicAdapter adapter = new LuntanPicAdapter(context, imgs);
                 picHolder.rv.setAdapter(adapter);
                 adapter.setListener(new OnItemClickListener() {
@@ -413,28 +415,29 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }
                 });
                 //评论
-                if (list.get(i-1).getPinglun().size()>0){
-                    if (list.get(i-1).getDianzan().size()==0){
-                        picHolder.layoutDianZan.setVisibility(View.GONE);
-                    }else{
-                        picHolder.layoutDianZan.setVisibility(View.VISIBLE);
-                    }
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    picHolder.rvMsg.setLayoutManager(linearLayoutManager);
-                    LuntanInfoAdater adater = new LuntanInfoAdater(context,list.get(i-1).getPinglun());
-                    picHolder.rvMsg.setAdapter(adater);
-                    adater.setOnItemClickListener(new OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            if (user.getId()!=list.get(i-1).getPinglun().get(position).getUid()){
-                                callBack.msgToUser(i-1,position);
-                            }else{
-                                MyToast.show(context,"不能自己给自己回复");
-                            }
-
-                        }
-                    });
+                if (list.get(i-1).getDianzan().size()==0){
+                    picHolder.layoutDianZan.setVisibility(View.GONE);
+                }else{
+                    picHolder.layoutDianZan.setVisibility(View.VISIBLE);
                 }
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                picHolder.rvMsg.setLayoutManager(linearLayoutManager);
+                adater = new LuntanInfoAdater(context,list.get(i-1).getPinglun());
+                picHolder.rvMsg.setAdapter(adater);
+                adater.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (user.getId()!=list.get(i-1).getPinglun().get(position).getUid()){
+                            callBack.msgToUser(i-1,position);
+                        }else{
+                            MyToast.show(context,"不能自己给自己回复");
+                        }
+
+                    }
+                });
+              /*  if (list.get(i-1).getPinglun().size()>0){
+
+                }*/
                 picHolder.tvComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -537,27 +540,28 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     }
                 });
                 //评论
-                if (list.get(i-1).getPinglun().size()>0){
-                    if (list.get(i-1).getDianzan().size()==0){
-                        videoViewHolder.layoutDianZan.setVisibility(View.GONE);
-                    }else{
-                        videoViewHolder.layoutDianZan.setVisibility(View.VISIBLE);
-                    }
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    videoViewHolder.rvMsg.setLayoutManager(linearLayoutManager);
-                    LuntanInfoAdater adater = new LuntanInfoAdater(context,list.get(i-1).getPinglun());
-                    videoViewHolder.rvMsg.setAdapter(adater);
-                    adater.setOnItemClickListener(new OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            if (user.getId()!=list.get(i-1).getPinglun().get(position).getUid()){
-                                callBack.msgToUser(i-1,position);
-                            }else{
-                                MyToast.show(context,"不能自己给自己回复");
-                            }
-                        }
-                    });
+                if (list.get(i-1).getDianzan().size()==0){
+                    videoViewHolder.layoutDianZan.setVisibility(View.GONE);
+                }else{
+                    videoViewHolder.layoutDianZan.setVisibility(View.VISIBLE);
                 }
+                LinearLayoutManager videoManager = new LinearLayoutManager(context);
+                videoViewHolder.rvMsg.setLayoutManager(videoManager);
+                adater = new LuntanInfoAdater(context,list.get(i-1).getPinglun());
+                videoViewHolder.rvMsg.setAdapter(adater);
+                adater.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (user.getId()!=list.get(i-1).getPinglun().get(position).getUid()){
+                            callBack.msgToUser(i-1,position);
+                        }else{
+                            MyToast.show(context,"不能自己给自己回复");
+                        }
+                    }
+                });
+              /*  if (list.get(i-1).getPinglun().size()>0){
+
+                }*/
                 videoViewHolder.tvComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

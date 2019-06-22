@@ -243,7 +243,7 @@ public interface HttpApi {
      * 根据门店名搜索门店
      * */
     @GET("users/stores")
-    Call<ResponseBody> searchStore(@Query("nickname") String nickname);
+    Call<ResponseBody> searchStore(@Query("nickname") String nickname,@Query("page")int page,@Query("number")int num);
     /**
      * 推荐门店
      * */

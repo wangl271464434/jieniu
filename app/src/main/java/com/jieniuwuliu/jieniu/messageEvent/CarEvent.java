@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu.messageEvent;
 
 import com.amap.api.services.core.LatLonPoint;
+import com.jieniuwuliu.jieniu.bean.SearchStore;
 import com.jieniuwuliu.jieniu.bean.SortModel;
 import com.jieniuwuliu.jieniu.bean.WorkType;
 
@@ -12,6 +13,15 @@ public class CarEvent {
     private String type;
     private LatLonPoint point;
     private String address;
+    private SearchStore.DataBean store;//门店
+
+    public SearchStore.DataBean getStore() {
+        return store;
+    }
+
+    public void setStore(SearchStore.DataBean store) {
+        this.store = store;
+    }
 
     public LatLonPoint getPoint() {
         return point;

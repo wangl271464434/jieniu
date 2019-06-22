@@ -86,8 +86,26 @@ public class UserBean implements Serializable {
         private double lng;
         private int level;
         private String region;
+        private String unionid;
+        private String  wxName;
         private int todayCount;
         private int totalCount;
+
+        public String getUnionid() {
+            return unionid;
+        }
+
+        public void setUnionid(String unionid) {
+            this.unionid = unionid;
+        }
+
+        public String getWxName() {
+            return wxName;
+        }
+
+        public void setWxName(String wxName) {
+            this.wxName = wxName;
+        }
 
         public String getWechat() {
             return wechat;

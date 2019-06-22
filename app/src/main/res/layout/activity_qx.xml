@@ -7,8 +7,43 @@
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".home.QXActivity">
-    <include
-        layout="@layout/title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/size_10dp"
+        >
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/size_20dp"
+            android:layout_height="@dimen/size_20dp"
+            android:src="@mipmap/ic_back"
+            android:layout_centerVertical="true"
+            />
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_white_shape"
+            android:textSize="@dimen/size_16sp"
+            android:padding="@dimen/size_5dp"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_marginRight="@dimen/size_10dp"
+            android:layout_toRightOf="@id/back"
+            android:layout_toLeftOf="@id/img_search"
+            android:hint="请输入门店名称"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            />
+        <ImageView
+            android:id="@+id/img_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_autodealer_search"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1dp"

@@ -38,6 +38,7 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
+import com.jieniuwuliu.jieniu.bean.AddressItem;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 import com.jieniuwuliu.jieniu.mine.adapter.MapAddressAdapter;
@@ -55,7 +56,7 @@ import butterknife.OnClick;
 /**
  * 根据地图搜索地址
  * */
-public class ChooseAddressActivity extends AppCompatActivity implements AMapLocationListener, TextView.OnEditorActionListener, PoiSearch.OnPoiSearchListener, OnItemClickListener {
+public class ChooseAddressActivity extends AppCompatActivity implements AMapLocationListener, PoiSearch.OnPoiSearchListener, OnItemClickListener {
 
     @BindView(R.id.tv_city)
     TextView tvCity;
@@ -74,9 +75,9 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
     public AMapLocationClientOption mLocationOption = null;
     //声明mListener对象，定位监听器
     private LocationSource.OnLocationChangedListener mListener = null;
-    private String province = "陕西省";
-    private String city = "西安市";
-    private List<PoiItem> list;
+    private String province;
+    private String city;
+    private List<AddressItem> list;
     private MapAddressAdapter adapter;
     private PoiItem currentItem = null;
     @Override
@@ -85,7 +86,6 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
         setContentView(R.layout.activity_choose_address);
         ButterKnife.bind(this);
         map.onCreate(savedInstanceState);
-        etContext.setOnEditorActionListener(this);
         if (aMap == null) {
             aMap = map.getMap();
             UiSettings settings = aMap.getUiSettings();
@@ -174,7 +174,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
         //启动定位
         mLocationClient.startLocation();
     }
-    @OnClick({R.id.back,R.id.tv_sure, R.id.tv_city})
+    @OnClick({R.id.back,R.id.tv_sure,R.id.img_search, R.id.tv_city})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -185,7 +185,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
                     CarEvent event = new CarEvent();
                     event.setType("address");
                     event.setPoint(currentItem.getLatLonPoint());
-                    event.setAddress(tvCity.getText().toString()+currentItem.getAdName()+currentItem.toString());
+                    event.setAddress(province+tvCity.getText().toString()+currentItem.getAdName()+currentItem.toString());
                     EventBus.getDefault().post(event);
                     finish();
                 }else{
@@ -194,6 +194,15 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
                 break;
             case R.id.tv_city:
                 chooseCity();
+                break;
+            case R.id.img_search:
+                String address = etContext.getText().toString();
+                if (address.isEmpty()){
+                    MyToast.show(getApplicationContext(),"请输入您想要搜索的地址");
+                    return;
+                }
+                searchAddress(address);
+                KeyboardUtil.hideSoftKeyboard(ChooseAddressActivity.this);
                 break;
         }
     }
@@ -225,7 +234,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
                 //城市
                 city = citySelected[1];
                 //区县（如果设定了两级联动，那么该项返回空）
-                tvCity.setText(province+city);
+                tvCity.setText(city);
             }
 
             @Override
@@ -242,8 +251,10 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
                 longitude = aMapLocation.getLongitude();
                 latitude = aMapLocation.getLatitude();
                 Log.i("lat+long", "经度：" + longitude + "维度：" + latitude);
+                province = aMapLocation.getProvince();
+                city = aMapLocation.getCity();
+                tvCity.setText(city);
                 searchAddress(aMapLocation.getAddress());
-
                 //将地图移动到定位点
 //                aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latitude, longitude)));
                 //点击定位按钮 能够将地图的中心移动到定位点
@@ -274,20 +285,6 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_SEND||
-                (event!=null&&event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
-            String address = etContext.getText().toString();
-            searchAddress(address);
-            KeyboardUtil.hideSoftKeyboard(ChooseAddressActivity.this);
-            return true;
-        }
-        return false;
-    }
-
-
     /**
      * 根据位置搜索地址
      * */
@@ -301,14 +298,23 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
     }
 
     @Override
-    public void onPoiSearched(PoiResult poiResult, int i) {
+    public void onPoiSearched(PoiResult poiResult, int code) {
         Log.w("poi",poiResult.toString());
         list.clear();
-        list.addAll(poiResult.getPois());
+        for (int i = 0 ;i<poiResult.getPois().size();i++){
+            AddressItem item = new AddressItem();
+            item.setPoiItem(poiResult.getPois().get(i));
+            if (i==0){
+              item.setChecked(true);
+            }else{
+                item.setChecked(false);
+            }
+            list.add(item);
+        }
         adapter.notifyDataSetChanged();
         aMap.clear();
-        currentItem = list.get(0);
-        LatLng latLng = new LatLng(list.get(0).getLatLonPoint().getLatitude(), list.get(0).getLatLonPoint().getLongitude());
+        currentItem = list.get(0).getPoiItem();
+        LatLng latLng = new LatLng(list.get(0).getPoiItem().getLatLonPoint().getLatitude(), list.get(0).getPoiItem().getLatLonPoint().getLongitude());
         aMap.addMarker(new MarkerOptions().position(latLng)
                 .icon(BitmapDescriptorFactory.fromResource (R.drawable.location_marker))
                 .draggable(false));
@@ -323,7 +329,15 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
     @Override
     public void onItemClick(View view, int position) {
         aMap.clear();
-       currentItem = list.get(position);
+        currentItem = list.get(position).getPoiItem();
+        for (int i = 0 ;i<list.size();i++){
+            if (i==position){
+                list.get(i).setChecked(true);
+            }else{
+                list.get(i).setChecked(false);
+            }
+        }
+        adapter.notifyDataSetChanged();
         LatLng latLng = new LatLng(currentItem.getLatLonPoint().getLatitude(), currentItem.getLatLonPoint().getLongitude());
         aMap.addMarker(new MarkerOptions().position(latLng)
                 .icon(BitmapDescriptorFactory.fromResource (R.drawable.location_marker))

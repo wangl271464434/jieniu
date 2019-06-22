@@ -15,30 +15,50 @@
         android:layout_marginTop="@dimen/size_20dp"
         android:background="@color/white"
         >
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/size_10dp"
             >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="公司名称："
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_15sp"
-                />
-            <EditText
-                android:id="@+id/et_company"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:layout_toLeftOf="@id/tv_store_search"
+                android:layout_marginRight="@dimen/size_10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="公司名称："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_15sp"
+                    />
+                <EditText
+                    android:id="@+id/et_company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="@dimen/size_5dp"
+                    android:singleLine="true"
+                    android:hint="自定义添加或门店搜索自动添加"
+                    android:textColor="@color/home_text"
+                    android:textSize="@dimen/size_15sp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_store_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="门店搜索"
                 android:padding="@dimen/size_5dp"
-                android:singleLine="true"
-                android:hint="公司名称"
-                android:textColor="@color/home_text"
-                android:textSize="@dimen/size_15sp"
+                android:background="@drawable/btn_orange_shape"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_12sp"
                 />
-        </LinearLayout>
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_1dp"
@@ -107,6 +127,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:padding="@dimen/size_10dp"
             >
             <TextView
@@ -122,7 +143,9 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:padding="@dimen/size_5dp"
-                android:singleLine="true"
+                android:drawableLeft="@mipmap/ic_home_location"
+                android:drawablePadding="@dimen/size_10dp"
+                android:ems="17"
                 android:text="请选择"
                 android:textColor="@color/home_text"
                 android:textSize="@dimen/size_15sp"
@@ -152,7 +175,7 @@
                 android:background="@color/white"
                 android:padding="@dimen/size_5dp"
                 android:singleLine="true"
-                android:hint="具体地址"
+                android:hint="门牌号，街道"
                 android:textColor="@color/home_text"
                 android:textSize="@dimen/size_15sp"
                 />
