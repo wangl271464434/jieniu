@@ -168,7 +168,6 @@ public class StoreCertifyActivity extends BaseActivity {
             case R.id.tv_city:
                 KeyboardUtil.hideSoftKeyboard(this);
                 startAcy(ChooseAddressActivity.class);
-//                inintCityPicker();
                 break;
             case R.id.submit://提交
                 storeName = etStoreName.getText().toString();
@@ -187,16 +186,22 @@ public class StoreCertifyActivity extends BaseActivity {
                         context = editContext.getText().toString();
                         break;
                 }
-                address = tvCity.getText().toString()+etAddress.getText().toString();
+                if (tvCity.getText().toString()!=null){
+                    if (tvCity.getText().toString().equals("请选择")){
+                        MyToast.show(getApplicationContext(),"请选择所在区域");
+                        return;
+                    }else{
+                        address = tvCity.getText().toString()+etAddress.getText().toString();
+                    }
+                }else{
+                    MyToast.show(getApplicationContext(),"请选择所在区域");
+                    return;
+                }
                 contanct = etContact.getText().toString();
                 weixin = etWeixin.getText().toString();
                 phone = etPhone.getText().toString();
                 if (storeName.isEmpty()||contanct.isEmpty()||phone.isEmpty()){
                     MyToast.show(getApplicationContext(),"门店名称/联系人/电话不能为空");
-                    return;
-                }
-                if (tvCity.getText().toString().equals("请选择")){
-                    MyToast.show(getApplicationContext(),"请选择城市");
                     return;
                 }
                 final StoreCerity storeCerity = new StoreCerity();

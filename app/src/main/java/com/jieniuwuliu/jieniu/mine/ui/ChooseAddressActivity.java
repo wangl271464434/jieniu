@@ -75,8 +75,8 @@ public class ChooseAddressActivity extends AppCompatActivity implements AMapLoca
     public AMapLocationClientOption mLocationOption = null;
     //声明mListener对象，定位监听器
     private LocationSource.OnLocationChangedListener mListener = null;
-    private String province;
-    private String city;
+    private String province = "陕西省";
+    private String city = "西安市";
     private List<AddressItem> list;
     private MapAddressAdapter adapter;
     private PoiItem currentItem = null;

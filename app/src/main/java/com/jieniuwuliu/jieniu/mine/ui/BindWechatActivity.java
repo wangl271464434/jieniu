@@ -89,7 +89,7 @@ public class BindWechatActivity extends BaseActivity {
          wxName = getIntent().getStringExtra("wxName");
         unionid = getIntent().getStringExtra("unionid");
         if (unionid!=null){
-            if (unionid.equals("-1")){
+            if (unionid.equals("-1")||unionid.equals("")){
                 tvWechatName.setText("未绑定");
                 tvBind.setText("绑定微信");
             }else{

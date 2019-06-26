@@ -218,7 +218,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
         banner.start();
     }
 
-    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow,R.id.btn})
+    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow,R.id.btn,R.id.msg})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -249,6 +249,9 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
                 intent.setData(data);
                 startActivity(intent);
+                break;
+            case R.id.msg:
+                MyToast.show(getApplicationContext(),"发送消息");
                 break;
         }
     }

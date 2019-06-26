@@ -96,6 +96,17 @@ public class App extends Application {
          */
         Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         /**
+         *  设置自定义升级对话框UI布局
+         *  注意：因为要保持接口统一，需要用户在指定控件按照以下方式设置tag，否则会影响您的正常使用：
+         *  标题：beta_title，如：android:tag="beta_title"
+         *  升级信息：beta_upgrade_info  如： android:tag="beta_upgrade_info"
+         *  更新属性：beta_upgrade_feature 如： android:tag="beta_upgrade_feature"
+         *  取消按钮：beta_cancel_button 如：android:tag="beta_cancel_button"
+         *  确定按钮：beta_confirm_button 如：android:tag="beta_confirm_button"
+         *  详见layout/upgrade_dialog.xml
+         */
+        Beta.upgradeDialogLayoutId = R.layout.check_dialog;
+        /**
          * 点击过确认的弹窗在APP下次启动自动检查更新时会再次显示;
          */
         Beta.showInterruptedStrategy = true;

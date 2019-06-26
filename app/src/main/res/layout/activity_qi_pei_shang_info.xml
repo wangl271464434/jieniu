@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:background="@color/line_gray"
     tools:context=".qipeishang.QPSORQXInfoActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom"
+        >
     <com.youth.banner.Banner
         android:id="@+id/banner"
         android:layout_width="match_parent"
@@ -211,15 +216,48 @@
                  />
          </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn"
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_gray"
+        android:layout_above="@id/bottom"
+        />
+    <LinearLayout
+        android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:text="拨打电话"
-        android:textSize="@dimen/size_16sp"
-        android:textColor="@color/blue"
-        />
+        >
+        <TextView
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/size_10dp"
+            android:layout_weight="1"
+            android:text="拨打电话"
+            android:textSize="@dimen/size_16sp"
+            android:textColor="@color/blue"
+            />
+        <View
+            android:layout_width="@dimen/size_1dp"
+            android:layout_height="match_parent"
+            android:background="@color/line_gray"
+            />
+        <TextView
+            android:id="@+id/msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/size_10dp"
+            android:layout_weight="1"
+            android:text="发消息"
+            android:textSize="@dimen/size_16sp"
+            android:textColor="@color/blue"
+            />
+    </LinearLayout>
+
 </RelativeLayout>

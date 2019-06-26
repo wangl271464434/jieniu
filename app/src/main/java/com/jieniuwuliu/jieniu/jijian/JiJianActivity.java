@@ -246,7 +246,7 @@ public class JiJianActivity extends BaseActivity {
                 if (user.getPersonType() ==2){//判断是否是汽修厂
                     juliPrice = 5;
                 }else{
-                    juliPrice = 15;
+                    juliPrice = 10;
                 }
                 if (distance/1000>=20){
                     juliPrice = juliPrice+((int)(distance/1000)-20);

@@ -30,7 +30,7 @@
             android:layout_marginRight="@dimen/size_10dp"
             android:layout_toRightOf="@id/back"
             android:layout_toLeftOf="@id/img_search"
-            android:hint="请输入门店名称"
+            android:hint="关键字搜索"
             android:singleLine="true"
             android:textColor="@color/black"
             />
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="请在输入框输入名称搜索"
-            android:textColor="@color/home_text"
+            android:textColor="@color/gray"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/size_180dp"
             android:textSize="@dimen/size_18sp"
