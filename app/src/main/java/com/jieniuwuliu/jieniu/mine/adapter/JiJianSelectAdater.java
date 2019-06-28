@@ -68,8 +68,13 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
             }else{
                 viewHolder.tvPay.setVisibility(View.GONE);
             }
+            if (!list.get(i).getInfo().equals("")){
+                viewHolder.tvInfo.setText("物品信息："+list.get(i).getInfo());
+            }else{
+                viewHolder.tvInfo.setText("物品信息：暂无");
+            }
             viewHolder.tvNo.setText("运单号："+list.get(i).getOrderNumber());
-            viewHolder.tvNum.setText("x"+list.get(i).getNumber());
+            viewHolder.tvNum.setText("x"+list.get(i).getNumber()+"件");
             viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt().replace("T"," ").replace("Z",""));
             float price  = list.get(i).getTotalMoney()/100;
             viewHolder.tvPrice.setText("¥ "+String.format("%.2f",price));
@@ -133,6 +138,8 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         TextView tvNo;
         @BindView(R.id.tv_time)
         TextView tvTime;
+        @BindView(R.id.tv_info)
+        TextView tvInfo;
         @BindView(R.id.tv_num)
         TextView tvNum;
         @BindView(R.id.tv_price)
