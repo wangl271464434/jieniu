@@ -32,7 +32,7 @@ import retrofit2.Response;
 /**
  * 地址列表
  */
-public class AddressListActivity extends BaseActivity implements AddressAdater.CallBack {
+public class AddressListActivity extends BaseActivity {
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.rv)
@@ -58,7 +58,6 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
         rv.setLayoutManager(manager);
         adapter = new AddressAdater(this,list);
         rv.setAdapter(adapter);
-        adapter.setCallBack(this);
     }
 
     @Override
@@ -112,13 +111,5 @@ public class AddressListActivity extends BaseActivity implements AddressAdater.C
                 finish();
                 break;
         }
-    }
-
-    @Override
-    public void modify(int position) {
-        Intent intent = new Intent();
-        intent.setClass(this,ModifyAddressActivity.class);
-        intent.putExtra("address",list.get(position));
-        startActivity(intent);
     }
 }

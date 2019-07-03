@@ -47,6 +47,15 @@ public class AliPayResult {
         private String Appid;
         private String out_trade_no;
         private String Notify;
+        private String AuthInfo;
+
+        public String getAuthInfo() {
+            return AuthInfo;
+        }
+
+        public void setAuthInfo(String authInfo) {
+            AuthInfo = authInfo;
+        }
 
         public String getPrivateKey() {
             return PrivateKey;

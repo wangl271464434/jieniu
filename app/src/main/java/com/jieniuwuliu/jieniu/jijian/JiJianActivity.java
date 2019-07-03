@@ -37,6 +37,7 @@ import com.jieniuwuliu.jieniu.bean.Order;
 import com.jieniuwuliu.jieniu.bean.OrderBean;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.UserBean;
+import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
 import com.jieniuwuliu.jieniu.mine.ui.AddressListActivity;
 import com.jieniuwuliu.jieniu.mine.ui.MyTicketActivity;
@@ -51,6 +52,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -108,7 +110,7 @@ public class JiJianActivity extends BaseActivity {
     private Coupon.DataBean data;
     private String token;
     private UserBean.DataBean user;
-    private LatLng start,end;
+    private LatLonPoint start,end;
     private int yunfei = 0;
     private int baojiaPrice = 0,weightPrice = 0,juliPrice = 0,numPrice=0,youhuiPrice = 0,daishouPrice = 0,baojiaMoney = 0;
     private boolean flag = false;//判断是否免运费
@@ -162,7 +164,7 @@ public class JiJianActivity extends BaseActivity {
                         tvFaName.setText(user.getNickname());
                         tvFaPhone.setText(user.getAddress().getPhone());
                         tvFaAddress.setText(user.getAddress().getAddress().replace("陕西省",""));
-                        start = new LatLng(user.getAddress().getLat(),user.getAddress().getLng());
+                        start = new LatLonPoint(user.getAddress().getLat(),user.getAddress().getLng());
                         tvMoney.setText(""+getYunFeiPrice());
                         tvTotalMoney.setText(""+getTotalPrice());
                     }
@@ -234,9 +236,9 @@ public class JiJianActivity extends BaseActivity {
             tvShouName.setText(event.getContactInfo().getCompany());
             tvShouAddress.setText(event.getContactInfo().getAddress().replace("陕西省",""));
             tvShouPhone.setText(event.getContactInfo().getPhone());
-            end = new LatLng(event.getContactInfo().getLat(),event.getContactInfo().getLng());
+            end = new LatLonPoint(event.getContactInfo().getLat(),event.getContactInfo().getLng());
             //计算收货地址和发货地址的驾车距离
-            double distance = AMapUtils.calculateLineDistance(start,end);
+//            double distance = AMapUtils.calculateLineDistance(start,end);
             if (event.getContactInfo().isVip()){
                 imgShouVip.setVisibility(View.VISIBLE);
                 flag = true;
@@ -248,13 +250,29 @@ public class JiJianActivity extends BaseActivity {
                 }else{
                     juliPrice = 10;
                 }
-                if (distance/1000>=20){
-                    juliPrice = juliPrice+((int)(distance/1000)-20);
-                }
+                List<LatLonPoint> points = new ArrayList<>();
+                points.add(start);
+                DistanceSearch search = new DistanceSearch(JiJianActivity.this);
+                DistanceSearch.DistanceQuery query = new DistanceSearch.DistanceQuery();
+                query.setOrigins(points);//支持多起点
+                query.setDestination(end);
+                //设置测量方式，支持直线和驾车
+                query.setType(DistanceSearch.TYPE_DRIVING_DISTANCE);//设置为驾车
+                search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
+                    @Override
+                    public void onDistanceSearched(DistanceResult distanceResult, int i) {
+                        Double distance = Double.valueOf(distanceResult.getDistanceResults().get(0).getDistance());
+                        if (distance/1000>=20){
+                            juliPrice = juliPrice+((int)(distance/1000)-20);
+                        }
+                        toUid = event.getContactInfo().getId();
+                        tvMoney.setText(""+getYunFeiPrice());
+                        tvTotalMoney.setText(""+getTotalPrice());
+                    }
+                });
+                search.calculateRouteDistanceAsyn(query);
+
             }
-            toUid = event.getContactInfo().getId();
-            tvMoney.setText(""+getYunFeiPrice());
-            tvTotalMoney.setText(""+getTotalPrice());
         }
         if (event.getUser()!=null){
             kuaidiId = event.getUser().getId();
@@ -324,8 +342,8 @@ public class JiJianActivity extends BaseActivity {
         order.setKuaidiID(kuaidiId);
         order.setFromUid(user.getId());
         order.setFromName(tvFaName.getText().toString());
-        order.setFromLat(start.latitude);
-        order.setFromLng(start.longitude);
+        order.setFromLat(start.getLatitude());
+        order.setFromLng(start.getLongitude());
         order.setFromPhone(tvFaPhone.getText().toString());
         order.setFromAddress(tvFaAddress.getText().toString());
         if (type.equals("上门取件")){
@@ -335,8 +353,8 @@ public class JiJianActivity extends BaseActivity {
         }
         order.setToUid(toUid);
         order.setToName(tvShouName.getText().toString());
-        order.setToLat(end.latitude);
-        order.setToLng(end.longitude);
+        order.setToLat(end.getLatitude());
+        order.setToLng(end.getLongitude());
         order.setToPhone(tvShouPhone.getText().toString());
         order.setToAddress(tvShouAddress.getText().toString());
         order.setWeight(weightType);

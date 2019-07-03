@@ -23,12 +23,6 @@ public class AddressAdater extends RecyclerView.Adapter<AddressAdater.ViewHolder
     private Context context;
     private OnItemClickListener listener;
     private List<Address> list;
-    private CallBack callBack;
-
-    public void setCallBack(CallBack callBack) {
-        this.callBack = callBack;
-    }
-
     public AddressAdater(Context context, List<Address> list) {
         this.context = context;
         this.list = list;
@@ -53,16 +47,6 @@ public class AddressAdater extends RecyclerView.Adapter<AddressAdater.ViewHolder
         Address item = list.get(i);
         viewHolder.tvAddress.setText(item.getAddress().replace("陕西省",""));
         viewHolder.tvInfo.setText(item.getName()+"  "+item.getPhone());
-        viewHolder.tvDefault.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callBack.modify(i);
-            }
-        });
-
-    }
-    public interface CallBack{
-        void modify(int position);
     }
     @Override
     public int getItemCount() {
@@ -81,8 +65,6 @@ public class AddressAdater extends RecyclerView.Adapter<AddressAdater.ViewHolder
         TextView tvAddress;
         @BindView(R.id.tv_info)
         TextView tvInfo;
-        @BindView(R.id.tv_default)
-        TextView tvDefault;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

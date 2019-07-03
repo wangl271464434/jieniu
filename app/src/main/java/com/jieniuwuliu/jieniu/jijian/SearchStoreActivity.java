@@ -67,6 +67,7 @@ public class SearchStoreActivity extends BaseActivity implements OnItemClickList
 
     @Override
     protected void init() {
+        info = getIntent().getStringExtra("info");
         list = new ArrayList<>();
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
@@ -79,6 +80,15 @@ public class SearchStoreActivity extends BaseActivity implements OnItemClickList
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
         refreshLayout.setNoMoreData(true);
+        if (!info.equals("")){
+            etSearch.setText(info);
+            etSearch.setSelection(info.length());
+            empty.setVisibility(View.GONE);
+            search(info);
+        }else{
+            empty.setText("未搜索到内容，请返回添加门店");
+            empty.setVisibility(View.VISIBLE);
+        }
     }
     @OnClick({R.id.back, R.id.img_search})
     public void onViewClicked(View view) {
@@ -93,6 +103,7 @@ public class SearchStoreActivity extends BaseActivity implements OnItemClickList
                     MyToast.show(getApplicationContext(),"请输入搜索内容");
                     return;
                 }
+                list.clear();
                 search(info);
                 break;
         }
@@ -123,6 +134,7 @@ public class SearchStoreActivity extends BaseActivity implements OnItemClickList
                     if (list.size()!=0){
                         empty.setVisibility(View.GONE);
                     }else{
+                        empty.setText("未搜索到内容，请返回添加门店");
                         empty.setVisibility(View.VISIBLE);
                     }
                 }catch (Exception e){

@@ -197,7 +197,7 @@ public class StoreInfoActivity extends BaseActivity {
                 MyToast.show(StoreInfoActivity.this,"请重新进行认证");
                 break;
             case R.id.et_address:
-                startAcy(AddressListActivity.class);
+                MyToast.show(StoreInfoActivity.this,"请重新进行认证");
                 break;
             case R.id.et_contact://联系人
                 intent = new Intent();

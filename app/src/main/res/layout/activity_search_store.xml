@@ -73,7 +73,7 @@
             android:id="@+id/empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="请在输入框输入名称搜索"
+            android:text=""
             android:textColor="@color/gray"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/size_180dp"

@@ -10,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
+import com.fasterxml.jackson.core.io.JsonEOFException;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AliPayUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
@@ -25,8 +26,10 @@ import com.jieniuwuliu.jieniu.bean.PayResult;
 import com.jieniuwuliu.jieniu.jijian.PayTypeActivity;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -96,7 +99,7 @@ public class MonthCardPayActivity extends BaseActivity {
             case R.id.btn_sure:
                 switch (payType){
                     case 1:
-                        MyToast.show(this,"该功能暂未开放");
+                        MyToast.show(this,"请选择支付宝支付");
 //                        wxPay();
                         break;
                     case 2:
@@ -121,19 +124,16 @@ public class MonthCardPayActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<AliPayResult> response) {
                 loading.dismiss();
-                try {
-                    String privateKey = response.body().getData().getPrivateKey();
-                    String appId = response.body().getData().getAppid();
-                    String notify = response.body().getData().getNotify();
-                    String order_no = response.body().getData().getOut_trade_no();
-                    Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.MONTH_CARD,money,order_no,notify);
-                    String orderParam = AliPayUtil.buildOrderParam(map);
-                    String sign =  AliPayUtil.pay(privateKey,map);
-                    String orderInfo = orderParam +"&"+sign;
-                    aliPay(orderInfo);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                String privateKey = response.body().getData().getPrivateKey();
+                String appId = response.body().getData().getAppid();
+                String notify = response.body().getData().getNotify();
+                String order_no = response.body().getData().getOut_trade_no();
+                Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.MONTH_CARD,money,order_no,notify);
+                String orderParam = AliPayUtil.buildOrderParam(map);
+                String sign =  AliPayUtil.pay(privateKey,map);
+                String orderInfo = orderParam +"&"+sign;
+//                String orderInfo = response.body().getData().getAuthInfo();
+                aliPay(orderInfo);
             }
 
             @Override
@@ -144,7 +144,9 @@ public class MonthCardPayActivity extends BaseActivity {
                     Log.w("result",s);
                     JSONObject object = new JSONObject(s);
                     MyToast.show(getApplicationContext(), object.getString("msg"));
-                }catch (Exception e){
+                }catch (IOException e){
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }

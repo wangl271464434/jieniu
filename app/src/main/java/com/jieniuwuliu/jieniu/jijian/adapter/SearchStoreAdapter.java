@@ -46,8 +46,9 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
         viewHolder.name.setText(list.get(i).getNickname());
+        viewHolder.phone.setText("联系电话："+list.get(i).getAddress().getPhone());
         GlideUtil.setImgUrl(context,list.get(i).getShopPhoto(),viewHolder.img);
-        viewHolder.address.setText(list.get(i).getAddress().getAddress().replace("陕西省",""));
+        viewHolder.address.setText("地址："+list.get(i).getAddress().getAddress().replace("陕西省",""));
     }
 
     @Override
@@ -66,6 +67,8 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
         ImageView img;
         @BindView(R.id.name)
         TextView name;
+        @BindView(R.id.phone)
+        TextView phone;
         @BindView(R.id.address)
         TextView address;
         ViewHolder(View view) {

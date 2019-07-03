@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.jijian;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -112,7 +113,11 @@ public class EditShouAdrActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_store_search:
-                startAcy(SearchStoreActivity.class);
+                String info = etCompany.getText().toString();
+                Intent intent = new Intent();
+                intent.setClass(this,SearchStoreActivity.class);
+                intent.putExtra("info",info);
+                startActivity(intent);
                 break;
             case R.id.tv_city:
                 KeyboardUtil.hideSoftKeyboard(this);
