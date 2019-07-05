@@ -185,14 +185,15 @@ public class PayTypeActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<AliPayResult> response) {
                 loading.dismiss();
-                String privateKey = response.body().getData().getPrivateKey();
+              /*  String privateKey = response.body().getData().getPrivateKey();
                 String appId = response.body().getData().getAppid();
                 String notify = response.body().getData().getNotify();
                 String order_no = response.body().getData().getOut_trade_no();
                 Map<String,String> map = AliPayUtil.buildOrderParamMap(appId,Constant.JIJIAN,money,order_no,notify);
                 String orderParam = AliPayUtil.buildOrderParam(map);
                 String sign =  AliPayUtil.pay(privateKey,map);
-                String orderInfo = orderParam +"&"+sign;
+                String orderInfo = orderParam +"&"+sign;*/
+                String orderInfo = response.body().getData().getAuthInfo();
                 aliPay(orderInfo);
             }
 

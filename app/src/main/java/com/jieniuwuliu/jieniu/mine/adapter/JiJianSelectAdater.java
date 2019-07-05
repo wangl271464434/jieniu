@@ -60,6 +60,25 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         if (list.size()!=0){
             if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))) {
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
+                if (list.get(i).isCancel()){//先进性判断能不能被取消
+                    if (list.get(i).isCancelStatus()){//判断是否取消
+                        viewHolder.layoutCancel.setVisibility(View.GONE);
+                        viewHolder.imgFinish.setVisibility(View.VISIBLE);
+                        viewHolder.imgFinish.setImageResource(R.mipmap.icon_yiquxiao);
+                    }else{
+                        viewHolder.layoutCancel.setVisibility(View.VISIBLE);
+                    }
+                }else{
+                    viewHolder.layoutCancel.setVisibility(View.GONE);
+                }
+                viewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        list.get(i).setCancel(true);
+                        list.get(i).setCancelStatus(true);
+                        callBack.cancel(i);
+                    }
+                });
             } else {
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_shoujian);
             }
@@ -84,17 +103,6 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
             }else{
                 viewHolder.imgFinish.setVisibility(View.GONE);
             }
-            if (list.get(i).isCancel()){//先进性判断能不能被取消
-                if (list.get(i).isCancelStatus()){//判断是否取消
-                    viewHolder.layoutCancel.setVisibility(View.GONE);
-                    viewHolder.imgFinish.setVisibility(View.VISIBLE);
-                    viewHolder.imgFinish.setImageResource(R.mipmap.icon_yiquxiao);
-                }else{
-                    viewHolder.layoutCancel.setVisibility(View.VISIBLE);
-                }
-            }else{
-                viewHolder.layoutCancel.setVisibility(View.GONE);
-            }
             viewHolder.tvPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -103,14 +111,6 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
                     intent.putExtra("orderNo",list.get(i).getOrderNumber());
                     intent.putExtra("price",list.get(i).getTotalMoney());
                     context.startActivity(intent);
-                }
-            });
-            viewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    list.get(i).setCancel(true);
-                    list.get(i).setCancelStatus(true);
-                    callBack.cancel(i);
                 }
             });
         }

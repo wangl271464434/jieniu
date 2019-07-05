@@ -116,7 +116,6 @@ public class App extends Application {
          */
         Beta.canShowUpgradeActs.add(MainActivity.class);
         Bugly.init(getApplicationContext(), Constant.BuglyId, false);
-//        CrashReport.initCrashReport(getApplicationContext(), Constant.BuglyId, false);
     }
     @TargetApi(9)
     protected void setStrictMode() {

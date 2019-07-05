@@ -43,8 +43,6 @@ public class OrderDescActivity extends AppCompatActivity {
     TextView tvDaiShou;
     @BindView(R.id.tv_yunfei)
     TextView tvYunFei;
-    @BindView(R.id.tv_total)
-    TextView tvTotal;
     @BindView(R.id.tv_fahuo_name)
     TextView tvFahuoName;
     @BindView(R.id.tv_fahuo_address)
@@ -111,7 +109,6 @@ public class OrderDescActivity extends AppCompatActivity {
         tvBaojiaMoney.setText("¥ " + (orderWuliuInfo.getBaojiajine() / 100));
         tvDaiShou.setText("¥ " + (orderWuliuInfo.getDaishouMoney() / 100));
         tvYunFei.setText("¥ " + (orderWuliuInfo.getYunfeiMoney() / 100));
-        tvTotal.setText("¥ " + (orderWuliuInfo.getTotalMoney() / 100));
         tvInfo.setText(orderWuliuInfo.getInfo());
         tvFahuoName.setText(orderWuliuInfo.getFromName());
         tvFahuoPhone.setText(orderWuliuInfo.getFromPhone());

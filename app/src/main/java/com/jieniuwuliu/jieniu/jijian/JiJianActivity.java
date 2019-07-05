@@ -93,8 +93,6 @@ public class JiJianActivity extends BaseActivity {
     TextView tvShouAddress;
     @BindView(R.id.tv_money)
     TextView tvMoney;
-    @BindView(R.id.tv_total_money)
-    TextView tvTotalMoney;
     @BindView(R.id.tv_daishou)
     TextView tvDaishou;
     @BindView(R.id.checkbox)
@@ -166,7 +164,6 @@ public class JiJianActivity extends BaseActivity {
                         tvFaAddress.setText(user.getAddress().getAddress().replace("陕西省",""));
                         start = new LatLonPoint(user.getAddress().getLat(),user.getAddress().getLng());
                         tvMoney.setText(""+getYunFeiPrice());
-                        tvTotalMoney.setText(""+getTotalPrice());
                     }
                 }catch (Exception e){e.printStackTrace();}
             }
@@ -209,7 +206,6 @@ public class JiJianActivity extends BaseActivity {
             }
         }
         tvMoney.setText(""+getYunFeiPrice());
-        tvTotalMoney.setText(""+getTotalPrice());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -223,13 +219,11 @@ public class JiJianActivity extends BaseActivity {
                 weightPrice = 0;
             }
             tvMoney.setText(""+getYunFeiPrice());
-            tvTotalMoney.setText(""+getTotalPrice());
         }
         if (event.getNum() != 0) {
             numPrice = (event.getNum()-1)*5;
             tvNum.setText(event.getNum() + "件");
             tvMoney.setText(""+getYunFeiPrice());
-            tvTotalMoney.setText(""+getTotalPrice());
         }
         if (event.getContactInfo()!=null){
             layoutShou.setVisibility(View.VISIBLE);
@@ -267,7 +261,6 @@ public class JiJianActivity extends BaseActivity {
                         }
                         toUid = event.getContactInfo().getId();
                         tvMoney.setText(""+getYunFeiPrice());
-                        tvTotalMoney.setText(""+getTotalPrice());
                     }
                 });
                 search.calculateRouteDistanceAsyn(query);
@@ -365,7 +358,6 @@ public class JiJianActivity extends BaseActivity {
         }else{
             order.setBaojiaMoney(0);
         }
-        order.setTotalMoney(getTotalPrice()*100);
         order.setYunfeiMoney(getYunFeiPrice()*100);
         if (data !=null){
             order.setCouponID(data.getId());
@@ -471,7 +463,6 @@ public class JiJianActivity extends BaseActivity {
                         baojiaMoney = Integer.valueOf(etNum.getText().toString());
                         tvBaojia.setText(tvNum.getText().toString());
                         baojiaPrice = Integer.valueOf(tvNum.getText().toString().replace("¥",""));
-                        tvTotalMoney.setText(""+getTotalPrice());
                         dialog.dismiss();
                     } else {
                         MyToast.show(getApplicationContext(), "5000及5000以上不保价");
@@ -484,7 +475,6 @@ public class JiJianActivity extends BaseActivity {
             public void onClick(View v) {
                 tvBaojia.setText("");
                 baojiaPrice = 0;
-                tvTotalMoney.setText(""+getTotalPrice());
                 dialog.dismiss();
             }
         });
@@ -516,7 +506,6 @@ public class JiJianActivity extends BaseActivity {
                     daishouPrice = Integer.valueOf(s);
                     tvDaishou.setText(s);
                 }
-                tvTotalMoney.setText(""+getTotalPrice());
                 dialog.dismiss();
             }
         });
@@ -535,12 +524,6 @@ public class JiJianActivity extends BaseActivity {
                 return yunfei;
             }
         }
-    }
-    /**
-     * 总价方法
-     * */
-    private int getTotalPrice(){
-        return getYunFeiPrice()+baojiaPrice;
     }
     /**
      * 保价规则

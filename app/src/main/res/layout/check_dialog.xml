@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bugly_bg"
         android:layout_centerInParent="true"
-        android:layout_margin="@dimen/size_30dp"
+        android:layout_margin="@dimen/size_40dp"
         android:orientation="vertical"
         >
         <ImageView
@@ -71,7 +71,7 @@
                 android:textColor="@color/black"
                 android:text="下次再说"
                 android:gravity="center"
-                android:padding="@dimen/size_10dp"
+                android:padding="@dimen/size_15dp"
                 />
             <View
                 android:layout_width="@dimen/size_1dp"
@@ -88,7 +88,7 @@
                 android:textSize="@dimen/size_15sp"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:padding="@dimen/size_10dp"
+                android:padding="@dimen/size_15dp"
                 />
         </LinearLayout>
     </LinearLayout>
