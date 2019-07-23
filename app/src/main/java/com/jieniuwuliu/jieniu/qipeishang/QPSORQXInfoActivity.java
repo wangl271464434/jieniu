@@ -127,7 +127,17 @@ public class QPSORQXInfoActivity extends BaseActivity {
                             storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"),StoreInfoBean.class);
                             tvName.setText(storeBean.getNickname());
                             name.setText(storeBean.getAddress().getName());
-                            phone.setText(storeBean.getAddress().getPhone());
+                            String phoneStr = storeBean.getAddress().getPhone();
+                            if (phoneStr.length()==11){
+                                String str1 =  phoneStr.substring(0,3);
+                                String str2 =  phoneStr.substring(8,11);
+                                phoneStr = str1+"******"+str2;
+                            }else{
+                                String str1 =  phoneStr.substring(0,3);
+                                String str2 =  phoneStr.substring(5,8);
+                                phoneStr = str1+"**"+str2;
+                            }
+                            phone.setText(phoneStr);
                             tvWechat.setText(storeBean.getWechat());
                             address.setText(storeBean.getAddress().getAddress());
                             if (storeBean.isFollow()){
@@ -251,7 +261,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.msg:
-                MyToast.show(getApplicationContext(),"发送消息");
+                MyToast.show(getApplicationContext(),"该功能暂未开放");
                 break;
         }
     }

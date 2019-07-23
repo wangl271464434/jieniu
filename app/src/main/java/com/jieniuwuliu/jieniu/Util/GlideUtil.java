@@ -67,7 +67,7 @@ public class GlideUtil {
                 .centerCrop()
                 .into(imageView);
     }
-    public static void setLocal0UserImgUrl(Context context, String path, ImageView imageView) {
+    public static void setLocalUserImgUrl(Context context, String path, ImageView imageView) {
         Glide.with(context)
                 .load(new File(path))
                 .transform(new GlideCircleTransform(context, 2, context.getResources().getColor(R.color.white)))
@@ -80,7 +80,7 @@ public class GlideUtil {
     public static void setUserImgUrl(Context context, String path, ImageView imageView) {
         Glide.with(context)
                 .load(path)
-                .placeholder( R.mipmap.user) //加载成功前显示的图片
+                .placeholder(R.mipmap.user) //加载成功前显示的图片
                 .transform(new GlideCircleTransform(context, 2, context.getResources().getColor(R.color.white)))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imageView);

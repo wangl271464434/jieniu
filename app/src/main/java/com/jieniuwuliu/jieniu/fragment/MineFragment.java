@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.fragment;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -43,6 +44,7 @@ import com.jieniuwuliu.jieniu.mine.ui.AddPicActivity;
 import com.jieniuwuliu.jieniu.mine.ui.AddressListActivity;
 import com.jieniuwuliu.jieniu.jijian.JiJianSelectActivity;
 import com.jieniuwuliu.jieniu.mine.ui.BindWechatActivity;
+import com.jieniuwuliu.jieniu.mine.ui.EditInfoActivity;
 import com.jieniuwuliu.jieniu.mine.ui.FeedBackActivity;
 import com.jieniuwuliu.jieniu.mine.ui.MyFollowActivity;
 import com.jieniuwuliu.jieniu.mine.ui.StoreCertifyActivity;
@@ -72,10 +74,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -84,7 +89,7 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MineFragment extends BaseFragment implements OnItemClickListener{
+public class MineFragment extends BaseFragment implements OnItemClickListener, PicDialog.CallBack {
     @BindView(R.id.tv_name)
     TextView tvName;
     @BindView(R.id.tv_type)
@@ -116,6 +121,12 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
     private final int CAMERA_CODE = 1002;//请求相机的请求码
     private MyLoading dialog ;
     private String type="";
+    private  File pictureFile;
+    private String imgUrl = "";
+    private boolean isImg = false;
+    private String[] permissions = new String[]{Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.mine;
@@ -145,9 +156,11 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        token = (String) SPUtil.get(getContext(),Constant.TOKEN,Constant.TOKEN,"");
-        Log.w("token",token);
-        getUserInfo(token);
+        if (!isImg){
+            token = (String) SPUtil.get(getContext(),Constant.TOKEN,Constant.TOKEN,"");
+            Log.w("token",token);
+            getUserInfo(token);
+        }
     }
 
     /**
@@ -324,13 +337,16 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
         dialog.show();
     }
 
-    @OnClick({R.id.setting,R.id.tv_like,R.id.layout_address})
+    @OnClick({R.id.setting,R.id.head_img,R.id.tv_like,R.id.layout_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.setting://设置
                 intent = new Intent();
                 intent.setClass(getActivity(),SettingActivity.class);
                 getActivity().startActivity(intent);
+                break;
+            case R.id.head_img:
+                new PicDialog(getActivity(),this);
                 break;
             case R.id.layout_address://地址
                 intent = new Intent();
@@ -352,5 +368,150 @@ public class MineFragment extends BaseFragment implements OnItemClickListener{
                 Log.i("MainActivity", "申请的权限为：" + permissions[i] + ",申请结果：" + grantResults[i]);
             }
         }
+    }
+    //相册
+    @Override
+    public void openPic() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if ( ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    ||  ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(getActivity(),permissions,100);
+                return;
+            }
+        }
+        isImg = true;
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, PIC_CODE);
+    }
+    //相机
+    @Override
+    public void openCamera() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if ( ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    ||  ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(getActivity(),permissions,100);
+                return;
+            }
+        }
+        isImg = true;
+        pictureFile = FileUtil.createImageFile(getActivity());
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, pictureFile.getAbsolutePath());
+            uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+        }else {
+            uri = Uri.fromFile(pictureFile);
+        }
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(cameraIntent, CAMERA_CODE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PIC_CODE://相册
+                if (data!=null){
+                    Log.w("imgurl", "onActivityResult:相册 " + data.getData().toString());
+                    ContentResolver resolver = getActivity().getContentResolver();
+                    try {
+                        InputStream inputStream = resolver.openInputStream(data.getData());
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        Cursor cursor = resolver.query(data.getData(),
+                                new String[]{MediaStore.Images.ImageColumns.DATA},//
+                                null, null, null);
+                        if (cursor == null){
+                            imgUrl = data.getData().getPath();
+                        }else {
+                            cursor.moveToFirst();
+                            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                            imgUrl = cursor.getString(index);
+                            cursor.close();
+                        }
+                        GlideUtil.setLocalUserImgUrl(getActivity(),imgUrl,headImg);
+                        upload(imgUrl);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case CAMERA_CODE://相机
+                Log.w("img", pictureFile.getPath());
+                GlideUtil.setLocalUserImgUrl(getActivity(),pictureFile.getPath(),headImg);
+                upload(pictureFile.getPath());
+                break;
+        }
+    }
+    /**
+     * 上传图片
+     * */
+    private void upload(String path) {
+        COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(getActivity()).upload("img",new File(path).getName(),path);
+        storeTask.setCosXmlResultListener(new CosXmlResultListener() {
+            @Override
+            public void onSuccess(CosXmlRequest request, CosXmlResult result) {
+                Log.w("返回结果","Success: " +result.accessUrl);
+                updata(result.accessUrl);
+            }
+
+            @Override
+            public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
+                Log.w("返回结果", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
+                MyToast.show(getActivity(),(exception == null ? serviceException.getMessage() : exception.toString()));
+            }
+        });
+    }
+
+    /**
+     * 修改头像
+     * */
+    private void updata(final String url) {
+        try {
+            JSONObject object = new JSONObject();
+            object.put("shopPhoto",url);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
+            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).modifyStoreInfo(body);
+            call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
+                @Override
+                public void onSuccess(Response<ResponseBody> response) {
+                    isImg = false;
+                    try {
+                        Log.i("result",response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onFail(int errorCode, Response<ResponseBody> response) {
+                    isImg = false;
+                    try {
+                        String s = response.errorBody().string();
+                        Log.w("result", s);
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getActivity(), object.getString("msg"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onNetError(String s) {
+                    isImg = false;
+                    MyToast.show(getActivity(),s);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.i("异常信息",e.toString());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

@@ -105,7 +105,7 @@ public class EditInfoActivity extends BaseActivity {
         }
         map.put("default",true);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));
-        Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).updateAddress(aid,body);
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateAddress(aid,body);
         call.enqueue(new SimpleCallBack<ResponseBody>(EditInfoActivity.this) {
             @Override
             public void onSuccess(Response<ResponseBody> response) {
@@ -157,7 +157,7 @@ public class EditInfoActivity extends BaseActivity {
                 break;
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));
-        Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).modifyStoreInfo(body);
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).modifyStoreInfo(body);
         call.enqueue(new SimpleCallBack<ResponseBody>(EditInfoActivity.this) {
             @Override
             public void onSuccess(Response<ResponseBody> response) {
@@ -189,6 +189,5 @@ public class EditInfoActivity extends BaseActivity {
                 MyToast.show(getApplicationContext(),s);
             }
         });
-
     }
 }

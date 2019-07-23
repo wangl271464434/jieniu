@@ -21,6 +21,7 @@ public class VideoActivity extends BaseActivity{
     }
     @Override
     protected void init() {
+
         videoUrl =  getIntent().getStringExtra("video");
     }
     @Override

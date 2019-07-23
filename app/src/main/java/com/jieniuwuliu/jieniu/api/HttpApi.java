@@ -275,4 +275,7 @@ public interface HttpApi {
      * */
     @PUT("users/order/cancel/{oid}")
     Call<ResponseBody> cancelOrder(@Path("oid")String orderNo);
+    /**
+     *
+     * */
 }

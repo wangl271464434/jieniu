@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -221,7 +222,6 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
             ContentValues contentValues = new ContentValues(1);
             contentValues.put(MediaStore.Images.Media.DATA, pictureFile.getAbsolutePath());
             uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
@@ -274,5 +274,10 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
