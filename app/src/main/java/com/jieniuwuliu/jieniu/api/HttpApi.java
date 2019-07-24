@@ -276,6 +276,9 @@ public interface HttpApi {
     @PUT("users/order/cancel/{oid}")
     Call<ResponseBody> cancelOrder(@Path("oid")String orderNo);
     /**
-     *
+     *  拨打电话
      * */
+    @POST("users/phoneprotect")
+    Call<ResponseBody> callPhone(@Query("wephone")String wePhone,@Query("tophone")String toPhone);
+
 }

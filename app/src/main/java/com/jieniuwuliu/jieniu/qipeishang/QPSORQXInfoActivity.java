@@ -14,6 +14,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +28,7 @@ import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.adapter.GuidePageAdapter;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -91,6 +94,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
     private List<Car> cars;
     private StoreInfoBean storeBean;
     private List<String> imgUrls;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qi_pei_shang_info;
@@ -103,10 +107,10 @@ public class QPSORQXInfoActivity extends BaseActivity {
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rv.setLayoutManager(manager);
         cars = new ArrayList<>();
-        adapter = new StoreCarAdapter(this,cars);
+        adapter = new StoreCarAdapter(this, cars);
         rv.setAdapter(adapter);
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
-        id = getIntent().getIntExtra("id",0);
+        id = getIntent().getIntExtra("id", 0);
         getStoreInfo(token);
 
     }
@@ -120,56 +124,56 @@ public class QPSORQXInfoActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    switch (response.code()){
+                    switch (response.code()) {
                         case 200:
                             ResponseBody body = response.body();
                             String json = body.string();
-                            storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"),StoreInfoBean.class);
+                            storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"), StoreInfoBean.class);
                             tvName.setText(storeBean.getNickname());
                             name.setText(storeBean.getAddress().getName());
                             String phoneStr = storeBean.getAddress().getPhone();
-                            if (phoneStr.length()==11){
-                                String str1 =  phoneStr.substring(0,3);
-                                String str2 =  phoneStr.substring(8,11);
-                                phoneStr = str1+"******"+str2;
-                            }else{
-                                String str1 =  phoneStr.substring(0,3);
-                                String str2 =  phoneStr.substring(5,8);
-                                phoneStr = str1+"**"+str2;
+                            if (phoneStr.length() == 11) {
+                                String str1 = phoneStr.substring(0, 3);
+                                String str2 = phoneStr.substring(8, 11);
+                                phoneStr = str1 + "******" + str2;
+                            } else {
+                                String str1 = phoneStr.substring(0, 3);
+                                String str2 = phoneStr.substring(5, 8);
+                                phoneStr = str1 + "**" + str2;
                             }
                             phone.setText(phoneStr);
                             tvWechat.setText(storeBean.getWechat());
                             address.setText(storeBean.getAddress().getAddress());
-                            if (storeBean.isFollow()){
+                            if (storeBean.isFollow()) {
                                 tvFollow.setText("已关注");
-                            }else {
+                            } else {
                                 tvFollow.setText("关注");
                             }
-                        switch (storeBean.getPersonType()){
-                            case 1://汽配商
-                                layoutCar.setVisibility(View.VISIBLE);
-                                layoutYewu.setVisibility(View.GONE);
-                                break;
-                            case 2://汽修商
-                                layoutYewu.setVisibility(View.VISIBLE);
-                                layoutCar.setVisibility(View.GONE);
-                                tvYewu.setText("主营业务：");
-                                tvContext.setText(storeBean.getYewu());
-                                break;
-                           default:
-                               tvYewu.setText("经营范围：");
-                                layoutYewu.setVisibility(View.VISIBLE);
-                                layoutCar.setVisibility(View.GONE);
-                                tvContext.setText(storeBean.getYewu());
-                                break;
-                        }
-                        if (!storeBean.getShopPhoto().equals("")){
-                            imgUrls.add(storeBean.getShopPhoto());
-                        }
-                        if (!storeBean.getPhotos().equals("")){
+                            switch (storeBean.getPersonType()) {
+                                case 1://汽配商
+                                    layoutCar.setVisibility(View.VISIBLE);
+                                    layoutYewu.setVisibility(View.GONE);
+                                    break;
+                                case 2://汽修商
+                                    layoutYewu.setVisibility(View.VISIBLE);
+                                    layoutCar.setVisibility(View.GONE);
+                                    tvYewu.setText("主营业务：");
+                                    tvContext.setText(storeBean.getYewu());
+                                    break;
+                                default:
+                                    tvYewu.setText("经营范围：");
+                                    layoutYewu.setVisibility(View.VISIBLE);
+                                    layoutCar.setVisibility(View.GONE);
+                                    tvContext.setText(storeBean.getYewu());
+                                    break;
+                            }
+                            if (!storeBean.getShopPhoto().equals("")) {
+                                imgUrls.add(storeBean.getShopPhoto());
+                            }
+                            if (!storeBean.getPhotos().equals("")) {
                                 try {
                                     JSONArray array = new JSONArray(storeBean.getPhotos());
-                                    for (int i = 0;i<array.length();i++){
+                                    for (int i = 0; i < array.length(); i++) {
                                         imgUrls.add(array.get(i).toString());
                                     }
                                 } catch (JSONException e) {
@@ -177,12 +181,12 @@ public class QPSORQXInfoActivity extends BaseActivity {
                                 }
                             }
                             setViewPage(imgUrls);
-                        if (storeBean.getFuwuCar()!=null){
-                            if (storeBean.getFuwuCar().size()>0){
-                                cars.addAll(storeBean.getFuwuCar());
-                                adapter.notifyDataSetChanged();
+                            if (storeBean.getFuwuCar() != null) {
+                                if (storeBean.getFuwuCar().size() > 0) {
+                                    cars.addAll(storeBean.getFuwuCar());
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
-                        }
                             break;
                         case 400:
                             try {
@@ -198,9 +202,9 @@ public class QPSORQXInfoActivity extends BaseActivity {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
-                }catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
@@ -212,6 +216,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * 设置轮播图
      * */
@@ -228,43 +233,80 @@ public class QPSORQXInfoActivity extends BaseActivity {
         banner.start();
     }
 
-    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow,R.id.btn,R.id.msg})
+    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow, R.id.btn, R.id.msg})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
             case R.id.tv_follow://关注/取消关注
-                if (storeBean.isFollow()){
+                if (storeBean.isFollow()) {
                     cancelFollow();
-                }else{
+                } else {
                     addFollow();
                 }
                 break;
             case R.id.tv_fuzhi://复制微信号
                 ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Label",storeBean.getWechat());
+                ClipData clipData = ClipData.newPlainText("Label", storeBean.getWechat());
                 manager.setPrimaryClip(clipData);
-                MyToast.show(this,"复制成功");
+                MyToast.show(this, "复制成功");
                 break;
             case R.id.btn://打电话
-                if (Build.VERSION.SDK_INT >= 23) {
-                    int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
-                    if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
-                        return;
-                    }
+                TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
                 }
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
-                intent.setData(data);
-                startActivity(intent);
+                String tel = tm.getLine1Number();
+                call(tel,storeBean.getAddress().getPhone());
                 break;
             case R.id.msg:
                 MyToast.show(getApplicationContext(),"该功能暂未开放");
                 break;
         }
     }
+    /**
+     * 打电话
+     * */
+    private void call(String tel, String phone) {
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).callPhone(tel,phone);
+        call.enqueue(new SimpleCallBack<ResponseBody>(this) {
+            @Override
+            public void onSuccess(Response<ResponseBody> response) {
+                try {
+                    String s = response.body().string();
+                    MyToast.show(QPSORQXInfoActivity.this,s);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try {
+                    String s = response.errorBody().string();
+                    MyToast.show(QPSORQXInfoActivity.this,s);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(QPSORQXInfoActivity.this,s);
+            }
+        });
+    }
+
     /**
      * 添加关注
      * */
@@ -294,7 +336,6 @@ public class QPSORQXInfoActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
