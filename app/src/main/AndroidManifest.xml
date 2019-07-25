@@ -248,7 +248,9 @@
         <activity
             android:name=".jijian.SearchStoreActivity"
             android:windowSoftInputMode="adjustPan|adjustResize" />
-        <activity android:name=".home.XJCarTypeActivity"></activity>
+        <activity android:name=".home.XJCarTypeActivity" />
+        <activity android:name=".home.XjInfoActivity" />
+        <activity android:name=".home.XjAddCarTypeActivity"></activity>
     </application>
 
 </manifest>
