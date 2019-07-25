@@ -284,7 +284,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
             public void onSuccess(Response<ResponseBody> response) {
                 try {
                     String s = response.body().string();
-                    MyToast.show(QPSORQXInfoActivity.this,s);
+                    MyToast.show(QPSORQXInfoActivity.this,"正在拨打电话,请耐心等候……");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
