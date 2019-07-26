@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.DistanceItem;
 import com.amap.api.services.route.DistanceResult;
 import com.amap.api.services.route.DistanceSearch;
 import com.jieniuwuliu.jieniu.FuWuActivity;
@@ -255,6 +256,11 @@ public class JiJianActivity extends BaseActivity {
                 search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
                     @Override
                     public void onDistanceSearched(DistanceResult distanceResult, int i) {
+                        List<DistanceItem> distanceItems = distanceResult.getDistanceResults();
+                        for (DistanceItem distanceItem:distanceItems){
+                          String info =   distanceItem.toString();
+                          Log.i("distance",info);
+                        }
                         Double distance = Double.valueOf(distanceResult.getDistanceResults().get(0).getDistance());
                         if (distance/1000>=20){
                             juliPrice = juliPrice+((int)(distance/1000)-20);
