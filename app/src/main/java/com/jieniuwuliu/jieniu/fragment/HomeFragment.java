@@ -42,6 +42,7 @@ import com.jieniuwuliu.jieniu.bean.RecomStore;
 import com.jieniuwuliu.jieniu.home.QPShopActivity;
 import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.home.XJCarTypeActivity;
+import com.jieniuwuliu.jieniu.home.XJListActivity;
 import com.jieniuwuliu.jieniu.home.adapter.HomeAdapter;
 import com.jieniuwuliu.jieniu.home.OrderInfoActivity;
 import com.jieniuwuliu.jieniu.home.adapter.RecomStoreAdapter;
@@ -231,14 +232,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 intent.setClass(getActivity(),QXActivity.class);
                 getActivity().startActivity(intent);
                 break;
-            case R.id.home_tab_2://汽配商城
+            case R.id.home_tab_2://询价
                 intent = new Intent();
                 intent.setClass(getActivity(),XJCarTypeActivity.class);
                 getActivity().startActivity(intent);
                 break;
-            case R.id.home_tab_3://我的快件
+            case R.id.home_tab_3://询价单
                 intent = new Intent();
-                intent.setClass(getActivity(),JiJianSelectActivity.class);
+                intent.setClass(getActivity(),XJListActivity.class);
                 getActivity().startActivity(intent);
                 break;
         }

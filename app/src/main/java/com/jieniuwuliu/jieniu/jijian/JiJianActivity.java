@@ -18,10 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DistanceItem;
 import com.amap.api.services.route.DistanceResult;
 import com.amap.api.services.route.DistanceSearch;
+import com.amap.api.services.route.DrivePath;
+import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.RideRouteResult;
+import com.amap.api.services.route.RouteSearch;
+import com.amap.api.services.route.WalkRouteResult;
 import com.jieniuwuliu.jieniu.FuWuActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
@@ -29,6 +38,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
+import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -41,6 +51,7 @@ import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
 import com.jieniuwuliu.jieniu.mine.ui.AddressListActivity;
 import com.jieniuwuliu.jieniu.mine.ui.MyTicketActivity;
+import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.greenrobot.eventbus.EventBus;
@@ -68,7 +79,7 @@ import retrofit2.Response;
 /**
  * 填写寄件信息
  */
-public class JiJianActivity extends BaseActivity {
+public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteSearchListener {
     @BindView(R.id.tv_type)
     TextView tvType;
     @BindView(R.id.tv_num)
@@ -244,27 +255,13 @@ public class JiJianActivity extends BaseActivity {
                 }else{
                     juliPrice = 10;
                 }
-                List<LatLonPoint> points = new ArrayList<>();
-                points.add(start);
-                DistanceSearch search = new DistanceSearch(JiJianActivity.this);
-                DistanceSearch.DistanceQuery query = new DistanceSearch.DistanceQuery();
-                query.setOrigins(points);//支持多起点
-                query.setDestination(end);
-                //设置测量方式，支持直线和驾车
-                query.setType(DistanceSearch.TYPE_DRIVING_DISTANCE);//设置为驾车
-                search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
-                    @Override
-                    public void onDistanceSearched(DistanceResult distanceResult, int i) {
-                        Double distance = Double.valueOf(distanceResult.getDistanceResults().get(0).getDistance());
-                        if (distance/1000>=20){
-                            juliPrice = juliPrice+((int)(distance/1000)-20);
-                        }
-                        toUid = event.getContactInfo().getId();
-                        tvMoney.setText(""+getYunFeiPrice());
-                    }
-                });
-                search.calculateRouteDistanceAsyn(query);
-
+                toUid = event.getContactInfo().getId();
+                RouteSearch routeSearch = new RouteSearch(this);
+                routeSearch.setRouteSearchListener(this);
+                RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
+                 RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
+                        RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
+                routeSearch.calculateDriveRouteAsyn(query);
             }
         }
         if (event.getUser()!=null){
@@ -556,12 +553,45 @@ public class JiJianActivity extends BaseActivity {
         }
         return a;
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
+        if (i == AMapException.CODE_AMAP_SUCCESS) {
+            if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
+                if (driveRouteResult.getPaths().size() > 0) {
+                    DrivePath drivePath = driveRouteResult.getPaths().get(0);
+                    if (drivePath == null) {
+                        return;
+                    }
+                    Double distance = Double.valueOf(drivePath.getDistance());
+                    if (distance/1000>=20){
+                        juliPrice = juliPrice+((int)(distance/1000)-20);
+                    }
+                    tvMoney.setText(""+getYunFeiPrice());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
+
     }
 }
