@@ -1,10 +1,12 @@
 package com.jieniuwuliu.jieniu.qipeishang;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telecom.TelecomManager;
+import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +38,7 @@ import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Car;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.SMSCore;
 import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
 import com.jieniuwuliu.jieniu.mine.ui.AddStorePicActivity;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.StoreCarAdapter;
@@ -95,7 +99,12 @@ public class QPSORQXInfoActivity extends BaseActivity {
     private List<Car> cars;
     private StoreInfoBean storeBean;
     private List<String> imgUrls;
-
+    private static final String ACTION_SMS_SEND = "lab.sodino.sms.send";
+    private static final String ACTION_SMS_DELIVERY = "lab.sodino.sms.delivery";
+    private static final String ACTION_SMS_RECEIVER = "android.provider.Telephony.SMS_RECEIVED";
+    private String[] permissions = new String[]{Manifest.permission.READ_SMS,
+            Manifest.permission.READ_PHONE_NUMBERS,
+            Manifest.permission.READ_PHONE_STATE};
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qi_pei_shang_info;
@@ -113,7 +122,9 @@ public class QPSORQXInfoActivity extends BaseActivity {
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         id = getIntent().getIntExtra("id", 0);
         getStoreInfo(token);
-
+        SMSReciver smsReceiver= new SMSReciver();
+        IntentFilter receiverFilter = new IntentFilter(ACTION_SMS_RECEIVER);
+        registerReceiver(smsReceiver, receiverFilter);
     }
 
     /**
@@ -254,14 +265,27 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 MyToast.show(this, "复制成功");
                 break;
             case R.id.btn://打电话
-                String tel = PhoneUtil.getPhoneNumber(this);
-                call(tel,storeBean.getAddress().getPhone());
+                if (Build.VERSION.SDK_INT >= 23){
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this,permissions,100);
+                        return;
+                    }
+                }
+                sendMsg();
                 break;
             case R.id.msg:
                 MyToast.show(getApplicationContext(),"该功能暂未开放");
                 break;
         }
     }
+
+    private void sendMsg() {
+        SMSCore smscore=new SMSCore();
+        smscore.SendSMS2("10001", "501", this);
+    }
+
     /**
      * 打电话
      * */
@@ -374,6 +398,39 @@ public class QPSORQXInfoActivity extends BaseActivity {
                     // Permission Denied Toast.makeText(MainActivity.this,"CALL_PHONE Denied", Toast.LENGTH_SHORT) .show();
                 }break;
             default:super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+    class SMSReciver extends BroadcastReceiver {
+        final String GetNumberAddress="10001";
+        @Override
+        public void onReceive(Context context, Intent intent) {
+// TODO Auto-generated method stub
+            if(intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")){
+
+                Object[] pdus=(Object[])intent.getExtras().get("pdus");
+                //不知道为什么明明只有一条消息，传过来的却是数组，也许是为了处理同时同分同秒同毫秒收到多条短信
+                //但这个概率有点小
+                SmsMessage[] message=new SmsMessage[pdus.length];
+                StringBuilder sb=new StringBuilder();
+                System.out.println("pdus长度"+pdus.length);
+                String address="";
+                for(int i=0;i<pdus.length;i++){
+                    //虽然是循环，其实pdus长度一般都是1
+                    message[i]=SmsMessage.createFromPdu((byte[])pdus[i]);
+                    sb.append("接收到短信来自:\n");
+                    address=message[i].getDisplayOriginatingAddress();
+                    sb.append(address+"\n");
+                    sb.append("内容:"+message[i].getDisplayMessageBody());
+                }
+                System.out.println(sb.toString());
+                if(SMSCore.PhoneNumber==""&&address.equals(GetNumberAddress)){
+                    SMSCore.PhoneNumber=SMSCore.GetPhoneNumberFromSMSText(sb.toString());
+//                MessageTools.ShowDialog(context, address);
+                }
+                call(SMSCore.PhoneNumber,storeBean.getAddress().getPhone());
+//            MessageTools.ShowDialog(context, sb.toString().trim());
+//            MessageTools.ShowDialog(context, SMSCore.PhoneNumber);
+            }
         }
     }
 }
