@@ -22,7 +22,6 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.route.DistanceItem;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DistanceItem;
 import com.amap.api.services.route.DistanceResult;
@@ -52,6 +51,7 @@ import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
 import com.jieniuwuliu.jieniu.mine.ui.AddressListActivity;
 import com.jieniuwuliu.jieniu.mine.ui.MyTicketActivity;
+import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.greenrobot.eventbus.EventBus;
@@ -255,32 +255,6 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
                 }else{
                     juliPrice = 10;
                 }
-                List<LatLonPoint> points = new ArrayList<>();
-                points.add(start);
-                DistanceSearch search = new DistanceSearch(JiJianActivity.this);
-                DistanceSearch.DistanceQuery query = new DistanceSearch.DistanceQuery();
-                query.setOrigins(points);//支持多起点
-                query.setDestination(end);
-                //设置测量方式，支持直线和驾车
-                query.setType(DistanceSearch.TYPE_DRIVING_DISTANCE);//设置为驾车
-                search.setDistanceSearchListener(new DistanceSearch.OnDistanceSearchListener() {
-                    @Override
-                    public void onDistanceSearched(DistanceResult distanceResult, int i) {
-                        List<DistanceItem> distanceItems = distanceResult.getDistanceResults();
-                        for (DistanceItem distanceItem:distanceItems){
-                          String info =   distanceItem.toString();
-                          Log.i("distance",info);
-                        }
-                        Double distance = Double.valueOf(distanceResult.getDistanceResults().get(0).getDistance());
-                        if (distance/1000>=20){
-                            juliPrice = juliPrice+((int)(distance/1000)-20);
-                        }
-                        toUid = event.getContactInfo().getId();
-                        tvMoney.setText(""+getYunFeiPrice());
-                    }
-                });
-                search.calculateRouteDistanceAsyn(query);
-
                 toUid = event.getContactInfo().getId();
                 RouteSearch routeSearch = new RouteSearch(this);
                 routeSearch.setRouteSearchListener(this);
@@ -579,7 +553,6 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
         }
         return a;
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
@@ -103,6 +104,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
     private static final String ACTION_SMS_DELIVERY = "lab.sodino.sms.delivery";
     private static final String ACTION_SMS_RECEIVER = "android.provider.Telephony.SMS_RECEIVED";
     private String[] permissions = new String[]{Manifest.permission.READ_SMS,
+            Manifest.permission.SEND_SMS,
             Manifest.permission.READ_PHONE_NUMBERS,
             Manifest.permission.READ_PHONE_STATE};
     @Override
@@ -266,7 +268,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 break;
             case R.id.btn://打电话
                 if (Build.VERSION.SDK_INT >= 23){
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this,permissions,100);
@@ -390,23 +392,31 @@ public class QPSORQXInfoActivity extends BaseActivity {
     //动态权限申请后处理
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults){
-        switch (requestCode) {
-            case 100:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted callDirectly(mobile);
-                }else {
-                    // Permission Denied Toast.makeText(MainActivity.this,"CALL_PHONE Denied", Toast.LENGTH_SHORT) .show();
-                }break;
-            default:super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != 100){
+            return;
+        }
+        if (grantResults.length>0){
+            List<String> deniedPermissionList = new ArrayList<>();
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissionList.add(permissions[i]);
+                }
+            }
+            if (deniedPermissionList.isEmpty()) {
+                //已经全部授权
+                sendMsg();
+            } else {
+                MyToast.show(getApplicationContext(),"请授与相应的授权");
+            }
         }
     }
     class SMSReciver extends BroadcastReceiver {
         final String GetNumberAddress="10001";
         @Override
         public void onReceive(Context context, Intent intent) {
-// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
             if(intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")){
-
                 Object[] pdus=(Object[])intent.getExtras().get("pdus");
                 //不知道为什么明明只有一条消息，传过来的却是数组，也许是为了处理同时同分同秒同毫秒收到多条短信
                 //但这个概率有点小

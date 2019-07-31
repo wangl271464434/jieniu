@@ -60,7 +60,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         if (list.size()!=0){
             if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))) {
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
-                if (list.get(i).isCancel()){//先进性判断能不能被取消
+                if (list.get(i).isCancel()){ //先进行判断能不能被取消
                     if (list.get(i).isCancelStatus()){//判断是否取消
                         viewHolder.layoutCancel.setVisibility(View.GONE);
                         viewHolder.imgFinish.setVisibility(View.VISIBLE);
@@ -80,6 +80,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
                     }
                 });
             } else {
+                viewHolder.layoutCancel.setVisibility(View.GONE);
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_shoujian);
             }
             if (list.get(i).getPayType()==0){

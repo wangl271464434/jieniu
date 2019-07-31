@@ -37,11 +37,6 @@ public class SMSCore {
         }
         return list;
     }
-
-    //===========================================================
-    //
-    //
-    //=============Send SMS================
     public  void SendSMS(String number,String text,Context context){
 
         PendingIntent pi = PendingIntent.getActivity(context, 0,
@@ -56,26 +51,6 @@ public class SMSCore {
         String DELIVERED = "sms_delivered";
         PendingIntent sentPI = PendingIntent.getActivity(context, 0, new Intent(SENT), 0);
         PendingIntent deliveredPI = PendingIntent.getActivity(context, 0, new Intent(DELIVERED), 0);
-//
-//          //
-//           registerReceiver(new BroadcastReceiver(){
-//                  @Override
-//                  public void onReceive(Context context, Intent intent){
-//                      switch(getResultCode())
-//                      {
-//                          case Activity.RESULT_OK:
-//                              Log.i("====>", "RESULT_OK");
-//                              System.out.println("RESULT_OK");
-//
-//                              break;
-//                          case Activity.RESULT_CANCELED:
-//                              Log.i("=====>", "RESULT_CANCELED");
-//                              break;
-//                      }
-//                  }
-//              }, new IntentFilter(DELIVERED));
-//            //
-
         SmsManager smsm = SmsManager.getDefault();
         smsm.sendTextMessage(number, null, text, sentPI, deliveredPI);
     }
