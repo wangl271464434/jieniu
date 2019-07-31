@@ -1,6 +1,8 @@
 package com.jieniuwuliu.jieniu.bean;
 
 public class Constant {
+    public static String PHONE = "phone";//手机号
+    public static String PWD = "pwd";//手机号
     public static String TOKEN = "token";//令牌
     public static String GUIDE = "guide";//引导页
     public static String UNREAD = "unRead";//未读消息

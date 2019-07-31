@@ -9,7 +9,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword '123456'
-            storeFile file('C:/Users/wl/Desktop/jieniu/jieniu.jks')
+            storeFile file('F:\\AndroidProject\\jieniu\\jieniu.jks')
             storePassword '123456'
         }
 

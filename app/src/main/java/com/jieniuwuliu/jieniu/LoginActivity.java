@@ -138,6 +138,10 @@ public class LoginActivity extends BaseActivity {
                     switch (response.code()) {
                         case 200:
                             if (response.body().getStatus() == 0) {
+                                //账号
+                                SPUtil.put(getApplicationContext(), Constant.PHONE, Constant.PHONE, response.body().getToken());
+                                //密码
+                                SPUtil.put(getApplicationContext(), Constant.PWD, Constant.PWD, response.body().getToken());
                                 //token
                                 SPUtil.put(getApplicationContext(), Constant.TOKEN, Constant.TOKEN, response.body().getToken());
                                 //是否认证

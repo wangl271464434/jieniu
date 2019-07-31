@@ -1,47 +1,34 @@
 package com.jieniuwuliu.jieniu.qipeishang;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.TelecomManager;
-import android.telephony.SmsMessage;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.PhoneUtil;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
-import com.jieniuwuliu.jieniu.adapter.GuidePageAdapter;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Car;
 import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.bean.SMSCore;
 import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
-import com.jieniuwuliu.jieniu.mine.ui.AddStorePicActivity;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.StoreCarAdapter;
 import com.jieniuwuliu.jieniu.view.GlideImageLoader;
 import com.youth.banner.Banner;
@@ -103,10 +90,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
     private static final String ACTION_SMS_SEND = "lab.sodino.sms.send";
     private static final String ACTION_SMS_DELIVERY = "lab.sodino.sms.delivery";
     private static final String ACTION_SMS_RECEIVER = "android.provider.Telephony.SMS_RECEIVED";
-    private String[] permissions = new String[]{Manifest.permission.READ_SMS,
-            Manifest.permission.SEND_SMS,
-            Manifest.permission.READ_PHONE_NUMBERS,
-            Manifest.permission.READ_PHONE_STATE};
+    private String[] permissions = new String[]{Manifest.permission.CALL_PHONE};
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qi_pei_shang_info;
@@ -124,9 +108,6 @@ public class QPSORQXInfoActivity extends BaseActivity {
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         id = getIntent().getIntExtra("id", 0);
         getStoreInfo(token);
-        SMSReciver smsReceiver= new SMSReciver();
-        IntentFilter receiverFilter = new IntentFilter(ACTION_SMS_RECEIVER);
-        registerReceiver(smsReceiver, receiverFilter);
     }
 
     /**
@@ -268,57 +249,24 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 break;
             case R.id.btn://打电话
                 if (Build.VERSION.SDK_INT >= 23){
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
                         ActivityCompat.requestPermissions(this,permissions,100);
                         return;
                     }
                 }
-                sendMsg();
+                callPhone();
                 break;
             case R.id.msg:
                 MyToast.show(getApplicationContext(),"该功能暂未开放");
                 break;
         }
     }
-
-    private void sendMsg() {
-        SMSCore smscore=new SMSCore();
-        smscore.SendSMS2("10001", "501", this);
-    }
-
-    /**
-     * 打电话
-     * */
-    private void call(String tel, String phone) {
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).callPhone(tel,phone);
-        call.enqueue(new SimpleCallBack<ResponseBody>(this) {
-            @Override
-            public void onSuccess(Response<ResponseBody> response) {
-                try {
-                    String s = response.body().string();
-                    MyToast.show(QPSORQXInfoActivity.this,"正在拨打电话,请耐心等候……");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFail(int errorCode, Response<ResponseBody> response) {
-                try {
-                    String s = response.errorBody().string();
-                    MyToast.show(QPSORQXInfoActivity.this,s);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onNetError(String s) {
-                MyToast.show(QPSORQXInfoActivity.this,s);
-            }
-        });
+    /***/
+    private void callPhone() {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
+        intent.setData(data);
+        startActivity(intent);
     }
 
     /**
@@ -389,57 +337,15 @@ public class QPSORQXInfoActivity extends BaseActivity {
             }
         });
     }
-    //动态权限申请后处理
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != 100){
-            return;
-        }
-        if (grantResults.length>0){
-            List<String> deniedPermissionList = new ArrayList<>();
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissionList.add(permissions[i]);
-                }
-            }
-            if (deniedPermissionList.isEmpty()) {
-                //已经全部授权
-                sendMsg();
-            } else {
-                MyToast.show(getApplicationContext(),"请授与相应的授权");
-            }
-        }
-    }
-    class SMSReciver extends BroadcastReceiver {
-        final String GetNumberAddress="10001";
-        @Override
-        public void onReceive(Context context, Intent intent) {
-        // TODO Auto-generated method stub
-            if(intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")){
-                Object[] pdus=(Object[])intent.getExtras().get("pdus");
-                //不知道为什么明明只有一条消息，传过来的却是数组，也许是为了处理同时同分同秒同毫秒收到多条短信
-                //但这个概率有点小
-                SmsMessage[] message=new SmsMessage[pdus.length];
-                StringBuilder sb=new StringBuilder();
-                System.out.println("pdus长度"+pdus.length);
-                String address="";
-                for(int i=0;i<pdus.length;i++){
-                    //虽然是循环，其实pdus长度一般都是1
-                    message[i]=SmsMessage.createFromPdu((byte[])pdus[i]);
-                    sb.append("接收到短信来自:\n");
-                    address=message[i].getDisplayOriginatingAddress();
-                    sb.append(address+"\n");
-                    sb.append("内容:"+message[i].getDisplayMessageBody());
-                }
-                System.out.println(sb.toString());
-                if(SMSCore.PhoneNumber==""&&address.equals(GetNumberAddress)){
-                    SMSCore.PhoneNumber=SMSCore.GetPhoneNumberFromSMSText(sb.toString());
-//                MessageTools.ShowDialog(context, address);
-                }
-                call(SMSCore.PhoneNumber,storeBean.getAddress().getPhone());
-//            MessageTools.ShowDialog(context, sb.toString().trim());
-//            MessageTools.ShowDialog(context, SMSCore.PhoneNumber);
+        if (requestCode == 100){
+            if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
+                MyToast.show(this,"请允许拨号权限后再试");
+            } else {//成功
+                callPhone();
             }
         }
     }
