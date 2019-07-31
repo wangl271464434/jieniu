@@ -87,10 +87,8 @@ public class QPSORQXInfoActivity extends BaseActivity {
     private List<Car> cars;
     private StoreInfoBean storeBean;
     private List<String> imgUrls;
-    private static final String ACTION_SMS_SEND = "lab.sodino.sms.send";
-    private static final String ACTION_SMS_DELIVERY = "lab.sodino.sms.delivery";
-    private static final String ACTION_SMS_RECEIVER = "android.provider.Telephony.SMS_RECEIVED";
-    private String[] permissions = new String[]{Manifest.permission.CALL_PHONE};
+    private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
+            Manifest.permission.PROCESS_OUTGOING_CALLS};
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qi_pei_shang_info;
@@ -261,10 +259,11 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 break;
         }
     }
-    /***/
+    /**拨打电话*/
     private void callPhone() {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
+        Intent intent = new Intent(Intent.ACTION_CALL);
+//        Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
+        Uri data = Uri.parse("tel:" + "121");
         intent.setData(data);
         startActivity(intent);
     }
