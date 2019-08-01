@@ -252,7 +252,7 @@
         <activity android:name=".home.XJCarTypeActivity" />
         <activity android:name=".home.XjInfoActivity" />
         <activity android:name=".home.XjAddCarTypeActivity" />
-        <activity android:name=".home.XJListActivity"></activity>
+        <activity android:name=".home.XJListActivity"/>
         <receiver android:name=".service.PhoneStateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE"/>

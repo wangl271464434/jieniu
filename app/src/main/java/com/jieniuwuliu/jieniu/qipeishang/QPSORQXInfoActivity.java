@@ -252,6 +252,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
                         return;
                     }
                 }
+                Constant.CALLPHONE = storeBean.getAddress().getPhone();
                 callPhone();
                 break;
             case R.id.msg:

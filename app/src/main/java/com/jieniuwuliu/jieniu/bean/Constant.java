@@ -15,4 +15,5 @@ public class Constant {
     public static String WXSERCET = "9286486f7bd6011923fbf0bed957d0f4";
     public static String MONTH_CARD = "月卡费用";
     public static String JIJIAN = "快递费用";
+    public static String CALLPHONE = "";
 }

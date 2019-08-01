@@ -313,6 +313,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 return;
             }
         }
+        Constant.CALLPHONE = list.get(positon).getAddress().getPhone();
         Intent intent = new Intent(Intent.ACTION_CALL);
         Uri data = Uri.parse("tel:" + list.get(positon).getAddress().getPhone());
         intent.setData(data);

@@ -279,6 +279,5 @@ public interface HttpApi {
      *  拨打电话
      * */
     @POST("users/phoneprotect")
-    Call<ResponseBody> callPhone(@Query("wephone")String wePhone,@Query("tophone")String toPhone);
-
+    Call<ResponseBody> callPhone(@Query("tophone")String toPhone);
 }
