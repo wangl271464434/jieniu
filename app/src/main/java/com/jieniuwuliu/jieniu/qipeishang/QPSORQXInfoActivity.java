@@ -253,6 +253,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
                     }
                 }
                 Constant.CALLPHONE = storeBean.getAddress().getPhone();
+                Constant.isCall = false;
                 callPhone();
                 break;
             case R.id.msg:
@@ -263,8 +264,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
     /**拨打电话*/
     private void callPhone() {
         Intent intent = new Intent(Intent.ACTION_CALL);
-//        Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
-        Uri data = Uri.parse("tel:" + "121");
+        Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
         intent.setData(data);
         startActivity(intent);
     }
@@ -345,7 +345,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
             if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
                 MyToast.show(this,"请允许拨号权限后再试");
             } else {//成功
-                callPhone();
+//                callPhone();
             }
         }
     }

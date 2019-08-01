@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
@@ -21,6 +22,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     private Context context;
     private boolean isFirst = false;
     private String token;
+    private String TAG = "PhoneStateReceiver";
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
@@ -37,39 +39,40 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         public void onCallStateChanged(int state, String phoneNumber) {
             super.onCallStateChanged(state, phoneNumber);
             switch (state){
-                case TelephonyManager.CALL_STATE_IDLE:
+                case TelephonyManager.CALL_STATE_IDLE://空闲
+                    Log.i(TAG,"监听："+Constant.isCall);
                     if (isFirst){
-//                        MyToast.show(context,"已经挂断电话");
-                        if (!Constant.CALLPHONE.equals("")){
+                        if (!Constant.isCall){
+                            Constant.isCall = true;
                             uploadPhone(Constant.CALLPHONE);
+                            Log.i(TAG,"监听："+Constant.isCall);
                         }
                         isFirst = false;
                     }else{
                         isFirst = true;
                     }
                     break;
-                case TelephonyManager.CALL_STATE_OFFHOOK:
-                    System.out.println("接听");
+                case TelephonyManager.CALL_STATE_OFFHOOK://接通
                     break;
-                case TelephonyManager.CALL_STATE_RINGING:
+                case TelephonyManager.CALL_STATE_RINGING://来电响铃中
                     System.out.println("响铃:来电号码"+phoneNumber);
-                    break;
+                        break;
+                }
             }
-        }
-    };
+        };
 
-    private void uploadPhone(String callphone) {
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).callPhone(callphone);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Constant.CALLPHONE = "";
-            }
+        private void uploadPhone(String callphone) {
+            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).callPhone(callphone);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Constant.CALLPHONE = "";
+                }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-            }
-        });
+                }
+            });
     }
 }

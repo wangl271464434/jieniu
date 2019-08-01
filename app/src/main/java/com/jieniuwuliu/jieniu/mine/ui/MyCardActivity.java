@@ -11,6 +11,7 @@ import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
+import com.jieniuwuliu.jieniu.Util.TimeUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.UserBean;
@@ -19,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +43,7 @@ public class MyCardActivity extends BaseActivity {
     Button btn;
     private String token;
     private UserBean.DataBean user;
-
+    private long time = 3*24*60*60*1000;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_my_card;
@@ -71,9 +74,14 @@ public class MyCardActivity extends BaseActivity {
                     tvTime.setVisibility(View.VISIBLE);
                     btn.setVisibility(View.GONE);
                     tvTime.setText("有效期至："+user.getVipTime());
+                    if (TimeUtil.getMiliSecond(user.getVipTime()) - System.currentTimeMillis() <= time){
+                        btn.setVisibility(View.VISIBLE);
+                        btn.setText("立即续费");
+                    }
                 }else{
                     tvTime.setVisibility(View.GONE);
                     btn.setVisibility(View.VISIBLE);
+                    btn.setText("立即办理");
                 }
             }
 

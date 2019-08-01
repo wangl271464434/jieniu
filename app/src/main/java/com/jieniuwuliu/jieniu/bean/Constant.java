@@ -16,4 +16,5 @@ public class Constant {
     public static String MONTH_CARD = "月卡费用";
     public static String JIJIAN = "快递费用";
     public static String CALLPHONE = "";
+    public static boolean isCall = false;
 }
