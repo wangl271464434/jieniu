@@ -36,6 +36,15 @@
             android:textSize="@dimen/size_18sp"
             />
     </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/size_10dp"
+            android:orientation="vertical"
+            >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -85,14 +94,21 @@
             android:padding="@dimen/size_10dp"
             android:orientation="vertical"
             >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <TextView
+                android:id="@+id/tv_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="添加配件"
+                android:layout_marginLeft="@dimen/size_10dp"
                 android:textColor="@color/orange"
                 android:textSize="@dimen/size_16sp"
                 android:drawableLeft="@mipmap/ic_add"
                 android:drawablePadding="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_10dp"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -149,4 +165,6 @@
             android:textSize="@dimen/size_15sp"
             android:background="@drawable/btn_orange_shape"
             />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

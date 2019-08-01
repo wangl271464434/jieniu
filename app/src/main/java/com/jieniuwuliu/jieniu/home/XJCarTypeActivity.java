@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ public class XJCarTypeActivity extends BaseActivity {
     @BindView(R.id.layout_vin)
     LinearLayout layoutVin;
     private String vin;
+    private Intent intent;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_xjcar_type;
@@ -36,7 +38,7 @@ public class XJCarTypeActivity extends BaseActivity {
     @Override
     protected void init() {
     }
-    @OnClick({R.id.layout_back, R.id.layout_search, R.id.tv_shoudong})
+    @OnClick({R.id.layout_back, R.id.layout_search,R.id.layout_vin, R.id.tv_shoudong})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
@@ -51,8 +53,15 @@ public class XJCarTypeActivity extends BaseActivity {
                 KeyboardUtil.hideSoftKeyboard(this);
                 searchCar(vin);
                 break;
+            case R.id.layout_vin:
+                intent = new Intent();
+                intent.setClass(this,XjInfoActivity.class);
+                startActivity(intent);
+                break;
             case R.id.tv_shoudong:
-                MyToast.show(getApplicationContext(),"手动选择");
+                intent = new Intent();
+                intent.setClass(this,XjAddCarTypeActivity.class);
+                startActivity(intent);
                 break;
         }
     }

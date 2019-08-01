@@ -36,7 +36,7 @@
     <string name="pwd_error_notice">两次输入的密码不一致</string>
 
     <string name="home_tab_1">捷牛快修</string>
-    <string name="home_tab_2">询价</string>
+    <string name="home_tab_2">极速询价</string>
     <string name="home_tab_3">询价单</string>
     <string name="search_hint">请输入运单号查询快件信息</string>
     <!--我的-->
