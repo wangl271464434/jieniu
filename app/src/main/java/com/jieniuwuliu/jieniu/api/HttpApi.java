@@ -3,6 +3,7 @@ package com.jieniuwuliu.jieniu.api;
 
 import com.jieniuwuliu.jieniu.bean.AddAdr;
 import com.jieniuwuliu.jieniu.bean.AddressList;
+import com.jieniuwuliu.jieniu.bean.BJOrder;
 import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
@@ -13,6 +14,8 @@ import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.bean.VinCar;
 import com.jieniuwuliu.jieniu.bean.XJCarType;
 import com.jieniuwuliu.jieniu.bean.XJOrder;
+
+import java.util.List;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -297,20 +300,30 @@ public interface HttpApi {
      * 添加询价单
      * */
     @GET("users/insertoffer")
-    Call<ResponseBody> addXJOrder(@Query("Uid")String uid,@Query("Partsphoto")String imgUrl,@Query("Logos")String logoUrl);
-    /**
-     * 取消询价
-     * */
-    @PUT("users/offerstate")
-    Call<XJOrder> cancelXJOrder(@Query("Uid")String uid);
+    Call<ResponseBody> addXJOrder(@Query("Partsphoto")String imgUrl,@Query("Logos")String logoUrl);
     /**
      * 询价列表
      * */
     @GET("users/getalloffer")
-    Call<XJOrder> getXJOrderList(@Query("uid")String uid);
+    Call<XJOrder> getXJOrderList();
     /**
      * 询价单详情
      * */
     @GET("users/getofferinform")
-    Call<XJOrder> getXJOrderInfo(@Query("Uid")String uid,@Query("Bid")String bid);
+    Call<XJOrder> getXJOrderInfo(@Query("Bid")String bid);
+    /**
+     * 报价列表
+     * */
+    @GET("users/phoneprotect")
+    Call<BJOrder> getBJOrderList();
+    /**
+     * 报价详情
+     * */
+    @GET("users/offerqp")
+    Call<BJOrder> getBJOrderInfo(@Query("Carlist")String data,@Query("CreatedAt")String time);
+    /**
+     * 取消报价
+     * */
+    @PUT("users/offerstate")
+    Call<XJOrder> cancelBJOrder();
 }
