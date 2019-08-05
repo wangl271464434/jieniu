@@ -10,6 +10,9 @@ import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.Notice;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.UserBean;
+import com.jieniuwuliu.jieniu.bean.VinCar;
+import com.jieniuwuliu.jieniu.bean.XJCarType;
+import com.jieniuwuliu.jieniu.bean.XJOrder;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -280,4 +283,34 @@ public interface HttpApi {
      * */
     @POST("users/phoneprotect")
     Call<ResponseBody> callPhone(@Query("tophone")String toPhone);
+    /**
+     * vin码查询
+     * */
+    @POST("users/frame")
+    Call<VinCar> selectVin(@Query("vin")String vin);
+    /**
+     * vin码查询
+     * */
+    @GET("allcar")
+    Call<ResponseBody> getXJCarType();
+    /**
+     * 添加询价单
+     * */
+    @GET("users/insertoffer")
+    Call<ResponseBody> addXJOrder(@Query("Uid")String uid,@Query("Partsphoto")String imgUrl,@Query("Logos")String logoUrl);
+    /**
+     * 取消询价
+     * */
+    @PUT("users/offerstate")
+    Call<XJOrder> cancelXJOrder(@Query("Uid")String uid);
+    /**
+     * 询价列表
+     * */
+    @GET("users/getalloffer")
+    Call<XJOrder> getXJOrderList(@Query("uid")String uid);
+    /**
+     * 询价单详情
+     * */
+    @GET("users/getofferinform")
+    Call<XJOrder> getXJOrderInfo(@Query("Uid")String uid,@Query("Bid")String bid);
 }

@@ -10,13 +10,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.Util.GlideUtil;
+import com.jieniuwuliu.jieniu.Util.GsonUtil;
+import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
+import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
+import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.VinCar;
+import com.jieniuwuliu.jieniu.view.MyLoading;
+
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class XJCarTypeActivity extends BaseActivity {
     @BindView(R.id.edit)
@@ -29,14 +42,19 @@ public class XJCarTypeActivity extends BaseActivity {
     TextView tvName;
     @BindView(R.id.layout_vin)
     LinearLayout layoutVin;
-    private String vin;
+    private String vin,token;
     private Intent intent;
+    private MyLoading loading;
+    private VinCar vinCar;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_xjcar_type;
     }
     @Override
     protected void init() {
+        loading = new MyLoading(this,R.style.CustomDialog);
+        token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
+        edit.setText("WDBGP57B6PB127810");
     }
     @OnClick({R.id.layout_back, R.id.layout_search,R.id.layout_vin, R.id.tv_shoudong})
     public void onViewClicked(View view) {
@@ -56,6 +74,7 @@ public class XJCarTypeActivity extends BaseActivity {
             case R.id.layout_vin:
                 intent = new Intent();
                 intent.setClass(this,XjInfoActivity.class);
+                intent.putExtra("type",vinCar.getCartype());
                 startActivity(intent);
                 break;
             case R.id.tv_shoudong:
@@ -69,6 +88,37 @@ public class XJCarTypeActivity extends BaseActivity {
      * 根据vin搜索
      * */
     private void searchCar(String vin) {
-        layoutVin.setVisibility(View.VISIBLE);
+        loading.show();
+        Call<VinCar> call = HttpUtil.getInstance().getApi(token).selectVin(vin);
+        call.enqueue(new SimpleCallBack<VinCar>(this) {
+            @Override
+            public void onSuccess(Response<VinCar> response) {
+                loading.dismiss();
+                vinCar = response.body();
+                GlideUtil.setImgUrl(XJCarTypeActivity.this,"http:"+vinCar.getLogos(),img);
+                tvName.setText(vinCar.getCartype());
+                layoutVin.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<VinCar> response) {
+                loading.dismiss();
+                try{
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(),s);
+            }
+        });
+
+
     }
 }
