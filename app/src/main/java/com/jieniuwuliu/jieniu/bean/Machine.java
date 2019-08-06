@@ -1,8 +1,9 @@
 package com.jieniuwuliu.jieniu.bean;
 
 public class Machine {
-    private String name;
-    private String type;
+    private String name = "";
+    private String type = "";
+    private String money = "";
 
     public String getName() {
         return name;
@@ -18,5 +19,13 @@ public class Machine {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
     }
 }

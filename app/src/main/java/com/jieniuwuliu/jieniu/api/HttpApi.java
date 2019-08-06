@@ -292,10 +292,10 @@ public interface HttpApi {
     @POST("users/frame")
     Call<VinCar> selectVin(@Query("vin")String vin);
     /**
-     * vin码查询
+     * 询价车型
      * */
-    @GET("allcar")
-    Call<ResponseBody> getXJCarType();
+    @GET("users/allcar")
+    Call<XJCarType> getXJCarType();
     /**
      * 添加询价单
      * */

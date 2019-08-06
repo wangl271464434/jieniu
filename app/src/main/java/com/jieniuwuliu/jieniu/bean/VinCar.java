@@ -1,38 +1,71 @@
 package com.jieniuwuliu.jieniu.bean;
 
-public class VinCar {
+import java.io.Serializable;
 
-    /**
-     * Cartype : 雪佛兰 创酷 2014款 1.4T SX AT
-     * States : 成功
-     * Logos : //car2.autoimg.cn/cardfs/series/g29/M03/AF/A2/100x100_f40_autohomecar__wKgHJFs9uFKAb5uSAAAhD-fryHg510.png
-     */
+public class VinCar implements Serializable {
+    private int status;
+    private String msg;
+    private Data data;
 
-    private String Cartype;
-    private String States;
-    private String Logos;
-
-    public String getCartype() {
-        return Cartype;
+    public int getStatus() {
+        return status;
     }
 
-    public void setCartype(String Cartype) {
-        this.Cartype = Cartype;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public String getStates() {
-        return States;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setStates(String States) {
-        this.States = States;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getLogos() {
-        return Logos;
+    public Data getData() {
+        return data;
     }
 
-    public void setLogos(String Logos) {
-        this.Logos = Logos;
+    public void setData(Data data) {
+        this.data = data;
+    }
+    public static class Data implements Serializable {
+        private String Cartype;
+        private String States;
+        private String Brand ;
+        private String Logos;
+
+        public String getBrand() {
+            return Brand;
+        }
+
+        public void setBrand(String brand) {
+            Brand = brand;
+        }
+
+        public String getCartype() {
+            return Cartype;
+        }
+
+        public void setCartype(String Cartype) {
+            this.Cartype = Cartype;
+        }
+
+        public String getStates() {
+            return States;
+        }
+
+        public void setStates(String States) {
+            this.States = States;
+        }
+
+        public String getLogos() {
+            return Logos;
+        }
+
+        public void setLogos(String Logos) {
+            this.Logos = Logos;
+        }
     }
 }

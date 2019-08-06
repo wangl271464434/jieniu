@@ -54,7 +54,7 @@ public class XJCarTypeActivity extends BaseActivity {
     protected void init() {
         loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
-        edit.setText("WDBGP57B6PB127810");
+        edit.setText("LFV2A21KOG4053021");
     }
     @OnClick({R.id.layout_back, R.id.layout_search,R.id.layout_vin, R.id.tv_shoudong})
     public void onViewClicked(View view) {
@@ -74,7 +74,7 @@ public class XJCarTypeActivity extends BaseActivity {
             case R.id.layout_vin:
                 intent = new Intent();
                 intent.setClass(this,XjInfoActivity.class);
-                intent.putExtra("type",vinCar.getCartype());
+                intent.putExtra("data",vinCar.getData());
                 startActivity(intent);
                 break;
             case R.id.tv_shoudong:
@@ -95,8 +95,8 @@ public class XJCarTypeActivity extends BaseActivity {
             public void onSuccess(Response<VinCar> response) {
                 loading.dismiss();
                 vinCar = response.body();
-                GlideUtil.setImgUrl(XJCarTypeActivity.this,"http:"+vinCar.getLogos(),img);
-                tvName.setText(vinCar.getCartype());
+                GlideUtil.setImgUrl(XJCarTypeActivity.this,vinCar.getData().getLogos(),img);
+                tvName.setText(vinCar.getData().getCartype());
                 layoutVin.setVisibility(View.VISIBLE);
             }
 
@@ -106,7 +106,8 @@ public class XJCarTypeActivity extends BaseActivity {
                 try{
                     String s = response.errorBody().string();
                     JSONObject object = new JSONObject(s);
-                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                    MyToast.show(getApplicationContext(), object.getString("data"));
+                    layoutVin.setVisibility(View.GONE);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -116,6 +117,7 @@ public class XJCarTypeActivity extends BaseActivity {
             public void onNetError(String s) {
                 loading.dismiss();
                 MyToast.show(getApplicationContext(),s);
+                layoutVin.setVisibility(View.GONE);
             }
         });
 

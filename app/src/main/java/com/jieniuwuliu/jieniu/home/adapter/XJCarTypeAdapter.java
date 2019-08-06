@@ -1,6 +1,9 @@
 package com.jieniuwuliu.jieniu.home.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +11,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
+import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.bean.SortModel;
+import com.jieniuwuliu.jieniu.bean.VinCar;
 import com.jieniuwuliu.jieniu.bean.XJCarType;
+import com.jieniuwuliu.jieniu.home.AddCarDateActivity;
+import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -24,9 +32,15 @@ import butterknife.ButterKnife;
  * */
 public class XJCarTypeAdapter extends RecyclerView.Adapter<XJCarTypeAdapter.ViewHolder>{
     private LayoutInflater mInflater;
-    private List<XJCarType> mData;
+    private List<XJCarType.Data> mData;
     private Context mContext;
-    public XJCarTypeAdapter(Context context, List<XJCarType> data) {
+    private CallBack callBack;
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    public XJCarTypeAdapter(Context context, List<XJCarType.Data> data) {
         mInflater = LayoutInflater.from(context);
         mData = data;
         this.mContext = context;
@@ -50,6 +64,37 @@ public class XJCarTypeAdapter extends RecyclerView.Adapter<XJCarTypeAdapter.View
         }
         GlideUtil.setImgUrl(mContext,mData.get(position).getImgurl(),holder.img);
         holder.tvName.setText(this.mData.get(position).getBrand());
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
+        holder.recyclerView.setLayoutManager(manager);
+        XJCarItemAdapter adapter = new XJCarItemAdapter(mContext,mData.get(position).getModels());
+        holder.recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int i) {
+                VinCar.Data data = new VinCar.Data();
+                data.setBrand(mData.get(position).getBrand());
+                data.setLogos(mData.get(position).getImgurl());
+                data.setCartype(mData.get(position).getBrand()+" "+mData.get(position).getModels().get(i));
+                Intent intent = new Intent();
+                intent.setClass(mContext, AddCarDateActivity.class);
+                intent.putExtra("data",data);
+                mContext.startActivity(intent);
+            }
+        });
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callBack.show(position);
+            }
+        });
+        if (mData.get(position).isShow()){
+            holder.recyclerView.setVisibility(View.VISIBLE);
+        }else{
+            holder.recyclerView.setVisibility(View.GONE);
+        }
+    }
+    public interface CallBack{
+        void show(int position);
     }
     @Override
     public int getItemCount() {
@@ -65,8 +110,6 @@ public class XJCarTypeAdapter extends RecyclerView.Adapter<XJCarTypeAdapter.View
         TextView tvTag;
         @BindView(R.id.img)
         ImageView img;
-        @BindView(R.id.checkbox)
-        ImageView checkBox;
         @BindView(R.id.layout)
         LinearLayout layout;
         @BindView(R.id.recyclerView)
@@ -81,7 +124,7 @@ public class XJCarTypeAdapter extends RecyclerView.Adapter<XJCarTypeAdapter.View
      * 提供给Activity刷新数据
      * @param list
      */
-    public void updateList(List<XJCarType> list){
+    public void updateList(List<XJCarType.Data> list){
         this.mData = list;
         notifyDataSetChanged();
     }

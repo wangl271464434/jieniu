@@ -32,7 +32,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class XjAddCarTypeActivity extends BaseActivity {
+public class XjAddCarTypeActivity extends BaseActivity implements XJCarTypeAdapter.CallBack {
     @BindView(R.id.et_search)
     EditText etSearch;
     @BindView(R.id.recyclerView)
@@ -42,7 +42,7 @@ public class XjAddCarTypeActivity extends BaseActivity {
     private XJCarTypeAdapter adapter;
     private LinearLayoutManager manager;
     private String token;
-    private List<XJCarType> list;
+    private List<XJCarType.Data> list;
     private MyLoading loading;
     @Override
     protected int getLayoutId() {
@@ -57,6 +57,8 @@ public class XjAddCarTypeActivity extends BaseActivity {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         adapter = new XJCarTypeAdapter(this, list);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        adapter.setCallBack(this);
         //设置右侧SideBar触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -74,26 +76,17 @@ public class XjAddCarTypeActivity extends BaseActivity {
 
     private void getData() {
         loading.show();
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getXJCarType();
-        call.enqueue(new SimpleCallBack<ResponseBody>(this) {
+        Call<XJCarType> call = HttpUtil.getInstance().getApi(token).getXJCarType();
+        call.enqueue(new SimpleCallBack<XJCarType>(this) {
             @Override
-            public void onSuccess(Response<ResponseBody> response) {
+            public void onSuccess(Response<XJCarType> response) {
                 loading.dismiss();
-                try {
-                   List<Object> objects = GsonUtil.praseJsonToList(response.body().string(),XJCarType.class);
-                   for (Object object:objects){
-                       XJCarType xjCarType = (XJCarType) object;
-                       list.add(xjCarType);
-                   }
-                   adapter.notifyDataSetChanged();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
+                list.addAll(response.body().getData());
+                adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFail(int errorCode, Response<ResponseBody> response) {
+            public void onFail(int errorCode, Response<XJCarType> response) {
                 loading.dismiss();
                 try{
                     String s = response.errorBody().string();
@@ -121,6 +114,25 @@ public class XjAddCarTypeActivity extends BaseActivity {
                 break;
             case R.id.img_search:
                 break;
+        }
+    }
+
+    @Override
+    public void show(int position) {
+        for (int i = 0;i<list.size();i++){
+            if (i == position){
+                if (list.get(i).isShow()){
+                    list.get(i).setShow(false);
+                }else{
+                    list.get(i).setShow(true);
+                }
+            }else{
+                list.get(i).setShow(false);
+            }
+        }
+        adapter.notifyDataSetChanged();
+        if (position != -1){
+            recyclerView.scrollToPosition(position);
         }
     }
 }
