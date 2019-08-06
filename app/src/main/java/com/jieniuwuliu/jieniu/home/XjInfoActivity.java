@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.FileUtil;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
+import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.UpLoadFileUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -126,7 +127,6 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
                 showPicDialog();
                 break;
             case R.id.btn:
-
                 addXJOrder();
                 break;
         }
@@ -140,10 +140,13 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
                 Log.w("返回结果","Success: " +result.accessUrl);
                 switch (imgType){
                     case 1:
+                        xjImg.cjUrl = result.accessUrl;
                         break;
                     case 2:
+                        xjImg.ctUrl = result.accessUrl;
                         break;
                     case 3:
+                        xjImg.pjUrl = result.accessUrl;
                         break;
                 }
             }
@@ -162,6 +165,13 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
 
     //生成询价单
     private void addXJOrder() {
+        if (list.size()==0){
+            MyToast.show(getApplicationContext(),"请添加配件");
+            return;
+        }
+        String imgStr = GsonUtil.objectToJson(xjImg);
+        String pjStr = GsonUtil.listToJson(list);
+
     }
 
     private void showAddDialog() {
