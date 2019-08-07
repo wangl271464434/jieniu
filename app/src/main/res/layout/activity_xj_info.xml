@@ -120,11 +120,16 @@
         android:padding="@dimen/size_15dp"
         android:orientation="vertical"
         >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="向供应商说明其他要求"
-            android:textColor="@color/gray"
+        <EditText
+            android:id="@+id/et_remark"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_80dp"
+            android:hint="向供应商说明其他要求"
+            android:padding="@dimen/size_10dp"
+            android:textColor="@color/black"
+            android:gravity="top|left"
+            android:textSize="@dimen/size_16sp"
+            android:background="@drawable/edittext_bg"
             />
         <LinearLayout
             android:layout_width="wrap_content"

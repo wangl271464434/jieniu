@@ -38,6 +38,7 @@
     <string name="home_tab_1">捷牛快修</string>
     <string name="home_tab_2">极速询价</string>
     <string name="home_tab_3">询价单</string>
+    <string name="home_tab_4">我要报价</string>
     <string name="search_hint">请输入运单号查询快件信息</string>
     <!--我的-->
     <string name="score">积分</string>

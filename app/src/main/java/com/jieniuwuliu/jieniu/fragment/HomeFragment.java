@@ -217,7 +217,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         //启动定位
         mLocationClient.startLocation();
     }
-    @OnClick({R.id.tv_position, R.id.tv_scan, R.id.home_tab_1, R.id.home_tab_2, R.id.home_tab_3})
+    @OnClick({R.id.tv_position, R.id.tv_scan, R.id.home_tab_1, R.id.home_tab_2, R.id.home_tab_3,R.id.home_tab_4})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_position://定位
@@ -241,6 +241,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 intent = new Intent();
                 intent.setClass(getActivity(),XJListActivity.class);
                 getActivity().startActivity(intent);
+                break;
+            case R.id.home_tab_4://我要报价
+                /*intent = new Intent();
+                intent.setClass(getActivity(),XJListActivity.class);
+                getActivity().startActivity(intent);*/
                 break;
         }
     }
