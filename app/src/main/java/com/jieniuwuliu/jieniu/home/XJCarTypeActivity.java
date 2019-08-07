@@ -54,7 +54,6 @@ public class XJCarTypeActivity extends BaseActivity {
     protected void init() {
         loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
-        edit.setText("LFV2A21KOG4053021");
     }
     @OnClick({R.id.layout_back, R.id.layout_search,R.id.layout_vin, R.id.tv_shoudong})
     public void onViewClicked(View view) {

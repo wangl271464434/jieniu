@@ -41,7 +41,7 @@ import com.jieniuwuliu.jieniu.bean.Machine;
 import com.jieniuwuliu.jieniu.bean.VinCar;
 import com.jieniuwuliu.jieniu.bean.XJImg;
 import com.jieniuwuliu.jieniu.home.adapter.XjAddMachieAdapter;
-import com.jieniuwuliu.jieniu.mine.ui.AddPicActivity;
+import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.jieniuwuliu.jieniu.view.PicDialog;
 import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.exception.CosXmlServiceException;
@@ -92,6 +92,8 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     private VinCar.Data data;
     private int imgType;
     private XJImg xjImg;
+    private MyLoading loading;
+
     private String[] permissions = {
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -106,6 +108,8 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void init() {
+        xjImg = new XJImg();
+        loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         data = (VinCar.Data) getIntent().getSerializableExtra("data");
         if (data != null) {
@@ -146,23 +150,32 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void uploadImg(String path) {
+    private void uploadImg(String path, int imgType) {
         COSXMLUploadTask storeTask = UpLoadFileUtil.getIntance(this).upload("img", new File(path).getName(), path);
         storeTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
                 Log.w("返回结果", "Success: " + result.accessUrl);
-                switch (imgType) {
-                    case 1:
-                        xjImg.cjUrl = result.accessUrl;
-                        break;
-                    case 2:
-                        xjImg.ctUrl = result.accessUrl;
-                        break;
-                    case 3:
-                        xjImg.pjUrl = result.accessUrl;
-                        break;
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (imgType) {
+                            case 1:
+                                xjImg.setCjUrl(result.accessUrl);
+                                GlideUtil.setImgUrl(XjInfoActivity.this,  result.accessUrl, img1);
+                                break;
+                            case 2:
+                                xjImg.setCtUrl(result.accessUrl);
+                                GlideUtil.setImgUrl(XjInfoActivity.this,   result.accessUrl, img2);
+                                break;
+                            case 3:
+                                xjImg.setPjUrl(result.accessUrl);
+                                GlideUtil.setImgUrl(XjInfoActivity.this,  result.accessUrl, img3);
+                                break;
+                        }
+                    }
+                });
+
             }
 
             @Override
@@ -179,6 +192,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
 
     //生成询价单
     private void addXJOrder() {
+        loading.show();
         remark = etRemark.getText().toString();
         if (list.size() == 0) {
             MyToast.show(getApplicationContext(), "请添加配件");
@@ -192,12 +206,14 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         call.enqueue(new SimpleCallBack<ResponseBody>(this) {
             @Override
             public void onSuccess(Response<ResponseBody> response) {
+                loading.dismiss();
                 MyToast.show(getApplicationContext(),"添加成功");
                 finish();
             }
 
             @Override
             public void onFail(int errorCode, Response<ResponseBody> response) {
+                loading.dismiss();
                 try {
                     String s = response.errorBody().string();
                     Log.w("result",s);
@@ -212,6 +228,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onNetError(String s) {
+                loading.dismiss();
                 MyToast.show(getApplicationContext(),s);
             }
         });
@@ -330,45 +347,16 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
                             imgUrl = cursor.getString(index);
                             cursor.close();
                         }
-                        uploadImg(imgUrl);
-                        switch (imgType) {
-                            case 1:
-                                img1.setImageBitmap(bitmap);
-                                break;
-                            case 2:
-                                img2.setImageBitmap(bitmap);
-                                break;
-                            case 3:
-                                img3.setImageBitmap(bitmap);
-
-                                break;
-                        }
+                        uploadImg(imgUrl,imgType);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
                 break;
             case Constant.CAMERA_CODE://相机
-                uploadImg(pictureFile.getPath());
-                switch (imgType) {
-                    case 1:
-                        GlideUtil.setLocalImgUrl(XjInfoActivity.this, pictureFile.getPath(), img1);
-                        break;
-                    case 2:
-                        GlideUtil.setLocalImgUrl(XjInfoActivity.this, pictureFile.getPath(), img2);
-                        break;
-                    case 3:
-                        GlideUtil.setLocalImgUrl(XjInfoActivity.this, pictureFile.getPath(), img3);
-                        break;
-                }
+                uploadImg(pictureFile.getPath(),imgType);
                 break;
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

@@ -300,7 +300,7 @@ public interface HttpApi {
      * 添加询价单
      * */
     @GET("users/insertoffer")
-    Call<ResponseBody> addXJOrder(@Query("CreatedAt")String time,@Query("Partsphoto")String imgUrl,@Query("Logos")String logoUrl,@Query("Remarks")String remark,
+    Call<ResponseBody> addXJOrder(@Query("CreatedAt")String time,@Query("Partsphoto")String imgUrl,@Query("Remarks")String remark,@Query("Logos")String logoUrl,
                                   @Query("Cartype")String type,@Query("Carbrand")String brand,@Query("Partslist")String pj,@Query("Stype")int status);
     /**
      * 询价列表

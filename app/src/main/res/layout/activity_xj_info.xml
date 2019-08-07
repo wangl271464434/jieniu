@@ -141,6 +141,8 @@
                 android:layout_width="@dimen/size_100dp"
                 android:layout_height="@dimen/size_100dp"
                 android:src="@mipmap/ic_upload1"
+                android:scaleType="centerCrop"
+
                 />
             <ImageView
                 android:id="@+id/img2"
@@ -148,6 +150,7 @@
                 android:layout_height="@dimen/size_100dp"
                 android:src="@mipmap/ic_upload2"
                 android:layout_marginLeft="@dimen/size_10dp"
+                android:scaleType="centerCrop"
                 />
             <ImageView
                 android:id="@+id/img3"
@@ -155,6 +158,8 @@
                 android:layout_height="@dimen/size_100dp"
                 android:src="@mipmap/ic_upload3"
                 android:layout_marginLeft="@dimen/size_10dp"
+                android:scaleType="centerCrop"
+
                 />
         </LinearLayout>
     </LinearLayout>
