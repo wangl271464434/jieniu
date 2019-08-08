@@ -39,6 +39,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
+import com.jieniuwuliu.jieniu.home.BJListActivity;
 import com.jieniuwuliu.jieniu.home.QPShopActivity;
 import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.home.XJCarTypeActivity;
@@ -92,8 +93,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     private LocationSource.OnLocationChangedListener mListener = null;
     private MyLoading loading;
     private String token;
+    private int userType;
     private int page = 1,pageNum=10;
-    private int state =0,type=0;//配送中
     private List<OrderInfo> list;
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
@@ -178,6 +179,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         recomList.clear();
         checkSDK();
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
+        userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
         getRecomList();
     }
 
@@ -233,19 +235,32 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 getActivity().startActivity(intent);
                 break;
             case R.id.home_tab_2://询价
-                intent = new Intent();
-                intent.setClass(getActivity(),XJCarTypeActivity.class);
-                getActivity().startActivity(intent);
+                if (userType == 2){
+                    intent = new Intent();
+                    intent.setClass(getActivity(),XJCarTypeActivity.class);
+                    getActivity().startActivity(intent);
+                }else{
+                    MyToast.show(getActivity(),"您不是汽修厂，不能发布询价单");
+                }
                 break;
             case R.id.home_tab_3://询价单
-                intent = new Intent();
-                intent.setClass(getActivity(),XJListActivity.class);
-                getActivity().startActivity(intent);
+                if (userType == 2){
+                    intent = new Intent();
+                    intent.setClass(getActivity(),XJListActivity.class);
+                    getActivity().startActivity(intent);
+                }else{
+                    MyToast.show(getActivity(),"您不是汽修厂，不能查看询价单");
+                }
                 break;
             case R.id.home_tab_4://我要报价
-                /*intent = new Intent();
-                intent.setClass(getActivity(),XJListActivity.class);
-                getActivity().startActivity(intent);*/
+                if (userType == 1){
+                    intent = new Intent();
+                    intent.setClass(getActivity(), BJListActivity.class);
+                    getActivity().startActivity(intent);
+                }else{
+                    MyToast.show(getActivity(),"您不是配件商，不能查看报价单");
+                }
+
                 break;
         }
     }

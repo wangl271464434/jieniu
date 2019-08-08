@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu.home;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -65,6 +66,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -151,6 +154,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void uploadImg(String path, int imgType) {
+        loading.show();
         COSXMLUploadTask storeTask = UpLoadFileUtil.getIntance(this).upload("img", new File(path).getName(), path);
         storeTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
@@ -159,6 +163,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        loading.dismiss();
                         switch (imgType) {
                             case 1:
                                 xjImg.setCjUrl(result.accessUrl);
@@ -192,46 +197,58 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
 
     //生成询价单
     private void addXJOrder() {
-        loading.show();
-        remark = etRemark.getText().toString();
-        if (list.size() == 0) {
-            MyToast.show(getApplicationContext(), "请添加配件");
-            return;
-        }
-        String imgStr = GsonUtil.objectToJson(xjImg);
-        String pjStr = GsonUtil.listToJson(list);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = sdf.format(new Date());
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addXJOrder(time,imgStr,data.getLogos(),remark,data.getBrand(),data.getCartype(),pjStr,1);
-        call.enqueue(new SimpleCallBack<ResponseBody>(this) {
-            @Override
-            public void onSuccess(Response<ResponseBody> response) {
-                loading.dismiss();
-                MyToast.show(getApplicationContext(),"添加成功");
-                finish();
+        try {
+            loading.show();
+            remark = etRemark.getText().toString();
+            if (list.size() == 0) {
+                MyToast.show(getApplicationContext(), "请添加配件");
+                return;
             }
-
-            @Override
-            public void onFail(int errorCode, Response<ResponseBody> response) {
-                loading.dismiss();
-                try {
-                    String s = response.errorBody().string();
-                    Log.w("result",s);
-                    JSONObject object = new JSONObject(s);
-                    MyToast.show(XjInfoActivity.this, object.getString("data"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }catch (JSONException e){
-                    e.printStackTrace();
+            String imgStr = GsonUtil.objectToJson(xjImg);
+            String pjStr = GsonUtil.listToJson(list);
+            JSONObject object = new JSONObject();
+            object.put("Partsphoto",imgStr);
+            object.put("Remarks",remark);
+            object.put("Logos",data.getLogos());
+            object.put("Cartype",data.getBrand());
+            object.put("Carbrand",data.getCartype());
+            object.put("Partslist",pjStr);
+            object.put("Stype",1);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
+            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addXJOrder(body);
+            call.enqueue(new SimpleCallBack<ResponseBody>(this) {
+                @Override
+                public void onSuccess(Response<ResponseBody> response) {
+                    loading.dismiss();
+                    MyToast.show(getApplicationContext(),"添加成功");
+                    finish();
                 }
-            }
 
-            @Override
-            public void onNetError(String s) {
-                loading.dismiss();
-                MyToast.show(getApplicationContext(),s);
-            }
-        });
+                @Override
+                public void onFail(int errorCode, Response<ResponseBody> response) {
+                    loading.dismiss();
+                    try {
+                        String s = response.errorBody().string();
+                        Log.w("result",s);
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(XjInfoActivity.this, object.getString("msg"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onNetError(String s) {
+                    loading.dismiss();
+                    MyToast.show(getApplicationContext(),s);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void showAddDialog() {

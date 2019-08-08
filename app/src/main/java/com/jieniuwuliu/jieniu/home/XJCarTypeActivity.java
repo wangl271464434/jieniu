@@ -75,6 +75,7 @@ public class XJCarTypeActivity extends BaseActivity {
                 intent.setClass(this,XjInfoActivity.class);
                 intent.putExtra("data",vinCar.getData());
                 startActivity(intent);
+                finish();
                 break;
             case R.id.tv_shoudong:
                 intent = new Intent();

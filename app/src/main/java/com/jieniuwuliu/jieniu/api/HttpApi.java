@@ -299,14 +299,13 @@ public interface HttpApi {
     /**
      * 添加询价单
      * */
-    @GET("users/insertoffer")
-    Call<ResponseBody> addXJOrder(@Query("CreatedAt")String time,@Query("Partsphoto")String imgUrl,@Query("Remarks")String remark,@Query("Logos")String logoUrl,
-                                  @Query("Cartype")String type,@Query("Carbrand")String brand,@Query("Partslist")String pj,@Query("Stype")int status);
+    @POST("users/insertoffer")
+    Call<ResponseBody> addXJOrder(@Body RequestBody body);
     /**
      * 询价列表
      * */
     @GET("users/getalloffer")
-    Call<XJOrder> getXJOrderList();
+    Call<XJOrder> getXJOrderList(@Query("page")String page,@Query("number")String num);
     /**
      * 询价单详情
      * */
@@ -323,8 +322,8 @@ public interface HttpApi {
     @GET("users/offerqp")
     Call<BJOrder> getBJOrderInfo(@Query("Carlist")String data,@Query("CreatedAt")String time);
     /**
-     * 取消报价
+     * 取消询价
      * */
     @PUT("users/offerstate")
-    Call<XJOrder> cancelBJOrder();
+    Call<ResponseBody> cancelBJOrder(@Query("Bid")int bid);
 }

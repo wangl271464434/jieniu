@@ -43,8 +43,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".home.AddCarDateActivity"></activity>
-        <!-- 获取临时读取存储权限 -->
+        <activity android:name=".home.BJListActivity"></activity>
+        <activity android:name=".home.XJContentActivity" />
+        <activity android:name=".home.AddCarDateActivity" /> <!-- 获取临时读取存储权限 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.jieniuwuliu.jieniu.fileprovider"
