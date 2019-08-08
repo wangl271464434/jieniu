@@ -34,6 +34,10 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
     protected void init() {
         refresh.setOnRefreshListener(this);
         refresh.setOnLoadMoreListener(this);
+        getData();
+    }
+
+    private void getData() {
     }
 
     @OnClick(R.id.layout_back)
@@ -43,11 +47,13 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
+        list.clear();
+        page =1;
+        getData();
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-
+        page++;
     }
 }
