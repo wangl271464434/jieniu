@@ -315,7 +315,7 @@ public interface HttpApi {
      * 报价列表
      * */
     @GET("users/phoneprotect")
-    Call<BJOrder> getBJOrderList();
+    Call<XJOrder> getBJOrderList();
     /**
      * 报价详情
      * */

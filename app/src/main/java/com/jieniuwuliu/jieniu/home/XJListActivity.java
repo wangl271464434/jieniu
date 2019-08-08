@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
+import com.jieniuwuliu.jieniu.Util.JwtUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
@@ -63,6 +64,7 @@ public class XJListActivity extends BaseActivity implements OnRefreshListener, O
         refresh.setOnRefreshListener(this);
         refresh.setOnLoadMoreListener(this);
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
+        Log.i("userid", JwtUtil.JWTParse(token));
         list = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -85,18 +87,13 @@ public class XJListActivity extends BaseActivity implements OnRefreshListener, O
                 }
                 try {
                     XJOrder  xjOrder = response.body();
-//                 Log.i("list",json);
-                    if (xjOrder.getTotal()==page){
+                    if (xjOrder.getTotal()<10){
                         refresh.setNoMoreData(true);
                     }else{
                         refresh.setNoMoreData(false);
                     }
+//                 Log.i("list",json);
                     if (xjOrder.getData().size()>0){
-                        if (xjOrder.getData().size()<10){
-                            refresh.setNoMoreData(true);
-                        }else{
-                            refresh.setNoMoreData(false);
-                        }
                         list.addAll(xjOrder.getData());
                         adapter.notifyDataSetChanged();
                     }

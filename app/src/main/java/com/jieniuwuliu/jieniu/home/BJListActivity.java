@@ -6,10 +6,13 @@ import android.support.v7.widget.RecyclerView;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
+import com.jieniuwuliu.jieniu.bean.XJOrder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +23,8 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
-
+    private int page = 1,num = 10;
+    private List<XJOrder.DataBean> list;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bjlist;
