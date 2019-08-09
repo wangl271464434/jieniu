@@ -14,6 +14,7 @@ import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.bean.VinCar;
 import com.jieniuwuliu.jieniu.bean.XJCarType;
 import com.jieniuwuliu.jieniu.bean.XJOrder;
+import com.jieniuwuliu.jieniu.bean.XjInfo;
 
 import java.util.List;
 
@@ -310,7 +311,7 @@ public interface HttpApi {
      * 询价单详情
      * */
     @GET("users/getofferinform")
-    Call<XJOrder> getXJOrderInfo(@Query("Bid")String bid);
+    Call<XjInfo> getXJOrderInfo(@Query("Bid")int bid);
     /**
      * 报价列表
      * */
