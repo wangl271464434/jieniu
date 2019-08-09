@@ -62,14 +62,14 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
                 if (list.get(i).isCancel()){ //先进行判断能不能被取消
                     if (list.get(i).isCancelStatus()){//判断是否取消
-                        viewHolder.layoutCancel.setVisibility(View.GONE);
+                        viewHolder.tvCancel.setVisibility(View.GONE);
                         viewHolder.imgFinish.setVisibility(View.VISIBLE);
                         viewHolder.imgFinish.setImageResource(R.mipmap.icon_yiquxiao);
                     }else{
-                        viewHolder.layoutCancel.setVisibility(View.VISIBLE);
+                        viewHolder.tvCancel.setVisibility(View.VISIBLE);
                     }
                 }else{
-                    viewHolder.layoutCancel.setVisibility(View.GONE);
+                    viewHolder.tvCancel.setVisibility(View.GONE);
                 }
                 viewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,6 +114,12 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
                     context.startActivity(intent);
                 }
             });
+            viewHolder.tvAgain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
         }
 
     }
@@ -151,6 +157,8 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         TextView tvCancel;
         @BindView(R.id.tv_pay)
         TextView tvPay;
+        @BindView(R.id.tv_again)
+        TextView tvAgain;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:text="我要报价"
+            android:text="报价"
             android:textColor="@color/white"
             android:textSize="@dimen/size_18sp"
             />
@@ -77,4 +77,24 @@
                 />
         </LinearLayout>
     </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:layout_above="@id/btn"
+        />
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="我要报价"
+        android:textStyle="bold"
+        android:textSize="@dimen/size_16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_orange_shape"
+        android:layout_margin="@dimen/size_30dp"
+        />
 </RelativeLayout>

@@ -43,7 +43,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".home.BjInfoActivity"></activity>
+        <activity android:name=".home.BjInfoActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
+            />
         <activity android:name=".home.BJListActivity" />
         <activity android:name=".home.XJContentActivity" />
         <activity android:name=".home.AddCarDateActivity" /> <!-- 获取临时读取存储权限 -->

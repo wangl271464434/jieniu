@@ -1,10 +1,12 @@
 package com.jieniuwuliu.jieniu.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.jieniuwuliu.jieniu.R;
@@ -17,6 +19,7 @@ import com.jieniuwuliu.jieniu.bean.BJOrder;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.XJOrder;
 import com.jieniuwuliu.jieniu.home.adapter.BJListAdapter;
+import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -36,7 +39,7 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class BJListActivity extends BaseActivity implements OnRefreshListener, OnLoadMoreListener {
+public class BJListActivity extends BaseActivity implements OnRefreshListener, OnLoadMoreListener, OnItemClickListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
@@ -62,6 +65,7 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
         recyclerView.setLayoutManager(manager);
         adapter = new BJListAdapter(this,list);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
         getData();
     }
 
@@ -133,5 +137,13 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         page++;
         getData();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent();
+        intent.setClass(this,BjInfoActivity.class);
+        intent.putExtra("data",list.get(position));
+        startActivity(intent);
     }
 }

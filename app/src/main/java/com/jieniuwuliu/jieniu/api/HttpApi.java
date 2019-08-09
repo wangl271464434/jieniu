@@ -317,10 +317,10 @@ public interface HttpApi {
     @GET("users/getofferlist")
     Call<BJOrder> getBJOrderList(@Query("page")String page,@Query("number")String num);
     /**
-     * 报价详情
+     * 配件商报价
      * */
-    @GET("users/offerqp")
-    Call<BJOrder> getBJOrderInfo(@Query("Carlist")String data,@Query("CreatedAt")String time);
+    @POST("users/offerqp")
+    Call<ResponseBody> addBJInfo(@Body RequestBody body);
     /**
      * 取消询价
      * */
