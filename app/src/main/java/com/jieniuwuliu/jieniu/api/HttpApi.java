@@ -314,8 +314,8 @@ public interface HttpApi {
     /**
      * 报价列表
      * */
-    @GET("users/phoneprotect")
-    Call<XJOrder> getBJOrderList();
+    @GET("users/getofferlist")
+    Call<BJOrder> getBJOrderList(@Query("page")String page,@Query("number")String num);
     /**
      * 报价详情
      * */

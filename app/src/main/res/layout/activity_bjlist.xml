@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:text="报价列表"
+            android:text="我要报价"
             android:textColor="@color/white"
             android:textSize="@dimen/size_18sp"
             />

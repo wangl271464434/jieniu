@@ -17,7 +17,8 @@ public class HttpUtil {
     private static HttpUtil intance = null;
     private String baseUrl = "https://api.jieniuwuliu.com/";
 //    private String baseUrl = "http://192.168.1.105:1323/";
-    private static final int READ_TIMEOUT = 60;//读取超时时间,单位秒
+    private static final int READ_TIMEOUT = 60;//读取超时时
+    // 间,单位秒
     private static final int CONN_TIMEOUT = 50;//连接超时时间,单位秒
     private Retrofit retrofit;
     /**     * 初始化一个client,不然retrofit会自己默认添加一个     */

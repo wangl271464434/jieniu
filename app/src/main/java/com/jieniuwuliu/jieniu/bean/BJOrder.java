@@ -1,83 +1,56 @@
 package com.jieniuwuliu.jieniu.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BJOrder {
+public class BJOrder implements Serializable{
+    private int status;
+    private String msg;
+    private int total;
+    private List<DataBean> data;
 
-    /**
-     * ID : 1
-     * CreatedAt : 2019-06-14 11:38:46
-     * Cartype : 雷克萨斯RX经典
-     * Logos : //car2.autoimg.cn/cardfs/series/g26/M0B/AE/B3/100x100_f40_autohomecar__wKgHEVs9u5WAV441AAAKdxZGE4U148.png
-     * Stype : 1
-     * Carlist : [{"ID":234,"Partstype":2,"Partsnum":"前杠"},{"ID":245,"Partstype":2,"Partsnum":"前轮"}]
-     */
-
-    private int ID;
-    private String CreatedAt;
-    private String Cartype;
-    private String Logos;
-    private int Stype;
-    private List<CarlistBean> Carlist;
-
-    public int getID() {
-        return ID;
+    public int getStatus() {
+        return status;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public String getCreatedAt() {
-        return CreatedAt;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setCreatedAt(String CreatedAt) {
-        this.CreatedAt = CreatedAt;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getCartype() {
-        return Cartype;
+    public int getTotal() {
+        return total;
     }
 
-    public void setCartype(String Cartype) {
-        this.Cartype = Cartype;
+    public void setTotal(int total) {
+        this.total = total;
     }
 
-    public String getLogos() {
-        return Logos;
+    public List<DataBean> getData() {
+        return data;
     }
 
-    public void setLogos(String Logos) {
-        this.Logos = Logos;
+    public void setData(List<DataBean> data) {
+        this.data = data;
     }
 
-    public int getStype() {
-        return Stype;
-    }
-
-    public void setStype(int Stype) {
-        this.Stype = Stype;
-    }
-
-    public List<CarlistBean> getCarlist() {
-        return Carlist;
-    }
-
-    public void setCarlist(List<CarlistBean> Carlist) {
-        this.Carlist = Carlist;
-    }
-
-    public static class CarlistBean {
-        /**
-         * ID : 234
-         * Partstype : 2
-         * Partsnum : 前杠
-         */
-
+    public static class DataBean implements Serializable {
         private int ID;
-        private int Partstype;
-        private String Partsnum;
+        private String CreatedAt;
+        private String Partsphoto;
+        private String Remarks;
+        private String Logos;
+        private String Cartype;
+        private String Carbrand;
+        private int Stype;
+        private String Partslist;
 
         public int getID() {
             return ID;
@@ -87,20 +60,68 @@ public class BJOrder {
             this.ID = ID;
         }
 
-        public int getPartstype() {
-            return Partstype;
+        public String getCreatedAt() {
+            return CreatedAt;
         }
 
-        public void setPartstype(int Partstype) {
-            this.Partstype = Partstype;
+        public void setCreatedAt(String createdAt) {
+            CreatedAt = createdAt;
         }
 
-        public String getPartsnum() {
-            return Partsnum;
+        public String getPartsphoto() {
+            return Partsphoto;
         }
 
-        public void setPartsnum(String Partsnum) {
-            this.Partsnum = Partsnum;
+        public void setPartsphoto(String partsphoto) {
+            Partsphoto = partsphoto;
+        }
+
+        public String getRemarks() {
+            return Remarks;
+        }
+
+        public void setRemarks(String remarks) {
+            Remarks = remarks;
+        }
+
+        public String getLogos() {
+            return Logos;
+        }
+
+        public void setLogos(String logos) {
+            Logos = logos;
+        }
+
+        public String getCartype() {
+            return Cartype;
+        }
+
+        public void setCartype(String cartype) {
+            Cartype = cartype;
+        }
+
+        public String getCarbrand() {
+            return Carbrand;
+        }
+
+        public void setCarbrand(String carbrand) {
+            Carbrand = carbrand;
+        }
+
+        public int getStype() {
+            return Stype;
+        }
+
+        public void setStype(int stype) {
+            Stype = stype;
+        }
+
+        public String getPartslist() {
+            return Partslist;
+        }
+
+        public void setPartslist(String partslist) {
+            Partslist = partslist;
         }
     }
 }
