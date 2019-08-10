@@ -75,7 +75,6 @@ public class SearchStoreActivity extends BaseActivity implements OnItemClickList
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         LinearLayoutManager manager = new LinearLayoutManager(this);
         rv.setLayoutManager(manager);
-        rv.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         adapter = new SearchStoreAdapter(this,list);
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);

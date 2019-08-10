@@ -1,7 +1,14 @@
 package com.jieniuwuliu.jieniu.home.adapter;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +32,8 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
     private Activity context;
     private OnItemClickListener listener;
     private List<XjInfo.DataBean> list;
-
+    private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
+            Manifest.permission.PROCESS_OUTGOING_CALLS};
     public XjContentAdapter(Activity context, List<XjInfo.DataBean> list) {
         this.list = list;
         this.context = context;
@@ -61,6 +69,21 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
             }
         }
         viewHolder.tvInfo.setText(info);
+        viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23){
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(context,permissions,100);
+                        return;
+                    }
+                }
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                Uri data = Uri.parse("tel:" + item.getPhone());
+                intent.setData(data);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

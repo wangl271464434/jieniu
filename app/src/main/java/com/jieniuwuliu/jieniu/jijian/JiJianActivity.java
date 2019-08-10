@@ -45,6 +45,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.bean.Order;
 import com.jieniuwuliu.jieniu.bean.OrderBean;
+import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.home.QXActivity;
@@ -125,7 +126,8 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
     private boolean flag = false;//判断是否免运费
     private MyLoading loading;
     private String info = "";
-    private int kuaidiId,toUid = 0;
+    private int kuaidiId,toUid = 0,id;
+    private OrderInfo orderInfo;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_ji_jian;
@@ -133,11 +135,20 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
 
     @Override
     protected void init() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         type = getIntent().getStringExtra("type");
+        orderInfo = (OrderInfo) getIntent().getSerializableExtra("order");
+        int userType = (int) SPUtil.get(this,Constant.USERTYPE,Constant.USERTYPE,0);
+        if (userType ==2){//判断是否是汽修厂
+            juliPrice = 5;
+        }else{
+            juliPrice = 10;
+        }
         tvType.setText(type);
-        tvMoney.setText(""+yunfei);
         data = (Coupon.DataBean) getIntent().getSerializableExtra("data");
         if (data != null) {
             if (data.getUseMoney() == 0) {
@@ -150,10 +161,25 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
                 youhuiPrice = data.getMoney()/100;
             }
         }
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
         getUserInfo();
+        if (orderInfo != null){
+            setData();
+        }
+    }
+
+    private void setData() {
+        layoutShou.setVisibility(View.VISIBLE);
+        tvShouName.setText(orderInfo.getToName());
+        tvShouAddress.setText(orderInfo.getToAddress().replace("陕西省",""));
+        tvShouPhone.setText(orderInfo.getToPhone());
+        end = new LatLonPoint(orderInfo.getToLat(),orderInfo.getToLng());
+        toUid = orderInfo.getToUid();
+        RouteSearch routeSearch = new RouteSearch(this);
+        routeSearch.setRouteSearchListener(this);
+        RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
+        RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
+                RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
+        routeSearch.calculateDriveRouteAsyn(query);
     }
 
     private void getUserInfo() {
@@ -165,6 +191,7 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
                 try{
                     if (response.body().getStatus() == 0){
                         user = response.body().getData();
+                        id = user.getId();
                         if (user.isVip()){
                             imgJiVip.setVisibility(View.VISIBLE);
                         }else {
@@ -270,15 +297,12 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
         }
     }
 
-    @OnClick({R.id.back, R.id.tv_ji_adr, R.id.tv_fuwu, R.id.layout_num, R.id.layout_psy,R.id.layout_ticket,
+    @OnClick({R.id.back, R.id.tv_fuwu, R.id.layout_num, R.id.layout_psy,R.id.layout_ticket,
             R.id.layout_baojia,R.id.layout_daishou,R.id.layout_shou_address,R.id.submit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
                 finish();
-                break;
-            case R.id.tv_ji_adr:
-                startAcy(AddressListActivity.class);
                 break;
             case R.id.layout_shou_address://编辑收货地址
                 startAcy(EditShouAdrActivity.class);
@@ -330,7 +354,7 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
         Order order = new Order();
         order.setInfo(info);
         order.setKuaidiID(kuaidiId);
-        order.setFromUid(user.getId());
+        order.setFromUid(id);
         order.setFromName(tvFaName.getText().toString());
         order.setFromLat(start.getLatitude());
         order.setFromLng(start.getLongitude());
@@ -568,21 +592,26 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
 
     @Override
     public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
-        if (i == AMapException.CODE_AMAP_SUCCESS) {
-            if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
-                if (driveRouteResult.getPaths().size() > 0) {
-                    DrivePath drivePath = driveRouteResult.getPaths().get(0);
-                    if (drivePath == null) {
-                        return;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (i == AMapException.CODE_AMAP_SUCCESS) {
+                    if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
+                        if (driveRouteResult.getPaths().size() > 0) {
+                            DrivePath drivePath = driveRouteResult.getPaths().get(0);
+                            if (drivePath == null) {
+                                return;
+                            }
+                            Double distance = Double.valueOf(drivePath.getDistance());
+                            if (distance/1000>=20){
+                                juliPrice = juliPrice+((int)(distance/1000)-20);
+                            }
+                            tvMoney.setText(""+getYunFeiPrice());
+                        }
                     }
-                    Double distance = Double.valueOf(drivePath.getDistance());
-                    if (distance/1000>=20){
-                        juliPrice = juliPrice+((int)(distance/1000)-20);
-                    }
-                    tvMoney.setText(""+getYunFeiPrice());
                 }
             }
-        }
+        });
     }
 
     @Override

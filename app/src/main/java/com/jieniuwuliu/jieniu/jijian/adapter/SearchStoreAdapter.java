@@ -1,7 +1,15 @@
 package com.jieniuwuliu.jieniu.jijian.adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +19,7 @@ import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
+import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.bean.SearchStore;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
@@ -20,11 +29,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.ViewHolder> implements View.OnClickListener {
-    private Context context;
+    private Activity context;
     private OnItemClickListener listener;
     private List<SearchStore.DataBean> list;
-
-    public SearchStoreAdapter(Context context, List<SearchStore.DataBean> list) {
+    private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
+            Manifest.permission.PROCESS_OUTGOING_CALLS};
+    public SearchStoreAdapter(Activity context, List<SearchStore.DataBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -49,6 +59,22 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
         viewHolder.phone.setText("联系电话："+list.get(i).getAddress().getPhone());
         GlideUtil.setImgUrl(context,list.get(i).getShopPhoto(),viewHolder.img);
         viewHolder.address.setText("地址："+list.get(i).getAddress().getAddress().replace("陕西省",""));
+        viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23){
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(context,permissions,100);
+                        return;
+                    }
+                }
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                Uri data = Uri.parse("tel:" + list.get(i).getAddress().getPhone());
+                intent.setData(data);
+                context.startActivity(intent);
+//                MyToast.show(context,"拨打电话");
+            }
+        });
     }
 
     @Override
@@ -71,6 +97,8 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
         TextView phone;
         @BindView(R.id.address)
         TextView address;
+        @BindView(R.id.tv_call)
+        TextView tvCall;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

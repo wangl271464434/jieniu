@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
+import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.jijian.PayTypeActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
@@ -117,7 +119,18 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
             viewHolder.tvAgain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    int userType = (int) SPUtil.get(context,Constant.USERTYPE,Constant.USERTYPE,0);
+                    String type = "";
+                    if (userType==1){
+                        type = "上门取件";
+                    }else{
+                        type = "服务点自寄";
+                    }
+                    Intent intent = new Intent();
+                    intent.setClass(context,JiJianActivity.class);
+                    intent.putExtra("order",list.get(i));
+                    intent.putExtra("type",type);
+                    context.startActivity(intent);
                 }
             });
         }
@@ -152,7 +165,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         @BindView(R.id.tv_price)
         TextView tvPrice;
         @BindView(R.id.layout_cancel)
-        RelativeLayout layoutCancel;
+        LinearLayout layoutCancel;
         @BindView(R.id.tv_cancel)
         TextView tvCancel;
         @BindView(R.id.tv_pay)

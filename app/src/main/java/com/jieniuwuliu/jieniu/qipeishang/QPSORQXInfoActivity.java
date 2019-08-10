@@ -29,6 +29,7 @@ import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Car;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
+import com.jieniuwuliu.jieniu.mine.ui.FeedBackActivity;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.StoreCarAdapter;
 import com.jieniuwuliu.jieniu.view.GlideImageLoader;
 import com.youth.banner.Banner;
@@ -226,7 +227,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
         banner.start();
     }
 
-    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow, R.id.btn, R.id.msg})
+    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow,R.id.layout_report,R.id.btn, R.id.msg})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -244,6 +245,11 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 ClipData clipData = ClipData.newPlainText("Label", storeBean.getWechat());
                 manager.setPrimaryClip(clipData);
                 MyToast.show(this, "复制成功");
+                break;
+            case R.id.layout_report:
+                intent = new Intent();
+                intent.setClass(this,FeedBackActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn://打电话
                 if (Build.VERSION.SDK_INT >= 23){

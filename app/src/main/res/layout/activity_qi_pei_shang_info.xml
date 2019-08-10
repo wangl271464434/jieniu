@@ -215,6 +215,25 @@
                  android:layout_marginLeft="@dimen/size_20dp"
                  />
          </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1dp"
+            android:background="@color/line_gray"
+            />
+        <RelativeLayout
+            android:id="@+id/layout_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/size_15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="如果沟通中遇到问题，可向平台反馈！"
+                android:textSize="@dimen/size_16sp"
+                android:textColor="@color/black"
+                />
+        </RelativeLayout>
     </LinearLayout>
     </RelativeLayout>
     <View
@@ -237,7 +256,7 @@
             android:gravity="center"
             android:padding="@dimen/size_10dp"
             android:layout_weight="1"
-            android:text="拨打电话"
+            android:text="联系商家"
             android:textSize="@dimen/size_16sp"
             android:textColor="@color/blue"
             />

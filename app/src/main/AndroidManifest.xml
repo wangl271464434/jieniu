@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jieniuwuliu.jieniu">
+
     <!-- 允许程序打开网络套接字 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -43,9 +44,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".home.BjInfoActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            />
+        <activity
+            android:name=".home.BjInfoActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".home.BJListActivity" />
         <activity android:name=".home.XJContentActivity" />
         <activity android:name=".home.AddCarDateActivity" /> <!-- 获取临时读取存储权限 -->
@@ -256,6 +257,8 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".jijian.AgainOrderActivity"></activity>
     </application>
 
 </manifest>

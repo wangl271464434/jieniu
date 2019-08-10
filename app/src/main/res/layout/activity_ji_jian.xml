@@ -121,19 +121,6 @@
                 android:layout_below="@id/layout_ji"
                 android:text="陕西省西安市高新区"
                 />
-            <TextView
-                android:id="@+id/tv_ji_adr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="地址薄"
-                android:paddingLeft="@dimen/size_10dp"
-                android:paddingRight="@dimen/size_10dp"
-                android:paddingTop="@dimen/size_3dp"
-                android:paddingBottom="@dimen/size_3dp"
-                android:textSize="@dimen/size_12sp"
-                android:background="@drawable/jijian_adr_shape"
-                />
         </RelativeLayout>
         <View
             android:layout_width="match_parent"

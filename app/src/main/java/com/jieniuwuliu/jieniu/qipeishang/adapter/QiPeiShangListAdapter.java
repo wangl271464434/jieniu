@@ -65,9 +65,14 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
             CartypeAdapter adapter = new CartypeAdapter(context,item.getFuwuCar());
             viewHolder.rv.setAdapter(adapter);
         }else{
-            viewHolder.rv.setVisibility(View.GONE);
-            viewHolder.tvCars.setVisibility(View.VISIBLE);
-            viewHolder.tvCars.setText("经营范围："+item.getYewu());
+            if (item.getPersonType() == 1){
+                viewHolder.rv.setVisibility(View.VISIBLE);
+                viewHolder.tvCars.setVisibility(View.GONE);
+            }else{
+                viewHolder.rv.setVisibility(View.GONE);
+                viewHolder.tvCars.setVisibility(View.VISIBLE);
+                viewHolder.tvCars.setText("经营范围："+item.getYewu());
+            }
         }
 
         viewHolder.tvPhone.setOnClickListener(new View.OnClickListener() {
