@@ -98,8 +98,8 @@
                 android:layout_weight="1"
                 >
                 <ImageView
-                    android:layout_width="@dimen/size_50dp"
-                    android:layout_height="@dimen/size_50dp"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="@dimen/size_40dp"
                     android:src="@mipmap/ic_xunjia"
                     />
                 <TextView
@@ -116,8 +116,8 @@
                 android:layout_weight="1"
                 >
                 <ImageView
-                    android:layout_width="@dimen/size_50dp"
-                    android:layout_height="@dimen/size_50dp"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="@dimen/size_40dp"
                     android:src="@mipmap/ic_baojiadan"
                     />
                 <TextView
@@ -134,8 +134,8 @@
                 android:layout_weight="1"
                 >
                 <ImageView
-                    android:layout_width="@dimen/size_50dp"
-                    android:layout_height="@dimen/size_50dp"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="@dimen/size_40dp"
                     android:src="@mipmap/ic_xunjiadan"
                     />
                 <TextView
