@@ -155,6 +155,9 @@ public class EditInfoActivity extends BaseActivity {
             case "绑定微信":
                 map.put("wechat",context);
                 break;
+            case "经营范围":
+                map.put("yewu",context);
+                break;
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).modifyStoreInfo(body);
