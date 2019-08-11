@@ -53,6 +53,7 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         RecomStore.DataBean item = list.get(i);
         GlideUtil.setVideoImg(context,item.getPhoto(),viewHolder.img);
         viewHolder.name.setText(item.getName());
+        viewHolder.time.setText(item.getCreatedAt());
     }
 
     @Override
@@ -72,6 +73,10 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         ImageView img;
         @BindView(R.id.name)
         TextView name;
+        @BindView(R.id.address)
+        TextView address;
+        @BindView(R.id.time)
+        TextView time;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

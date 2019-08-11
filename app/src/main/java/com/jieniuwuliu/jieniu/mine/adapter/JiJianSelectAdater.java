@@ -61,6 +61,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         String token = (String) SPUtil.get(context, Constant.TOKEN, Constant.TOKEN, "");
         if (list.size()!=0){
             if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))) {
+                viewHolder.layoutCancel.setVisibility(View.VISIBLE);
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
                 if (list.get(i).isCancel()){ //先进行判断能不能被取消
                     if (list.get(i).isCancelStatus()){//判断是否取消
@@ -96,6 +97,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
                 viewHolder.tvInfo.setText("物品信息：暂无");
             }
             viewHolder.tvNo.setText("运单号："+list.get(i).getOrderNumber());
+            viewHolder.tvName.setText(list.get(i).getFromName()+" 一 "+list.get(i).getToName());
             viewHolder.tvNum.setText("x"+list.get(i).getNumber()+"件");
             viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt().replace("T"," ").replace("Z",""));
             float price  = list.get(i).getTotalMoney()/100;
@@ -160,6 +162,8 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         TextView tvTime;
         @BindView(R.id.tv_info)
         TextView tvInfo;
+        @BindView(R.id.tv_name)
+        TextView tvName;
         @BindView(R.id.tv_num)
         TextView tvNum;
         @BindView(R.id.tv_price)

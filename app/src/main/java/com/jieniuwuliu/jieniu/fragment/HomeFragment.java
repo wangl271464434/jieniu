@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +71,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements OnItemClickListener, OnRefreshListener, OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener {
+public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.rv)
@@ -83,6 +84,10 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.et_search)
     EditText etSearch;
+    @BindView(R.id.layout_order)
+    LinearLayout layoutOrder;
+    @BindView(R.id.tv_more)
+    TextView tvMore;
     private HomeAdapter adapter;
     private Intent intent;
     //声明AMapLocationClient类对象，定位发起端
@@ -111,7 +116,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         loading = new MyLoading(getActivity(),R.style.CustomDialog);
         //推荐商家
         LinearLayoutManager shopManager = new LinearLayoutManager(getActivity());
-        shopManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(shopManager);
         recomStoreAdapter = new RecomStoreAdapter(getActivity(),recomList);
         recyclerView.setAdapter(recomStoreAdapter);
@@ -126,14 +130,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         });
         //最新物流
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rv.setLayoutManager(manager);
-        DividerItemDecoration divider = new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.custom_divider));
-        rv.addItemDecoration(divider);
         adapter = new HomeAdapter(getActivity(),list);
         rv.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
-        refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
 
     }
@@ -146,7 +147,15 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 try{
+                    if (refreshLayout!=null){
+                        refreshLayout.finishLoadMore();
+                    }
                     RecomStore recomStore = (RecomStore) GsonUtil.praseJsonToModel(response.body().string(),RecomStore.class);
+                    if (recomStore.getData().size()<10){
+                        refreshLayout.setNoMoreData(true);
+                    }else{
+                        refreshLayout.setNoMoreData(false);
+                    }
                     recomList.addAll(recomStore.getData());
                     recomStoreAdapter.notifyDataSetChanged();
                 }catch (Exception e){
@@ -273,21 +282,13 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         getActivity().startActivity(intent);
     }
     /**
-     * 下拉刷新
-     * */
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        page = 1;
-        list.clear();
-        getData();
-    }
-    /**
      * 上拉加载
      * */
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         page++;
-        getData();
+        getRecomList();
+//        getData();
     }
 
     @Override
@@ -317,17 +318,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 try{
-                    if (refreshLayout!=null){
-                        refreshLayout.finishRefresh();
-                        refreshLayout.finishLoadMore();
-                    }
                     String json = response.body().string();
                     OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
-                    if (orderResult.getData().size()<10){
-                        refreshLayout.setNoMoreData(true);
-                    }else{
-                        refreshLayout.setNoMoreData(false);
-                    }
                     if (orderResult.getData().size()!=0){
                         tvEmpty.setVisibility(View.GONE);
                         list.addAll(orderResult.getData());

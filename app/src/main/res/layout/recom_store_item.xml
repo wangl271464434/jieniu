@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/size_100dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="@dimen/size_10dp"
     android:gravity="center"
+    android:background="@color/white"
     >
      <ImageView
          android:id="@+id/img"
-         android:layout_width="@dimen/size_80dp"
+         android:layout_width="@dimen/size_100dp"
          android:layout_height="@dimen/size_80dp"
          android:src="@mipmap/loading"
+         android:layout_centerVertical="true"
          />
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_5dp"
-        android:gravity="center"
-        android:text="大家奥斯卡了房间卡电视里看到啊啊送来的快解散了"
-        android:textSize="@dimen/size_12sp"
-        android:ems="6"
-        android:ellipsize="end"
-        android:maxLines="2"
-        />
-</LinearLayout>
+        android:layout_toRightOf="@id/img"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/size_10dp"
+        >
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="大家奥斯卡了房间卡电视里看到啊啊送来的快解散了"
+            android:textSize="@dimen/size_15sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/size_5dp"
+            />
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_5dp"
+            android:text="西安市"
+            android:textSize="@dimen/size_13sp"
+            android:textColor="@color/light_black"
+            />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_5dp"
+            android:text="2019-07-10"
+            android:textSize="@dimen/size_13sp"
+            android:textColor="@color/light_black"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

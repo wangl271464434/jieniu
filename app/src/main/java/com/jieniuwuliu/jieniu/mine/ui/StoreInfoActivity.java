@@ -35,6 +35,7 @@ import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
 import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
@@ -102,6 +103,7 @@ public class StoreInfoActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        EventBus.getDefault().register(this);
         loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(this,Constant.USERTYPE,Constant.USERTYPE,0);
@@ -109,12 +111,12 @@ public class StoreInfoActivity extends BaseActivity {
         list = new ArrayList<>();
         carTypeList = new ArrayList<>();
         workTypes = new ArrayList<>();
+        getStoreInfo();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getStoreInfo();
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(CarEvent carEvent) {
@@ -169,7 +171,6 @@ public class StoreInfoActivity extends BaseActivity {
             public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
                 MyToast.show(StoreInfoActivity.this,"修改成功");
-                finish();
             }
 
             @Override
@@ -222,10 +223,11 @@ public class StoreInfoActivity extends BaseActivity {
                             String s = "";
                             if (storeBean.getFuwuCar()!=null){
                                 for (int i =0;i<storeBean.getFuwuCar().size();i++){
-                                    if (i!=0){
-                                        s += ","+storeBean.getFuwuCar().get(i).getName();
-                                    }else{
+                                    if (i==0){
                                         s += storeBean.getFuwuCar().get(i).getName();
+                                    }else{
+                                        s += ","+storeBean.getFuwuCar().get(i).getName();
+
                                     }
                                 }
                             }
@@ -402,6 +404,13 @@ public class StoreInfoActivity extends BaseActivity {
                     break;
             }
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

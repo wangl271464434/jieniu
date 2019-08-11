@@ -75,9 +75,18 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {
                 loading.dismiss();
-                int status = response.body().getStatus();
-                if (status == 0) {
-                    MyToast.show(RegisterActivity.this, "验证码已发送，请注意查收");
+                switch (response.code()){
+                    case 200:
+                        MyToast.show(RegisterActivity.this, "验证码已发送，请注意查收");
+                        break;
+                    case 400:
+                        try{
+                            String json = response.errorBody().string();
+                            MyToast.show(getApplicationContext(),new JSONObject(json).getString("data"));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        break;
                 }
             }
 

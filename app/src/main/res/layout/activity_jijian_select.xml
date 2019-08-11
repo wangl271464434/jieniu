@@ -10,6 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:padding="@dimen/size_15dp"
         >
         <ImageView
@@ -47,7 +48,7 @@
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@drawable/edit_white_shape"
             android:singleLine="true"
             android:hint="输入运单号查询"
             android:textSize="@dimen/size_15sp"

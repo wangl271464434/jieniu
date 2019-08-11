@@ -78,23 +78,28 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
         manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        if (chooseList.size()!=0){
-            for (int i =0;i<SourceDateList.size();i++){
-                for (int j = 0;j<chooseList.size();j++){
-                    if (SourceDateList.get(i).getName().equals(chooseList.get(j).getName())){
-                        SourceDateList.set(i,chooseList.get(j));
+        if (chooseList!=null){
+            if (chooseList.size()!=0){
+                for (int i =0;i<SourceDateList.size();i++){
+                    for (int j = 0;j<chooseList.size();j++){
+                        if (SourceDateList.get(i).getName().equals(chooseList.get(j).getName())){
+                            SourceDateList.set(i,chooseList.get(j));
+                        }
                     }
                 }
             }
         }
+
         adapter = new SortAdapter(this, SourceDateList);
         recyclerView.setAdapter(adapter);
         adapter.setCallBack(this);
     }
     @OnClick(R.id.tv_sure)
     void onClick(){
-        if (chooseList.size()>0){
-            list.addAll(chooseList);
+        if (chooseList!=null){
+            if (chooseList.size()>0){
+                list.addAll(chooseList);
+            }
         }
         CarEvent carEvent = new CarEvent();
         carEvent.setSortModelList(list);
@@ -112,8 +117,10 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
         if (isChecked){
             list.add(SourceDateList.get(position));
         }else{
-            if (chooseList.size()>0){
-                chooseList.remove(SourceDateList.get(position));
+            if (chooseList!=null){
+                if (chooseList.size()>0){
+                    chooseList.remove(SourceDateList.get(position));
+                }
             }
             list.remove(SourceDateList.get(position));
         }

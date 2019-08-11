@@ -63,9 +63,17 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         for (int j = 0;j<objects.size();j++) {
             Machine machine = (Machine) objects.get(j);
             if (j==0){
-                info += machine.getName()+"   "+machine.getMoney();
+                if (machine.getMoney().equals("")|| machine.getMoney().equals("0")){
+                    info += machine.getName()+"   未报价";
+                }else{
+                    info += machine.getName()+"   "+machine.getMoney();
+                }
             }else{
-                info += "\n"+ machine.getName()+"   "+machine.getMoney();
+                if (machine.getMoney().equals("")|| machine.getMoney().equals("0")){
+                    info += "\n"+machine.getName()+"   未报价";
+                }else{
+                    info += "\n"+machine.getName()+"   "+machine.getMoney();
+                }
             }
         }
         viewHolder.tvInfo.setText(info);
