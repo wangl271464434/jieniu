@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu.home.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,68 +17,118 @@ import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
+import com.jieniuwuliu.jieniu.jijian.JiJianSelectActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> implements View.OnClickListener {
+public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
     private Context context;
     private OnItemClickListener listener;
     private List<OrderInfo> list;
+    private  View view;
+    private ViewHolder holder;
+    private FootView footView;
     public HomeAdapter(Context context,List<OrderInfo> list) {
-        this.list = list;
         this.context = context;
+        setData(list);
+    }
+
+   public void setData(List<OrderInfo> data) {
+        list = new ArrayList<>();
+        list.addAll(data);
+        if (list.size()>0){
+            list.add(new OrderInfo());
+        }
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.listener = onItemClickListener;
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == list.size()-1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.home_item,viewGroup,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        view.setOnClickListener(this);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        RecyclerView.ViewHolder viewHolder = null;
+        switch (i){
+            case 0:
+                view = LayoutInflater.from(context).inflate(R.layout.home_item,viewGroup,false);
+                viewHolder = new ViewHolder(view);
+                view.setOnClickListener(this);
+                break;
+            case 1:
+                view = LayoutInflater.from(context).inflate(R.layout.home_footer,viewGroup,false);
+                viewHolder = new FootView(view);
+                break;
+        }
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
-        OrderInfo item = list.get(i);
-        viewHolder.tvNo.setText(item.getOrderNumber());
-        String token = (String) SPUtil.get(context,Constant.TOKEN,Constant.TOKEN,"");
-        viewHolder.tvStartAdr.setText(item.getFromName());
-        viewHolder.tvEndAdr.setText(item.getToName());
-        viewHolder.info.setText(item.getInfo());
-        viewHolder.tvNum.setText(item.getNumber()+"件");
-        if (item.getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))){
-            viewHolder.img.setImageResource(R.mipmap.ic_home_jijian);
-        }else{
-            viewHolder.img.setImageResource(R.mipmap.ic_home_shoujian);
+        switch (getItemViewType(i)){
+            case 0:
+                holder = (ViewHolder) viewHolder;
+                OrderInfo item = list.get(i);
+                holder.tvNo.setText(item.getOrderNumber());
+                String token = (String) SPUtil.get(context,Constant.TOKEN,Constant.TOKEN,"");
+                holder.tvStartAdr.setText(item.getFromName());
+                holder.tvEndAdr.setText(item.getToName());
+                holder.info.setText(item.getInfo());
+                holder.tvNum.setText(item.getNumber()+"件");
+                if (item.getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))){
+                    holder.img.setImageResource(R.mipmap.ic_home_jijian);
+                }else{
+                    holder.img.setImageResource(R.mipmap.ic_home_shoujian);
+                }
+                if (item.getOrderList()!=null){
+                    if (item.getOrderList().size()>0){
+                        holder.imgStart.setVisibility(View.INVISIBLE);
+                        holder.imgMiddle.setVisibility(View.VISIBLE);
+                        holder.imgEnd.setVisibility(View.INVISIBLE);
+                        holder.bar.setSecondaryProgress(50);
+                        holder.tvMiddle.setText("配送中");
+                    }else{
+                        holder.imgStart.setVisibility(View.VISIBLE);
+                        holder.imgMiddle.setVisibility(View.INVISIBLE);
+                        holder.imgEnd.setVisibility(View.INVISIBLE);
+                        holder.bar.setSecondaryProgress(0);
+                    }
+                }else {
+                    holder.imgStart.setVisibility(View.VISIBLE);
+                    holder.imgMiddle.setVisibility(View.INVISIBLE);
+                    holder.imgEnd.setVisibility(View.INVISIBLE);
+                    holder.bar.setSecondaryProgress(0);
+                }
+                break;
+            case 1:
+                footView = (FootView) viewHolder;
+                footView.tvMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setClass(context, JiJianSelectActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
+                break;
         }
-        if (item.getOrderList()!=null){
-            if (item.getOrderList().size()>0){
-                viewHolder.imgStart.setVisibility(View.INVISIBLE);
-                viewHolder.imgMiddle.setVisibility(View.VISIBLE);
-                viewHolder.imgEnd.setVisibility(View.INVISIBLE);
-                viewHolder.bar.setSecondaryProgress(50);
-                viewHolder.tvMiddle.setText("配送中");
-            }else{
-                viewHolder.imgStart.setVisibility(View.VISIBLE);
-                viewHolder.imgMiddle.setVisibility(View.INVISIBLE);
-                viewHolder.imgEnd.setVisibility(View.INVISIBLE);
-                viewHolder.bar.setSecondaryProgress(0);
-            }
-        }else {
-            viewHolder.imgStart.setVisibility(View.VISIBLE);
-            viewHolder.imgMiddle.setVisibility(View.INVISIBLE);
-            viewHolder.imgEnd.setVisibility(View.INVISIBLE);
-            viewHolder.bar.setSecondaryProgress(0);
-        }
+
     }
 
     @Override
@@ -107,19 +158,23 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
         ProgressBar bar;
         @BindView(R.id.img_start)
         ImageView imgStart;
-        @BindView(R.id.tv_yunshu)
-        TextView tvYunShu;
         @BindView(R.id.tv_start_adr)
         TextView tvStartAdr;
         @BindView(R.id.tv_end_adr)
         TextView tvEndAdr;
-        @BindView(R.id.tv_peisong)
-        TextView tvPeiSong;
         @BindView(R.id.img_middle)
         ImageView imgMiddle;
         @BindView(R.id.img_end)
         ImageView imgEnd;
         ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+    static class FootView extends RecyclerView.ViewHolder{
+        @BindView(R.id.tv_more)
+        TextView tvMore;
+        FootView(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }

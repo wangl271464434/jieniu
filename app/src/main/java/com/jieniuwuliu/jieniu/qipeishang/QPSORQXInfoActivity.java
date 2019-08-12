@@ -8,31 +8,34 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Car;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
 import com.jieniuwuliu.jieniu.mine.ui.FeedBackActivity;
+import com.jieniuwuliu.jieniu.qipeishang.adapter.InfoImgAdapter;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.StoreCarAdapter;
 import com.jieniuwuliu.jieniu.view.GlideImageLoader;
-import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
 import org.json.JSONArray;
@@ -46,7 +49,9 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -57,39 +62,45 @@ import retrofit2.Response;
  * 门店详情
  */
 public class QPSORQXInfoActivity extends BaseActivity {
+
+
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.img)
+    ImageView img;
     @BindView(R.id.tv_name)
     TextView tvName;
-    @BindView(R.id.layout_yewu)
-    LinearLayout layoutYewu;
+    @BindView(R.id.tv_follow)
+    TextView tvFollow;
+    @BindView(R.id.rv)
+    RecyclerView rv;
     @BindView(R.id.layout_car)
     LinearLayout layoutCar;
-    @BindView(R.id.name)
-    TextView name;
-    @BindView(R.id.phone)
-    TextView phone;
-    @BindView(R.id.address)
-    TextView address;
-    @BindView(R.id.tv_wechat)
-    TextView tvWechat;
     @BindView(R.id.tv_yewu)
     TextView tvYewu;
     @BindView(R.id.tv_context)
     TextView tvContext;
-    @BindView(R.id.tv_follow)
-    TextView tvFollow;
-    @BindView(R.id.banner)
-    Banner banner;
-    @BindView(R.id.rv)
-    RecyclerView rv;
+    @BindView(R.id.layout_yewu)
+    LinearLayout layoutYewu;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.tv_person)
+    TextView tvPerson;
+    @BindView(R.id.tv_address)
+    TextView tvAddress;
+    @BindView(R.id.tv_wechat)
+    TextView tvWechat;
     private String token;
     private Intent intent;
     private int id;
     private StoreCarAdapter adapter;
     private List<Car> cars;
+    private List<String> imgs;
+    private InfoImgAdapter imgAdapter;
     private StoreInfoBean storeBean;
-    private List<String> imgUrls;
     private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
             Manifest.permission.PROCESS_OUTGOING_CALLS};
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qi_pei_shang_info;
@@ -97,7 +108,11 @@ public class QPSORQXInfoActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        imgUrls = new ArrayList<>();
+        imgs = new ArrayList<>();
+        GridLayoutManager imgManager = new GridLayoutManager(this,3);
+        recyclerView.setLayoutManager(imgManager);
+        imgAdapter = new InfoImgAdapter(this,imgs);
+        recyclerView.setAdapter(imgAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rv.setLayoutManager(manager);
@@ -123,21 +138,16 @@ public class QPSORQXInfoActivity extends BaseActivity {
                             ResponseBody body = response.body();
                             String json = body.string();
                             storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"), StoreInfoBean.class);
+                            title.setText(storeBean.getNickname());
                             tvName.setText(storeBean.getNickname());
-                            name.setText(storeBean.getAddress().getName());
-                            String phoneStr = storeBean.getAddress().getPhone();
-                            if (phoneStr.length() == 11) {
-                                String str1 = phoneStr.substring(0, 3);
-                                String str2 = phoneStr.substring(8, 11);
-                                phoneStr = str1 + "******" + str2;
-                            } else {
-                                String str1 = phoneStr.substring(0, 3);
-                                String str2 = phoneStr.substring(5, 8);
-                                phoneStr = str1 + "**" + str2;
+                            tvPerson.setText(storeBean.getAddress().getName());
+                            if ("".equals(storeBean.getWechat())){
+                                tvWechat.setText("暂无微信");
+                            }else {
+                                tvWechat.setText(storeBean.getWechat());
                             }
-                            phone.setText(phoneStr);
-                            tvWechat.setText(storeBean.getWechat());
-                            address.setText(storeBean.getAddress().getAddress());
+
+                            tvAddress.setText(storeBean.getAddress().getAddress());
                             if (storeBean.isFollow()) {
                                 tvFollow.setText("已关注");
                             } else {
@@ -162,19 +172,19 @@ public class QPSORQXInfoActivity extends BaseActivity {
                                     break;
                             }
                             if (!storeBean.getShopPhoto().equals("")) {
-                                imgUrls.add(storeBean.getShopPhoto());
+                                GlideUtil.setImgUrl(QPSORQXInfoActivity.this,storeBean.getShopPhoto(),img);
                             }
                             if (!storeBean.getPhotos().equals("")) {
                                 try {
                                     JSONArray array = new JSONArray(storeBean.getPhotos());
                                     for (int i = 0; i < array.length(); i++) {
-                                        imgUrls.add(array.get(i).toString());
+                                        imgs.add(array.get(i).toString());
                                     }
+                                    imgAdapter.notifyDataSetChanged();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            setViewPage(imgUrls);
                             if (storeBean.getFuwuCar() != null) {
                                 if (storeBean.getFuwuCar().size() > 0) {
                                     cars.addAll(storeBean.getFuwuCar());
@@ -212,62 +222,8 @@ public class QPSORQXInfoActivity extends BaseActivity {
     }
 
     /**
-     * 设置轮播图
-     * */
-    private void setViewPage(List<String> imgUrls) {
-        //设置banner样式(显示圆形指示器)
-        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
-        //设置图片加载器
-        banner.setImageLoader(new GlideImageLoader());
-        //设置图片集合
-        banner.setImages(imgUrls);
-        //设置轮播时间
-        banner.setDelayTime(5000);
-        //banner设置方法全部调用完毕时最后调用
-        banner.start();
-    }
-
-    @OnClick({R.id.back, R.id.tv_fuzhi, R.id.tv_follow,R.id.layout_report,R.id.btn, R.id.msg})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
-            case R.id.tv_follow://关注/取消关注
-                if (storeBean.isFollow()) {
-                    cancelFollow();
-                } else {
-                    addFollow();
-                }
-                break;
-            case R.id.tv_fuzhi://复制微信号
-                ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Label", storeBean.getWechat());
-                manager.setPrimaryClip(clipData);
-                MyToast.show(this, "复制成功");
-                break;
-            case R.id.layout_report:
-                intent = new Intent();
-                intent.setClass(this,FeedBackActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.btn://打电话
-                if (Build.VERSION.SDK_INT >= 23){
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(this,permissions,100);
-                        return;
-                    }
-                }
-                Constant.CALLPHONE = storeBean.getAddress().getPhone();
-                Constant.isCall = false;
-                callPhone();
-                break;
-            case R.id.msg:
-                MyToast.show(getApplicationContext(),"该功能暂未开放");
-                break;
-        }
-    }
-    /**拨打电话*/
+     * 拨打电话
+     */
     private void callPhone() {
         Intent intent = new Intent(Intent.ACTION_CALL);
         Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
@@ -277,33 +233,34 @@ public class QPSORQXInfoActivity extends BaseActivity {
 
     /**
      * 添加关注
-     * */
+     */
     private void addFollow() {
-        Map<String,Object> map = new HashMap<>();
-        map.put("fUid",storeBean.getUid());
+        Map<String, Object> map = new HashMap<>();
+        map.put("fUid", storeBean.getUid());
         String json = GsonUtil.mapToJson(map);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).addFollow(body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    switch (response.code()){
+                    switch (response.code()) {
                         case 200:
                             MyToast.show(QPSORQXInfoActivity.this, "关注成功");
                             tvFollow.setText("已关注");
                             break;
                         case 400:
                             String s = response.errorBody().string();
-                            Log.w("result",s);
+                            Log.w("result", s);
                             JSONObject object = new JSONObject(s);
                             MyToast.show(QPSORQXInfoActivity.this, object.getString("msg"));
                             break;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
@@ -313,26 +270,26 @@ public class QPSORQXInfoActivity extends BaseActivity {
 
     /**
      * 取消关注
-     * */
+     */
     private void cancelFollow() {
         Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).deleteFollow(storeBean.getUid());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    switch (response.code()){
+                    switch (response.code()) {
                         case 200:
                             MyToast.show(QPSORQXInfoActivity.this, "取消成功");
                             tvFollow.setText("关注");
                             break;
                         case 400:
                             String s = response.errorBody().string();
-                            Log.w("result",s);
+                            Log.w("result", s);
                             JSONObject object = new JSONObject(s);
                             MyToast.show(QPSORQXInfoActivity.this, object.getString("msg"));
                             break;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -347,12 +304,55 @@ public class QPSORQXInfoActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100){
+        if (requestCode == 100) {
             if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
-                MyToast.show(this,"请允许拨号权限后再试");
+                MyToast.show(this, "请允许拨号权限后再试");
             } else {//成功
 //                callPhone();
             }
+        }
+    }
+
+    @OnClick({R.id.layout_back, R.id.tv_follow, R.id.tv_more, R.id.tv_fuzhi, R.id.layout_report, R.id.layout_call})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.layout_back:
+                finish();
+                break;
+            case R.id.tv_follow:
+                if (storeBean.isFollow()) {
+                    cancelFollow();
+                } else {
+                    addFollow();
+                }
+                break;
+            case R.id.tv_more:
+                break;
+            case R.id.tv_fuzhi:
+                if ("".equals(storeBean.getWechat())){
+                    return;
+                }
+                ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Label", storeBean.getWechat());
+                manager.setPrimaryClip(clipData);
+                MyToast.show(this, "复制成功");
+                break;
+            case R.id.layout_report:
+                intent = new Intent();
+                intent.setClass(this, FeedBackActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.layout_call:
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, permissions, 100);
+                        return;
+                    }
+                }
+                Constant.CALLPHONE = storeBean.getAddress().getPhone();
+                Constant.isCall = false;
+                callPhone();
+                break;
         }
     }
 }

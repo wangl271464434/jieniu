@@ -47,7 +47,9 @@
         <activity
             android:name=".home.BjInfoActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".home.BJListActivity" />
+        <activity android:name=".home.BJListActivity"
+
+            />
         <activity android:name=".home.XJContentActivity" />
         <activity android:name=".home.AddCarDateActivity" /> <!-- 获取临时读取存储权限 -->
         <provider
@@ -74,10 +76,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".WelcomeActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -74,7 +74,7 @@ public class ScanQCActivity extends BaseActivity implements OnScannerCompletionL
         String s = parsedResult.toString();
         s = s.replace("\r\n", "");
         if (RegularUtil.isNum(s)) {
-            bindOrder(s);
+//            bindOrder(s);
         } else {
             MyToast.show(this, s);
             finish();

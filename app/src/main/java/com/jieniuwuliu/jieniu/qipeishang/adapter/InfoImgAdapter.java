@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.home.adapter;
+package com.jieniuwuliu.jieniu.qipeishang.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,32 +7,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
-import com.jieniuwuliu.jieniu.Util.JwtUtil;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.bean.OrderInfo;
-import com.jieniuwuliu.jieniu.bean.RecomStore;
+import com.jieniuwuliu.jieniu.bean.Label;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-/**
- * 推荐商家适配器
- * */
-public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.ViewHolder> implements View.OnClickListener {
+
+public class InfoImgAdapter extends RecyclerView.Adapter<InfoImgAdapter.ViewHolder> implements View.OnClickListener {
     private Context context;
     private OnItemClickListener listener;
-    private List<RecomStore.DataBean> list;
-    public RecomStoreAdapter(Context context, List<RecomStore.DataBean> list) {
-        this.list = list;
+    private List<String> list;
+    public InfoImgAdapter(Context context, List<String> list) {
         this.context = context;
+        this.list = list;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -41,7 +34,7 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recom_store_item,viewGroup,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.info_img_item,viewGroup,false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(this);
         return viewHolder;
@@ -50,11 +43,7 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
-        RecomStore.DataBean item = list.get(i);
-        GlideUtil.setVideoImg(context,item.getPhoto(),viewHolder.img);
-        viewHolder.name.setText(item.getName());
-        viewHolder.time.setText(item.getCreatedAt());
-        viewHolder.address.setText(item.getAddress().replace("陕西省",""));
+        GlideUtil.setImgUrl(context,list.get(i),R.mipmap.loading,viewHolder.img);
     }
 
     @Override
@@ -72,12 +61,6 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
     static class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.img)
         ImageView img;
-        @BindView(R.id.name)
-        TextView name;
-        @BindView(R.id.address)
-        TextView address;
-        @BindView(R.id.time)
-        TextView time;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

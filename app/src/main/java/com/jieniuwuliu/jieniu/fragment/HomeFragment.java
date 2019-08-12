@@ -48,19 +48,18 @@ import com.jieniuwuliu.jieniu.home.XJListActivity;
 import com.jieniuwuliu.jieniu.home.adapter.HomeAdapter;
 import com.jieniuwuliu.jieniu.home.OrderInfoActivity;
 import com.jieniuwuliu.jieniu.home.adapter.RecomStoreAdapter;
-import com.jieniuwuliu.jieniu.jijian.JiJianSelectActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
-import com.jieniuwuliu.jieniu.mine.ui.ChooseAddressActivity;
 import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
+import com.jieniuwuliu.jieniu.view.GlideImageLoader;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,12 +67,13 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.banner)
+    Banner banner;
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.tv_empty)
@@ -84,10 +84,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.et_search)
     EditText etSearch;
-    @BindView(R.id.layout_order)
-    LinearLayout layoutOrder;
-    @BindView(R.id.tv_more)
-    TextView tvMore;
     private HomeAdapter adapter;
     private Intent intent;
     //声明AMapLocationClient类对象，定位发起端
@@ -103,6 +99,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private List<OrderInfo> list;
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
+    private List<Integer> imgs;
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.home;
@@ -110,6 +107,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
 
     @Override
     protected void init() {
+        imgs = new ArrayList<>();
+        imgs.add(R.mipmap.home_banner_1);
+        imgs.add(R.mipmap.home_banner_2);
+        setBanner();
+        rv.setVisibility(View.GONE);
         etSearch.setOnEditorActionListener(this);
         list = new ArrayList<>();
         recomList = new ArrayList<>();
@@ -138,6 +140,30 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         refreshLayout.setOnLoadMoreListener(this);
 
     }
+    /**
+     * 设置轮播图
+     * */
+    private void setBanner() {
+        //设置banner样式(显示圆形指示器)
+        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+        //设置指示器位置（指示器居右）
+        banner.setIndicatorGravity(BannerConfig.CENTER);
+        //设置图片加载器
+        banner.setImageLoader(new GlideImageLoader());
+        //设置图片集合
+        banner.setImages(imgs);
+        //设置banner动画效果
+//        banner.setBannerAnimation(Transformer.DepthPage);
+        //设置标题集合（当banner样式有显示title时）
+//        banner.setBannerTitles(titles);
+        //设置自动轮播，默认为true
+//        banner.isAutoPlay(true);
+        //设置轮播时间
+        banner.setDelayTime(5000);
+        //banner设置方法全部调用完毕时最后调用
+        banner.start();
+    }
+
     /**
      * 获取推荐商家
      * */
@@ -228,12 +254,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         //启动定位
         mLocationClient.startLocation();
     }
-    @OnClick({R.id.tv_position, R.id.tv_scan, R.id.home_tab_1, R.id.home_tab_2, R.id.home_tab_3,R.id.home_tab_4})
+    @OnClick({R.id.tv_position, R.id.tv_msg, R.id.home_tab_1, R.id.home_tab_2, R.id.home_tab_3,R.id.home_tab_4})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_position://定位
                 break;
-            case R.id.tv_scan://扫码
+            case R.id.tv_msg://消息
                 intent = new Intent();
                 intent.setClass(getActivity(),ScanQCActivity.class);
                 getActivity().startActivity(intent);
@@ -322,8 +348,9 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                     OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
                     if (orderResult.getData().size()!=0){
                         tvEmpty.setVisibility(View.GONE);
+                        rv.setVisibility(View.VISIBLE);
                         list.addAll(orderResult.getData());
-                        adapter.notifyDataSetChanged();
+                        adapter.setData(list);
                     }else{
                         tvEmpty.setVisibility(View.VISIBLE);
                     }

@@ -54,6 +54,7 @@ public class RecomStore {
         private int uid;
         private String name;
         private String photo;
+        private String address ;
 
         public int getId() {
             return id;
@@ -101,6 +102,14 @@ public class RecomStore {
 
         public void setPhoto(String photo) {
             this.photo = photo;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
         }
     }
 }

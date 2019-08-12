@@ -5,15 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/line_gray">
+    android:background="@color/comment_bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <LinearLayout
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/ic_home_banner"
+                android:layout_height="@dimen/size_150dp"
+                android:background="@mipmap/home_banner_1"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_shape"
-                    android:layout_toLeftOf="@id/tv_scan"
+                    android:layout_toLeftOf="@id/tv_msg"
                     android:imeOptions="actionSearch"
                     android:singleLine="true"
                     android:inputType="text"
@@ -50,14 +51,14 @@
                     android:textSize="@dimen/size_14sp"
                     tools:ignore="Autofill,RtlHardcoded,TextFields" />
                 <TextView
-                    android:id="@+id/tv_scan"
+                    android:id="@+id/tv_msg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="扫码"
+                    android:text="消息"
                     android:layout_marginRight="@dimen/size_10dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:drawableTop="@mipmap/ic_home_scan"
+                    android:drawableTop="@mipmap/ic_msg"
                     android:drawablePadding="@dimen/size_3dp"
                     android:textSize="@dimen/size_12sp"
                     android:layout_marginTop="@dimen/size_3dp"
@@ -137,62 +138,76 @@
         </LinearLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/size_10dp"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_empty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_white_shape"
-                android:layout_margin="@dimen/size_15dp"
-                android:paddingTop="@dimen/size_30dp"
-                android:paddingBottom="@dimen/size_20dp"
-                android:drawableTop="@mipmap/pic_home_empty"
-                android:text="Sorry～没有最新的物流信息"
-                android:gravity="center"
-                android:drawablePadding="@dimen/size_10dp"
-                />
-            <LinearLayout
-                android:id="@+id/layout_order"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_margin="@dimen/size_15dp"
-                    />
-                <TextView
-                    android:id="@+id/tv_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/size_15dp"
-                    android:text="查看更多订单"
-                    />
-            </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_5dp"
                 android:background="@color/white"
                 android:orientation="vertical"
                 >
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="推荐商家"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                    android:id="@+id/tv_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_135dp"
+                    android:background="@drawable/bg_gray_shape"
+                    android:layout_marginTop="@dimen/size_20dp"
+                    android:layout_marginBottom="@dimen/size_20dp"
+                    android:layout_marginLeft="@dimen/size_30dp"
+                    android:layout_marginRight="@dimen/size_30dp"
+                    android:paddingTop="@dimen/size_30dp"
+                    android:paddingBottom="@dimen/size_20dp"
+                    android:drawableTop="@mipmap/pic_home_empty"
+                    android:text="Sorry～没有最新的物流信息"
                     android:textSize="@dimen/size_16sp"
-                    android:layout_margin="@dimen/size_10dp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/size_10dp"
                     />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_10dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:layout_width="@dimen/size_60dp"
+                        android:layout_height="@dimen/size_1dp"
+                        android:background="@color/orange"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="推荐商家"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/size_16sp"
+                        android:layout_margin="@dimen/size_10dp"
+                        />
+                    <TextView
+                        android:layout_width="@dimen/size_60dp"
+                        android:layout_height="@dimen/size_1dp"
+                        android:background="@color/orange"
+                        />
+                </LinearLayout>
+
                 <com.scwang.smartrefresh.layout.SmartRefreshLayout
                     android:id="@+id/refreshlayout"
                     android:layout_width="match_parent"

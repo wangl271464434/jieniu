@@ -25,8 +25,7 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="大家奥斯卡了房间卡电视里看到啊啊送来的快解散了"
-            android:textSize="@dimen/size_15sp"
+            android:textSize="@dimen/size_16sp"
             android:textColor="@color/black"
             android:layout_marginTop="@dimen/size_5dp"
             />
