@@ -9,12 +9,10 @@
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/orange_shape"
         android:paddingTop="@dimen/size_1dp"
         android:paddingBottom="@dimen/size_1dp"
         android:paddingLeft="@dimen/size_3dp"
         android:paddingRight="@dimen/size_3dp"
-        android:textColor="@color/orange"
         android:text="服务"
         android:textSize="@dimen/size_12sp"
         />

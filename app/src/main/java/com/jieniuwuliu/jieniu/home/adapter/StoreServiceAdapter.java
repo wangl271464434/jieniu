@@ -43,6 +43,13 @@ public class StoreServiceAdapter extends RecyclerView.Adapter<StoreServiceAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
+        if ("包邮".equals(list.get(i))){
+            viewHolder.tv.setTextColor(context.getResources().getColor(R.color.red));
+            viewHolder.tv.setBackgroundResource(R.drawable.bg_red_shape);
+        }else{
+            viewHolder.tv.setTextColor(context.getResources().getColor(R.color.orange));
+            viewHolder.tv.setBackgroundResource(R.drawable.orange_shape);
+        }
         viewHolder.tv.setText(list.get(i));
     }
 
