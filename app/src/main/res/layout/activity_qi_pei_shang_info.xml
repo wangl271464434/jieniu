@@ -211,7 +211,7 @@
                     android:id="@+id/layout_report"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/size_10dp"
+                    android:layout_marginTop="@dimen/size_10dp"
                     android:paddingBottom="@dimen/size_10dp"
                     >
                     <TextView

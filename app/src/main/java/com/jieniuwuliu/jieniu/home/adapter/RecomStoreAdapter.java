@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.home.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,8 +55,16 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         RecomStore.DataBean item = list.get(i);
         GlideUtil.setVideoImg(context,item.getPhoto(),viewHolder.img);
         viewHolder.name.setText(item.getName());
-        viewHolder.time.setText(item.getCreatedAt());
         viewHolder.address.setText(item.getAddress().replace("陕西省",""));
+        List<String> list = new ArrayList<>();
+        list.add("星级服务");
+        list.add("优质服务");
+        list.add("送货上门");
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        viewHolder.recyclerView.setLayoutManager(manager);
+        StoreServiceAdapter adapter = new StoreServiceAdapter(context,list);
+        viewHolder.recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -76,8 +86,8 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         TextView name;
         @BindView(R.id.address)
         TextView address;
-        @BindView(R.id.time)
-        TextView time;
+        @BindView(R.id.recyclerView)
+        RecyclerView recyclerView;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

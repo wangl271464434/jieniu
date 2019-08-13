@@ -18,7 +18,7 @@ public class WelcomeActivity extends BaseActivity {
     CountdownView tvEnter;
     private String token;
     private int userType;
-    private boolean isGuide;
+//    private boolean isGuide;
 
     @Override
     protected int getLayoutId() {
@@ -29,7 +29,7 @@ public class WelcomeActivity extends BaseActivity {
     protected void init() {
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
-        isGuide = (boolean) SPUtil.get(this, Constant.GUIDE, Constant.GUIDE, false);
+//        isGuide = (boolean) SPUtil.get(this, Constant.GUIDE, Constant.GUIDE, false);
         tvEnter.start();
         tvEnter.setOnFinishAction(new Action() {
             @Override
@@ -48,19 +48,20 @@ public class WelcomeActivity extends BaseActivity {
      * 进入具体界面
      */
     private void enter() {
-        if (isGuide) {
-            if (!token.equals("")) {
-                if (userType == 5||userType == 6) {
-                    startAcy(LoginActivity.class);
-                } else {
-                    startAcy(MainActivity.class);
-                }
-            } else {
+        if (!token.equals("")) {
+            if (userType == 5||userType == 6) {
                 startAcy(LoginActivity.class);
+            } else {
+                startAcy(MainActivity.class);
             }
         } else {
-            startAcy(GuideActivity.class);
+            startAcy(LoginActivity.class);
         }
+      /*  if (isGuide) {
+
+        } else {
+            startAcy(GuideActivity.class);
+        }*/
         finish();
     }
 }

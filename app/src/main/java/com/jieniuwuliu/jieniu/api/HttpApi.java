@@ -255,7 +255,7 @@ public interface HttpApi {
      * 推荐门店
      * */
     @GET("users/recommends")
-    Call<ResponseBody> getRecomStoreList();
+    Call<ResponseBody> getRecomStoreList(@Query("page")String page,@Query("number")String num);
     /**
      * 获取未读消息列表
      * */

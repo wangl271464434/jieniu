@@ -36,6 +36,7 @@
     <dimen name="size_320dp">320dp</dimen>
     <dimen name="size_330dp">330dp</dimen>
     <dimen name="size_340dp">340dp</dimen>
+    <dimen name="size_350dp">350dp</dimen>
     <dimen name="size_360dp">360dp</dimen>
 
     <!--文本内容的大小-->

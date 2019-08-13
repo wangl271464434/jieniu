@@ -7,8 +7,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +21,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
-import com.amap.api.maps.model.LatLng;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.ScanQCActivity;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
@@ -42,7 +36,6 @@ import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
 import com.jieniuwuliu.jieniu.home.BJListActivity;
 import com.jieniuwuliu.jieniu.home.MsgActivity;
-import com.jieniuwuliu.jieniu.home.QPShopActivity;
 import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.home.XJCarTypeActivity;
 import com.jieniuwuliu.jieniu.home.XJListActivity;
@@ -56,6 +49,7 @@ import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
@@ -70,7 +64,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener {
+public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener, OnRefreshListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.banner)
@@ -131,15 +125,18 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                 startActivity(intent);
             }
         });
+
         //最新物流
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rv.setLayoutManager(manager);
         adapter = new HomeAdapter(getActivity(),list);
         rv.setAdapter(adapter);
+     /*   LinearSnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(rv);*/
         adapter.setOnItemClickListener(this);
         refreshLayout.setOnLoadMoreListener(this);
-
+        refreshLayout.setOnRefreshListener(this);
     }
     /**
      * 设置轮播图
@@ -169,13 +166,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
      * 获取推荐商家
      * */
     private void getRecomList() {
-        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getRecomStoreList();
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getRecomStoreList(String.valueOf(page),String.valueOf(pageNum));
         call.enqueue(new SimpleCallBack<ResponseBody>(getActivity()) {
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 try{
                     if (refreshLayout!=null){
                         refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
                     }
                     RecomStore recomStore = (RecomStore) GsonUtil.praseJsonToModel(response.body().string(),RecomStore.class);
                     if (recomStore.getData().size()<10){
@@ -308,6 +306,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         intent.putExtra("orderNo",list.get(position).getOrderNumber());
         getActivity().startActivity(intent);
     }
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        page = 1;
+        recomList.clear();
+        getRecomList();
+    }
     /**
      * 上拉加载
      * */
@@ -315,7 +319,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         page++;
         getRecomList();
-//        getData();
     }
 
     @Override
@@ -351,7 +354,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                         tvEmpty.setVisibility(View.GONE);
                         rv.setVisibility(View.VISIBLE);
                         list.addAll(orderResult.getData());
-                        adapter.setData(list);
+//                        adapter.setData(list);
+                        adapter.notifyDataSetChanged();
                     }else{
                         tvEmpty.setVisibility(View.VISIBLE);
                     }
@@ -433,4 +437,5 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
             }
         });
     }
+
 }

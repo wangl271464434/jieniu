@@ -331,6 +331,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 break;
             case R.id.tv_fuzhi:
                 if ("".equals(storeBean.getWechat())) {
+                    MyToast.show(this,"未绑定微信不能复制");
                     return;
                 }
                 ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
