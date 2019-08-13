@@ -55,6 +55,14 @@ public class MineAdater extends RecyclerView.Adapter<MineAdater.ViewHolder> impl
            }else{
                viewHolder.tvCertify.setVisibility(View.GONE);
            }
+        }else if (i==1){
+            boolean isBind = (boolean) SPUtil.get(context,Constant.BIND,Constant.BIND,false);
+            if (isBind){
+                viewHolder.tvCertify.setVisibility(View.GONE);
+            }else{
+                viewHolder.tvCertify.setVisibility(View.VISIBLE);
+                viewHolder.tvCertify.setText("未绑定");
+            }
         }
         viewHolder.img.setImageResource(list.get(i).getResId());
         viewHolder.name.setText(list.get(i).getName());

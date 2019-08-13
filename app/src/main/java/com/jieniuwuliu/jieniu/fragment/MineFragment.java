@@ -203,6 +203,12 @@ public class MineFragment extends BaseFragment implements OnItemClickListener, P
                         //是否认证
                         SPUtil.put(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,isCertify);
                         adapter.notifyItemChanged(0);
+                        if("".equals(user.getUnionid())||"-1".equals(user.getUnionid())){
+                            SPUtil.put(getActivity(),Constant.BIND,Constant.BIND,false);
+                        }else{
+                            SPUtil.put(getActivity(),Constant.BIND,Constant.BIND,true);
+                        }
+                        adapter.notifyItemChanged(1);
                         tvNickName.setText(user.getNickname());
                         if (user.getAddress()!=null){
                             tvAddress.setText(user.getAddress().getAddress().replace("陕西省",""));
