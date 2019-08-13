@@ -35,8 +35,6 @@ import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
 import com.jieniuwuliu.jieniu.mine.ui.FeedBackActivity;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.InfoImgAdapter;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.StoreCarAdapter;
-import com.jieniuwuliu.jieniu.view.GlideImageLoader;
-import com.youth.banner.BannerConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,6 +88,8 @@ public class QPSORQXInfoActivity extends BaseActivity {
     TextView tvAddress;
     @BindView(R.id.tv_wechat)
     TextView tvWechat;
+    @BindView(R.id.img_right)
+    ImageView imgRight;
     private String token;
     private Intent intent;
     private int id;
@@ -108,10 +108,11 @@ public class QPSORQXInfoActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        imgRight.setImageResource(R.mipmap.ic_fenxiang);
         imgs = new ArrayList<>();
-        GridLayoutManager imgManager = new GridLayoutManager(this,3);
+        GridLayoutManager imgManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(imgManager);
-        imgAdapter = new InfoImgAdapter(this,imgs);
+        imgAdapter = new InfoImgAdapter(this, imgs);
         recyclerView.setAdapter(imgAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -141,10 +142,10 @@ public class QPSORQXInfoActivity extends BaseActivity {
                             title.setText(storeBean.getNickname());
                             tvName.setText(storeBean.getNickname());
                             tvPerson.setText(storeBean.getAddress().getName());
-                            if ("".equals(storeBean.getWechat())){
-                                tvWechat.setText("暂无微信");
-                            }else {
-                                tvWechat.setText(storeBean.getWechat());
+                            if ("".equals(storeBean.getWechat())) {
+                                tvWechat.setText("未绑定");
+                            } else {
+                                tvWechat.setText("已绑定");
                             }
 
                             tvAddress.setText(storeBean.getAddress().getAddress());
@@ -172,7 +173,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
                                     break;
                             }
                             if (!storeBean.getShopPhoto().equals("")) {
-                                GlideUtil.setImgUrl(QPSORQXInfoActivity.this,storeBean.getShopPhoto(),img);
+                                GlideUtil.setImgUrl(QPSORQXInfoActivity.this, storeBean.getShopPhoto(), img);
                             }
                             if (!storeBean.getPhotos().equals("")) {
                                 try {
@@ -329,7 +330,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
             case R.id.tv_more:
                 break;
             case R.id.tv_fuzhi:
-                if ("".equals(storeBean.getWechat())){
+                if ("".equals(storeBean.getWechat())) {
                     return;
                 }
                 ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

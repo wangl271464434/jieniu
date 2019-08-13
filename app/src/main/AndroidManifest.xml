@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jieniuwuliu.jieniu">
-
     <!-- 允许程序打开网络套接字 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -44,12 +43,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".home.MsgActivity"></activity>
         <activity
             android:name=".home.BjInfoActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".home.BJListActivity"
-
-            />
+        <activity android:name=".home.BJListActivity" />
         <activity android:name=".home.XJContentActivity" />
         <activity android:name=".home.AddCarDateActivity" /> <!-- 获取临时读取存储权限 -->
         <provider
@@ -76,11 +74,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".WelcomeActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -261,7 +259,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".jijian.AgainOrderActivity"></activity>
+        <activity android:name=".jijian.AgainOrderActivity" />
     </application>
 
 </manifest>

@@ -41,6 +41,7 @@ import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
 import com.jieniuwuliu.jieniu.home.BJListActivity;
+import com.jieniuwuliu.jieniu.home.MsgActivity;
 import com.jieniuwuliu.jieniu.home.QPShopActivity;
 import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.home.XJCarTypeActivity;
@@ -261,7 +262,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                 break;
             case R.id.tv_msg://消息
                 intent = new Intent();
-                intent.setClass(getActivity(),ScanQCActivity.class);
+                intent.setClass(getActivity(), MsgActivity.class);
                 getActivity().startActivity(intent);
                 break;
             case R.id.home_tab_1://捷牛快修

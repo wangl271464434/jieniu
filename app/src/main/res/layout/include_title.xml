@@ -28,4 +28,18 @@
         android:textColor="@color/white"
         android:textSize="@dimen/size_18sp"
         />
+    <LinearLayout
+        android:id="@+id/layout_right"
+        android:layout_width="@dimen/size_30dp"
+        android:layout_height="@dimen/size_30dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/img_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
 </RelativeLayout>
