@@ -8,12 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,7 +134,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         rv.setLayoutManager(manager);
         adapter = new HomeAdapter(getActivity(),list);
         rv.setAdapter(adapter);
-     /*   LinearSnapHelper snapHelper = new LinearSnapHelper();
+/*        LinearSnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(rv);*/
         adapter.setOnItemClickListener(this);
         refreshLayout.setOnLoadMoreListener(this);
@@ -354,8 +356,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                         tvEmpty.setVisibility(View.GONE);
                         rv.setVisibility(View.VISIBLE);
                         list.addAll(orderResult.getData());
-//                        adapter.setData(list);
-                        adapter.notifyDataSetChanged();
+                        adapter.setData(list);
                     }else{
                         tvEmpty.setVisibility(View.VISIBLE);
                     }
