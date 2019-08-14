@@ -9,7 +9,7 @@
     >
      <ImageView
          android:id="@+id/img"
-         android:layout_width="@dimen/size_100dp"
+         android:layout_width="@dimen/size_80dp"
          android:layout_height="@dimen/size_80dp"
          android:src="@mipmap/loading"
          android:layout_centerVertical="true"
@@ -27,19 +27,19 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/size_16sp"
             android:textColor="@color/black"
-            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_3dp"
             />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_3dp"
             />
         <TextView
             android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_3dp"
             android:text="西安市"
             android:textSize="@dimen/size_13sp"
             android:textColor="@color/light_black"
@@ -48,7 +48,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_3dp"
             />
     </LinearLayout>
 

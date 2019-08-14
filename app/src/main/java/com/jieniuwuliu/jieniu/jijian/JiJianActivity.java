@@ -322,14 +322,14 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
             }else{
                 imgShouVip.setVisibility(View.GONE);
                 flag = false;
-                toUid = event.getContactInfo().getId();
-                RouteSearch routeSearch = new RouteSearch(this);
-                routeSearch.setRouteSearchListener(this);
-                RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
-                 RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
-                        RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
-                routeSearch.calculateDriveRouteAsyn(query);
             }
+            toUid = event.getContactInfo().getId();
+            RouteSearch routeSearch = new RouteSearch(this);
+            routeSearch.setRouteSearchListener(this);
+            RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
+            RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
+                    RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
+            routeSearch.calculateDriveRouteAsyn(query);
         }
         if (event.getUser()!=null){
             kuaidiId = event.getUser().getId();

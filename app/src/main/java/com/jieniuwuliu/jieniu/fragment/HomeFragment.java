@@ -33,6 +33,7 @@ import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseFragment;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.ImgBanner;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
@@ -64,6 +65,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener, OnRefreshListener {
@@ -96,7 +98,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private List<OrderInfo> list;
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
-    private List<Integer> imgs;
+    private List<ImgBanner.DataBean> imgs;
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.home;
@@ -105,9 +107,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     @Override
     protected void init() {
         imgs = new ArrayList<>();
-        imgs.add(R.mipmap.home_banner_1);
-        imgs.add(R.mipmap.home_banner_2);
-        setBanner();
         rv.setVisibility(View.GONE);
         etSearch.setOnEditorActionListener(this);
         list = new ArrayList<>();
@@ -216,7 +215,28 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         checkSDK();
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
+        getBanner();
         getRecomList();
+    }
+    /**
+     * 轮播
+     * */
+    private void getBanner() {
+        Call<ImgBanner> call = HttpUtil.getInstance().getApi(token).getBanner();
+        call.enqueue(new Callback<ImgBanner>() {
+            @Override
+            public void onResponse(Call<ImgBanner> call, Response<ImgBanner> response) {
+                if (response.code() == 200){
+                    imgs.addAll(response.body().getData());
+                    setBanner();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ImgBanner> call, Throwable t) {
+
+            }
+        });
     }
 
     private void checkSDK() {

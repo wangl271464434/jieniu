@@ -14,6 +14,6 @@
         android:paddingLeft="@dimen/size_3dp"
         android:paddingRight="@dimen/size_3dp"
         android:text="服务"
-        android:textSize="@dimen/size_12sp"
+        android:textSize="@dimen/size_8sp"
         />
 </LinearLayout>
