@@ -212,6 +212,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         super.onResume();
         list.clear();
         recomList.clear();
+        imgs.clear();
+        page = 1;
         checkSDK();
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
