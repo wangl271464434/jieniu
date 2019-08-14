@@ -156,10 +156,11 @@ public class QPSORQXInfoActivity extends BaseActivity implements View.OnClickLis
                             }else {
                                 tvContent.setText(storeBean.getStoreinform());
                             }
-                            if ("".equals(storeBean.getWechat())) {
+                            if ("".equals(storeBean.getWxName())||"-1".equals(storeBean.getWxName())) {
                                 tvWechat.setText("未绑定");
                             } else {
-                                tvWechat.setText("已绑定");
+//                                tvWechat.setText("已绑定");
+                                tvWechat.setText(storeBean.getWxName());
                             }
 
                             tvAddress.setText(storeBean.getAddress().getAddress());
@@ -344,12 +345,12 @@ public class QPSORQXInfoActivity extends BaseActivity implements View.OnClickLis
             case R.id.tv_more:
                 break;
             case R.id.tv_fuzhi:
-                if ("".equals(storeBean.getWechat())) {
+                if ("".equals(storeBean.getWxName())||"-1".equals(storeBean.getWxName())) {
                     MyToast.show(this,"未绑定微信不能复制");
                     return;
                 }
                 ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Label", storeBean.getWechat());
+                ClipData clipData = ClipData.newPlainText("Label", storeBean.getWxName());
                 manager.setPrimaryClip(clipData);
                 MyToast.show(this, "复制成功");
                 break;

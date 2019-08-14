@@ -95,8 +95,8 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .dontAnimate()
-                .placeholder(R.mipmap.logo) //占位符 也就是加载中的图片，可放个gif
-                .error(R.mipmap.logo) //失败图片
+                .placeholder(R.mipmap.loading) //占位符 也就是加载中的图片，可放个gif
+                .error(R.mipmap.loading) //失败图片
                 .skipMemoryCache(true)//跳过缓存
                 .transform(new CenterCrop(context),new GlideRoundTransform(context,6))//圆角图片
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

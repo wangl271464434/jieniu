@@ -69,15 +69,21 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
             }else{
                 viewHolder.rv.setVisibility(View.GONE);
             }
-            GlideUtil.setVideoImg(context,item.getPhoto(),viewHolder.img);
+            GlideUtil.setRoundImg(context,item.getPhoto(),viewHolder.img);
             viewHolder.name.setText(item.getName());
             viewHolder.address.setText(item.getAddress().replace("陕西省",""));
-            String[] array = item.getLabel().split(",");
-            LinearLayoutManager manager = new LinearLayoutManager(context);
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            viewHolder.recyclerView.setLayoutManager(manager);
-            StoreServiceAdapter adapter = new StoreServiceAdapter(context,array);
-            viewHolder.recyclerView.setAdapter(adapter);
+            if (item.getLabel().equals("")){
+               viewHolder.recyclerView.setVisibility(View.GONE);
+            }else{
+                viewHolder.recyclerView.setVisibility(View.VISIBLE);
+                String[] array = item.getLabel().split(",");
+                LinearLayoutManager manager = new LinearLayoutManager(context);
+                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                viewHolder.recyclerView.setLayoutManager(manager);
+                StoreServiceAdapter adapter = new StoreServiceAdapter(context,array);
+                viewHolder.recyclerView.setAdapter(adapter);
+            }
+
         }
     }
 

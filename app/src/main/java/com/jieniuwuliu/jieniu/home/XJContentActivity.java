@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
@@ -97,9 +98,11 @@ public class XJContentActivity extends BaseActivity {
             public void onSuccess(Response<XjInfo> response) {
                 loading.dismiss();
                 XjInfo xjInfo = response.body();
-                if (xjInfo.getData().size()>0){
-                    list.addAll(xjInfo.getData());
-                    adapter.notifyDataSetChanged();
+                if (xjInfo.getData()!=null){
+                    if (xjInfo.getData().size()>0){
+                        list.addAll(xjInfo.getData());
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
 

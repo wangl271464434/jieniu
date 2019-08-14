@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/line_gray"
     tools:context=".home.BjInfoActivity">
     <RelativeLayout
         android:id="@+id/layout_title"
@@ -36,14 +37,22 @@
             android:textSize="@dimen/size_18sp"
             />
     </RelativeLayout>
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/size_10dp"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/size_24dp"
+        android:paddingLeft="@dimen/size_16dp"
+        android:paddingRight="@dimen/size_16dp"
+        android:paddingBottom="@dimen/size_20dp"
         android:background="@color/white"
         android:layout_below="@id/layout_title"
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
         <ImageView
             android:id="@+id/img"
             android:layout_width="48dp"
@@ -55,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/img"
             android:layout_marginRight="@dimen/size_10dp"
-            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_marginLeft="@dimen/size_16dp"
             android:orientation="vertical"
             >
             <TextView
@@ -71,17 +80,62 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/size_12sp"
-                android:layout_marginTop="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_8dp"
                 android:textColor="@color/xj_text"
                 android:text="2019-07-30  12:14:30"
                 />
+            <TextView
+                android:id="@+id/tv_remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/size_12sp"
+                android:layout_marginTop="@dimen/size_8dp"
+                android:textColor="@color/xj_text"
+                android:text="备注"
+                />
         </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1dp"
+            android:background="@color/line_gray"
+            android:layout_marginTop="@dimen/size_8dp"
+            />
+        <LinearLayout
+            android:id="@+id/layout_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/size_30dp"
+            android:paddingBottom="@dimen/size_30dp"
+            >
+            <ImageView
+                android:id="@+id/img1"
+                android:layout_width="@dimen/size_100dp"
+                android:layout_height="@dimen/size_100dp"
+                android:scaleType="centerCrop"
+                />
+            <ImageView
+                android:id="@+id/img2"
+                android:layout_width="@dimen/size_100dp"
+                android:layout_height="@dimen/size_100dp"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:scaleType="centerCrop"
+                />
+            <ImageView
+                android:id="@+id/img3"
+                android:layout_width="@dimen/size_100dp"
+                android:layout_height="@dimen/size_100dp"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:scaleType="centerCrop"
+                />
+        </LinearLayout>
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/info"
+        android:background="@color/white"
         android:layout_marginTop="@dimen/size_20dp"
         android:layout_above="@id/btn"
         />

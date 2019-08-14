@@ -21,6 +21,8 @@ public class StoreInfoBean implements Serializable{
     private String photos;
     private String landline;
     private String storeinform;
+    private String unionid;
+    private String wxName;
     private boolean isFollow;
     private List<Car> fuwuCar;
 
@@ -158,5 +160,21 @@ public class StoreInfoBean implements Serializable{
 
     public void setFuwuCar(List<Car> fuwuCar) {
         this.fuwuCar = fuwuCar;
+    }
+
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
+
+    public String getWxName() {
+        return wxName;
+    }
+
+    public void setWxName(String wxName) {
+        this.wxName = wxName;
     }
 }
