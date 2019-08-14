@@ -19,8 +19,26 @@ public class StoreInfoBean implements Serializable{
     private String yewu;
     private String wechat;
     private String photos;
+    private String landline;
+    private String storeinform;
     private boolean isFollow;
     private List<Car> fuwuCar;
+
+    public String getStoreinform() {
+        return storeinform;
+    }
+
+    public void setStoreinform(String storeinform) {
+        this.storeinform = storeinform;
+    }
+
+    public String getLandline() {
+        return landline;
+    }
+
+    public void setLandline(String landline) {
+        this.landline = landline;
+    }
 
     public boolean isFollow() {
         return isFollow;

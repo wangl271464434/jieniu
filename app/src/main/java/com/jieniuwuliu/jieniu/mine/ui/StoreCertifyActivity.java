@@ -80,10 +80,10 @@ public class StoreCertifyActivity extends BaseActivity {
     EditText etContact;
     @BindView(R.id.et_phone)
     EditText etPhone;
-    @BindView(R.id.et_weixin)
-    EditText etWeixin;
+    @BindView(R.id.et_telephone)
+    EditText etTelephone;
     private int personType = 2;
-    private String storeName,context="",address,contanct,phone,weixin,carType="",stroreImgUrl = "",zizhiImgUrl = "";
+    private String storeName,context="",address,contanct,phone,telephone,carType="",stroreImgUrl = "",zizhiImgUrl = "";
     private String token,storeUrl = "",zizhiUrl = "";
     private List<Car> cars;//服务车型数组
     private List<String> carTypeList;//服务车型数组
@@ -198,7 +198,7 @@ public class StoreCertifyActivity extends BaseActivity {
                     return;
                 }
                 contanct = etContact.getText().toString();
-                weixin = etWeixin.getText().toString();
+                telephone = etTelephone.getText().toString();
                 phone = etPhone.getText().toString();
                 if (storeName.isEmpty()||contanct.isEmpty()||phone.isEmpty()){
                     MyToast.show(getApplicationContext(),"门店名称/联系人/电话不能为空");
@@ -208,7 +208,7 @@ public class StoreCertifyActivity extends BaseActivity {
                 storeCerity.setNickname(storeName);
                 storeCerity.setPersonType(personType);
                 storeCerity.setYewu(context);
-                storeCerity.setWechat(weixin);
+                storeCerity.setLandline(telephone);
                 if (carTypeList.size()!=0){
                     storeCerity.setFuwuCars(GsonUtil.listToJson(carTypeList));
                 }

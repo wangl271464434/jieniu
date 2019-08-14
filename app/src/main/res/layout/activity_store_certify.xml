@@ -311,12 +311,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="微  信  号："
+                android:text="固定电话："
                 android:textSize="@dimen/size_16sp"
                 android:textColor="@color/black"
                 />
             <EditText
-                android:id="@+id/et_weixin"
+                android:id="@+id/et_telephone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"

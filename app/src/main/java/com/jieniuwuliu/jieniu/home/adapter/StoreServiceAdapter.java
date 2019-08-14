@@ -26,9 +26,9 @@ import butterknife.ButterKnife;
  * */
 public class StoreServiceAdapter extends RecyclerView.Adapter<StoreServiceAdapter.ViewHolder>{
     private Context context;
-    private List<String> list;
-    public StoreServiceAdapter(Context context, List<String> list) {
-        this.list = list;
+    private String[] array;
+    public StoreServiceAdapter(Context context, String[] array) {
+        this.array = array;
         this.context = context;
     }
 
@@ -43,19 +43,19 @@ public class StoreServiceAdapter extends RecyclerView.Adapter<StoreServiceAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
-        if ("包邮".equals(list.get(i))){
+        if ("包邮".equals(array[i])){
             viewHolder.tv.setTextColor(context.getResources().getColor(R.color.red));
             viewHolder.tv.setBackgroundResource(R.drawable.bg_red_shape);
         }else{
             viewHolder.tv.setTextColor(context.getResources().getColor(R.color.orange));
             viewHolder.tv.setBackgroundResource(R.drawable.orange_shape);
         }
-        viewHolder.tv.setText(list.get(i));
+        viewHolder.tv.setText(array[i]);
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return array.length;
     }
     static class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.tv)

@@ -29,6 +29,12 @@
             android:textColor="@color/black"
             android:layout_marginTop="@dimen/size_5dp"
             />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_5dp"
+            />
         <TextView
             android:id="@+id/address"
             android:layout_width="match_parent"

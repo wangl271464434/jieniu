@@ -10,9 +10,18 @@ public class StoreCerity implements Serializable {
     private String zizhiPhoto;//营业执照
     private String yewu;//主营业务
     private String wechat;//微信
+    private String landline;//固定电话
     private String fuwuCars;//服务车型
     private  Address address;//地址
     private int auth;//门店认证
+
+    public String getLandline() {
+        return landline;
+    }
+
+    public void setLandline(String landline) {
+        this.landline = landline;
+    }
 
     public String getNickname() {
         return nickname;

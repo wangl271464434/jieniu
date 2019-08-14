@@ -48,6 +48,18 @@
                     android:textSize="@dimen/size_16sp"
                     />
             </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:text="暂无简介"
+                android:paddingLeft="@dimen/size_15dp"
+                android:paddingRight="@dimen/size_15dp"
+                android:paddingBottom="@dimen/size_15dp"
+                android:textSize="@dimen/size_16sp"
+                android:textColor="@color/gray"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,6 +103,7 @@
                             android:text="更多"
                             android:layout_centerVertical="true"
                             android:textSize="@dimen/size_16sp"
+                            android:visibility="gone"
                             />
                     </RelativeLayout>
                     <View
@@ -160,6 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:layout_marginTop="@dimen/size_10dp"
                 android:padding="@dimen/size_15dp"
                 android:orientation="vertical"
                 >

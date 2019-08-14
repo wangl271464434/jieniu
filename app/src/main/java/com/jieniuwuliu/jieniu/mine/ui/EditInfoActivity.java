@@ -152,11 +152,14 @@ public class EditInfoActivity extends BaseActivity {
             case "主营业务":
                 map.put("yewu",context);
                 break;
-            case "绑定微信":
-                map.put("wechat",context);
+            case "固定电话":
+                map.put("landline",context);
                 break;
             case "经营范围":
                 map.put("yewu",context);
+                break;
+            case "门店简介":
+                map.put("storeinform",context);
                 break;
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GsonUtil.mapToJson(map));

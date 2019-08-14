@@ -35,18 +35,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private FootView footView;
     public HomeAdapter(Context context,List<OrderInfo> list) {
         this.context = context;
-        setData(list);
+        this.list = list;
     }
-
-   public void setData(List<OrderInfo> data) {
-        list = new ArrayList<>();
-        list.addAll(data);
-        if (list.size()>0){
-            list.add(new OrderInfo());
-        }
-        notifyDataSetChanged();
-    }
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.listener = onItemClickListener;
     }

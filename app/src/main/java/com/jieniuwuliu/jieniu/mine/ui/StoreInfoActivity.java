@@ -84,8 +84,10 @@ public class StoreInfoActivity extends BaseActivity {
     TextView etContact;
     @BindView(R.id.et_phone)
     TextView etPhone;
-    @BindView(R.id.et_weixin)
-    TextView etWeixin;
+    @BindView(R.id.et_telephone)
+    TextView etTelephone;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
     private StoreInfoBean storeBean;
     private Intent intent;
     private String token,carType="";
@@ -213,7 +215,16 @@ public class StoreInfoActivity extends BaseActivity {
                     etStoreName.setText(storeBean.getNickname());
                     etContact.setText(storeBean.getAddress().getName());
                     etPhone.setText(storeBean.getAddress().getPhone());
-                    etWeixin.setText(storeBean.getWechat());
+                    if (storeBean.getLandline().equals("")){
+                        etTelephone.setText("暂无");
+                    }else{
+                        etTelephone.setText(storeBean.getLandline());
+                    }
+                    if (storeBean.getStoreinform().equals("")){
+                        tvContent.setText("暂无");
+                    }else{
+                        tvContent.setText(storeBean.getStoreinform());
+                    }
                     etAddress.setText(storeBean.getAddress().getAddress().replace("陕西省",""));
                     switch (storeBean.getPersonType()){
                         case 1://汽配商
@@ -282,7 +293,7 @@ public class StoreInfoActivity extends BaseActivity {
 
     @OnClick({R.id.back, R.id.tv_certify, R.id.et_store_name,R.id.tv_type,R.id.et_context,
             R.id.tv_car_type, R.id.et_address, R.id.et_contact, R.id.et_phone,
-            R.id.et_weixin,R.id.layout_add_pic})
+            R.id.et_telephone,R.id.layout_content,R.id.layout_add_pic})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -331,12 +342,19 @@ public class StoreInfoActivity extends BaseActivity {
                 intent.putExtra("info",storeBean.getAddress().getPhone());
                 startActivityForResult(intent,2);
                 break;
-            case R.id.et_weixin://微信
+            case R.id.et_telephone://微信
                 intent = new Intent();
                 intent.setClass(StoreInfoActivity.this,EditInfoActivity.class);
-                intent.putExtra("title","绑定微信");
-                intent.putExtra("info",storeBean.getWechat());
+                intent.putExtra("title","固定电话");
+                intent.putExtra("info",storeBean.getLandline());
                 startActivityForResult(intent,3);
+                break;
+            case R.id.layout_content://简介
+                intent = new Intent();
+                intent.setClass(StoreInfoActivity.this,EditInfoActivity.class);
+                intent.putExtra("title","门店简介");
+                intent.putExtra("info",storeBean.getStoreinform());
+                startActivityForResult(intent,4);
                 break;
             case R.id.layout_add_pic:
                 intent = new Intent();
@@ -400,7 +418,10 @@ public class StoreInfoActivity extends BaseActivity {
                     etPhone.setText(info);
                     break;
                 case 3:
-                    etWeixin.setText(info);
+                    etTelephone.setText(info);
+                    break;
+                case 4:
+                    tvContent.setText(info);
                     break;
             }
         }

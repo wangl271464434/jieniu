@@ -19,6 +19,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.RecomStore;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
+import com.jieniuwuliu.jieniu.qipeishang.adapter.CartypeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,19 +53,32 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
-        RecomStore.DataBean item = list.get(i);
-        GlideUtil.setVideoImg(context,item.getPhoto(),viewHolder.img);
-        viewHolder.name.setText(item.getName());
-        viewHolder.address.setText(item.getAddress().replace("陕西省",""));
-        List<String> list = new ArrayList<>();
-        list.add("星级服务");
-        list.add("优质服务");
-        list.add("送货上门");
-        LinearLayoutManager manager = new LinearLayoutManager(context);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        viewHolder.recyclerView.setLayoutManager(manager);
-        StoreServiceAdapter adapter = new StoreServiceAdapter(context,list);
-        viewHolder.recyclerView.setAdapter(adapter);
+        if (list.size()>0){
+            RecomStore.DataBean item = list.get(i);
+            if (item.getFuwuCar()!=null){
+                if (item.getFuwuCar().size()>0){
+                    viewHolder.rv.setVisibility(View.VISIBLE);
+                    LinearLayoutManager carManager = new LinearLayoutManager(context);
+                    carManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    viewHolder.rv.setLayoutManager(carManager);
+                    CartypeAdapter cartypeAdapter = new CartypeAdapter(context,item.getFuwuCar());
+                    viewHolder.rv.setAdapter(cartypeAdapter);
+                }else{
+                    viewHolder.rv.setVisibility(View.GONE);
+                }
+            }else{
+                viewHolder.rv.setVisibility(View.GONE);
+            }
+            GlideUtil.setVideoImg(context,item.getPhoto(),viewHolder.img);
+            viewHolder.name.setText(item.getName());
+            viewHolder.address.setText(item.getAddress().replace("陕西省",""));
+            String[] array = item.getLabel().split(",");
+            LinearLayoutManager manager = new LinearLayoutManager(context);
+            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            viewHolder.recyclerView.setLayoutManager(manager);
+            StoreServiceAdapter adapter = new StoreServiceAdapter(context,array);
+            viewHolder.recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -86,6 +100,8 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         TextView name;
         @BindView(R.id.address)
         TextView address;
+        @BindView(R.id.rv)
+        RecyclerView rv;
         @BindView(R.id.recyclerView)
         RecyclerView recyclerView;
         ViewHolder(View view) {

@@ -47,6 +47,7 @@ import com.jieniuwuliu.jieniu.bean.Order;
 import com.jieniuwuliu.jieniu.bean.OrderBean;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.bean.OrderResult;
+import com.jieniuwuliu.jieniu.bean.SearchStore;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
@@ -169,19 +170,63 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
 
     private void setData() {
         layoutShou.setVisibility(View.VISIBLE);
-        tvShouName.setText(orderInfo.getToName());
-        tvShouAddress.setText(orderInfo.getToAddress().replace("陕西省",""));
-        tvShouPhone.setText(orderInfo.getToPhone());
-        end = new LatLonPoint(orderInfo.getToLat(),orderInfo.getToLng());
-        toUid = orderInfo.getToUid();
-        RouteSearch routeSearch = new RouteSearch(this);
-        routeSearch.setRouteSearchListener(this);
-        RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
-        RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
-                RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
-        routeSearch.calculateDriveRouteAsyn(query);
+        search(orderInfo.getToName());
     }
+    /**
+     * 搜索
+     * */
+    private void search(String info) {
+        Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).searchStore(info,1,10);
+        call.enqueue(new SimpleCallBack<ResponseBody>(JiJianActivity.this) {
+            @Override
+            public void onSuccess(Response<ResponseBody> response) {
+                try {
+                    SearchStore searchStore = (SearchStore) GsonUtil.praseJsonToModel(response.body().string(),SearchStore.class);
+                    Log.i("门店",searchStore.getData().size()+"");
+                    if (searchStore.getData().size()>0){
+                        SearchStore.DataBean data = searchStore.getData().get(0);
+                        if (data.isVip()){
+                            imgShouVip.setVisibility(View.VISIBLE);
+                            flag = true;
+                        }else {
+                            imgShouVip.setVisibility(View.GONE);
+                            flag = false;
+                        }
+                        tvShouName.setText(data.getNickname());
+                        tvShouAddress.setText(data.getAddress().getAddress().replace("陕西省",""));
+                        tvShouPhone.setText(data.getAddress().getPhone());
+                        end = new LatLonPoint(data.getAddress().getLat(),data.getAddress().getLng());
+                        toUid = orderInfo.getToUid();
+                        RouteSearch routeSearch = new RouteSearch(JiJianActivity.this);
+                        routeSearch.setRouteSearchListener(JiJianActivity.this);
+                        RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
+                        RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
+                                RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
+                        routeSearch.calculateDriveRouteAsyn(query);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onFail(int errorCode, Response<ResponseBody> response) {
+                try {
+                    String s = response.errorBody().string();
+                    Log.w("result",s);
+                    JSONObject object = new JSONObject(s);
+                    MyToast.show(getApplicationContext(), object.getString("msg"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                MyToast.show(getApplicationContext(),s);
+            }
+        });
+    }
     private void getUserInfo() {
         Call<UserBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getUserInfo();
         call.enqueue(new SimpleCallBack<UserBean>(JiJianActivity.this) {
@@ -277,11 +322,6 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
             }else{
                 imgShouVip.setVisibility(View.GONE);
                 flag = false;
-                if (user.getPersonType() ==2){//判断是否是汽修厂
-                    juliPrice = 5;
-                }else{
-                    juliPrice = 10;
-                }
                 toUid = event.getContactInfo().getId();
                 RouteSearch routeSearch = new RouteSearch(this);
                 routeSearch.setRouteSearchListener(this);

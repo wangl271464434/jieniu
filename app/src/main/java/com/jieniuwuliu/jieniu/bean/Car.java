@@ -6,8 +6,8 @@ public class Car implements Serializable {
     private String name;
     private String zimu;//显示拼音的首字母
     private String tupian;//图片地址
-    private String created_at;
-    private String updated_at;
+    private String CreatedAt;
+    private String UpdatedAt;
 
     public String getName() {
         return name;
@@ -33,19 +33,19 @@ public class Car implements Serializable {
         this.tupian = tupian;
     }
 
-    public String getCreated_at() {
-        return created_at;
+    public String getCreatedAt() {
+        return CreatedAt;
     }
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(String createdAt) {
+        CreatedAt = createdAt;
     }
 
-    public String getUpdated_at() {
-        return updated_at;
+    public String getUpdatedAt() {
+        return UpdatedAt;
     }
 
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(String updatedAt) {
+        UpdatedAt = updatedAt;
     }
 }

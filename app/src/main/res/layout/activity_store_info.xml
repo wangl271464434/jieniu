@@ -270,12 +270,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="微  信  号："
+                android:text="固定电话："
                 android:textSize="@dimen/size_16sp"
                 android:textColor="@color/black"
                 />
             <TextView
-                android:id="@+id/et_weixin"
+                android:id="@+id/et_telephone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -283,6 +283,38 @@
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:textSize="@dimen/size_16sp"
                 android:singleLine="true"
+                android:drawableRight="@mipmap/ic_center_more"
+                android:textColor="@color/black"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1dp"
+            android:background="@color/line_gray"
+            />
+        <LinearLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/size_10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="门店简介："
+                android:textSize="@dimen/size_16sp"
+                android:textColor="@color/black"
+                />
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/size_5dp"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:textSize="@dimen/size_16sp"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:drawableRight="@mipmap/ic_center_more"
                 android:textColor="@color/black"
                 />
@@ -312,6 +344,7 @@
                 android:padding="@dimen/size_5dp"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:textSize="@dimen/size_16sp"
+                android:text="添加或者查看图片"
                 android:singleLine="true"
                 android:drawableRight="@mipmap/ic_center_more"
                 android:textColor="@color/black"

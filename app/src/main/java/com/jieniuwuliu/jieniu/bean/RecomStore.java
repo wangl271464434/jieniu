@@ -54,7 +54,9 @@ public class RecomStore {
         private int uid;
         private String name;
         private String photo;
-        private String address ;
+        private String address;
+        private String label;
+        private List<Car> fuwuCar;
 
         public int getId() {
             return id;
@@ -110,6 +112,22 @@ public class RecomStore {
 
         public void setAddress(String address) {
             this.address = address;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public List<Car> getFuwuCar() {
+            return fuwuCar;
+        }
+
+        public void setFuwuCar(List<Car> fuwuCar) {
+            this.fuwuCar = fuwuCar;
         }
     }
 }

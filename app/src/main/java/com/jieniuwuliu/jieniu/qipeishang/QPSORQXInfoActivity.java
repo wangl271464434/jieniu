@@ -1,6 +1,8 @@
 package com.jieniuwuliu.jieniu.qipeishang;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -16,7 +18,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,7 +65,7 @@ import retrofit2.Response;
 /**
  * 门店详情
  */
-public class QPSORQXInfoActivity extends BaseActivity {
+public class QPSORQXInfoActivity extends BaseActivity implements View.OnClickListener {
 
 
     @BindView(R.id.title)
@@ -88,6 +94,8 @@ public class QPSORQXInfoActivity extends BaseActivity {
     TextView tvAddress;
     @BindView(R.id.tv_wechat)
     TextView tvWechat;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
     @BindView(R.id.img_right)
     ImageView imgRight;
     private String token;
@@ -98,6 +106,7 @@ public class QPSORQXInfoActivity extends BaseActivity {
     private List<String> imgs;
     private InfoImgAdapter imgAdapter;
     private StoreInfoBean storeBean;
+    private AlertDialog dialog;
     private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
             Manifest.permission.PROCESS_OUTGOING_CALLS};
 
@@ -142,6 +151,11 @@ public class QPSORQXInfoActivity extends BaseActivity {
                             title.setText(storeBean.getNickname());
                             tvName.setText(storeBean.getNickname());
                             tvPerson.setText(storeBean.getAddress().getName());
+                            if ("".equals(storeBean.getStoreinform())){
+                                tvContent.setText("暂无简介");
+                            }else {
+                                tvContent.setText(storeBean.getStoreinform());
+                            }
                             if ("".equals(storeBean.getWechat())) {
                                 tvWechat.setText("未绑定");
                             } else {
@@ -345,6 +359,50 @@ public class QPSORQXInfoActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.layout_call:
+                showPhoneDialog();
+                break;
+        }
+    }
+    //电话弹窗
+    @SuppressLint("SetTextI18n")
+    private void showPhoneDialog() {
+        dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        dialog.show();
+        dialog.setContentView(R.layout.dialog_store_phone);
+        TextView tvTelephone = dialog.findViewById(R.id.tv_telephone);
+        TextView tvPhone = dialog.findViewById(R.id.tv_phone);
+        if (storeBean.getLandline().equals("")){
+            tvTelephone.setText("固定电话：暂无");
+        }else{
+            tvTelephone.setText("固定电话：  "+storeBean.getLandline());
+        }
+        if (storeBean.getAddress().getPhone().equals("")){
+            tvPhone.setText("移动电话：暂无");
+        }else{
+            tvPhone.setText("移动电话：  "+storeBean.getAddress().getPhone());
+        }
+        tvTelephone.setOnClickListener(this);
+        tvPhone.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_telephone:
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, permissions, 100);
+                        return;
+                    }
+                }
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
+                intent.setData(data);
+                startActivity(intent);
+                break;
+            case R.id.tv_phone:
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, permissions, 100);

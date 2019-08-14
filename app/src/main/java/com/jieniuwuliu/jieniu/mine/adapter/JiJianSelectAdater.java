@@ -100,7 +100,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
             viewHolder.tvName.setText(list.get(i).getFromName()+" 一 "+list.get(i).getToName());
             viewHolder.tvNum.setText("x"+list.get(i).getNumber()+"件");
             viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt().replace("T"," ").replace("Z",""));
-            float price  = list.get(i).getTotalMoney()/100;
+            float price  = list.get(i).getYunfeiMoney()/100;
             viewHolder.tvPrice.setText("¥ "+String.format("%.2f",price));
             if (list.get(i).getStatus() ==5){
                 viewHolder.imgFinish.setVisibility(View.VISIBLE);
@@ -114,7 +114,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
                     Intent intent = new Intent();
                     intent.setClass(context,PayTypeActivity.class);
                     intent.putExtra("orderNo",list.get(i).getOrderNumber());
-                    intent.putExtra("price",list.get(i).getTotalMoney());
+                    intent.putExtra("price",list.get(i).getYunfeiMoney());
                     context.startActivity(intent);
                 }
             });

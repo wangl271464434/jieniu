@@ -35,7 +35,6 @@ import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
-import com.jieniuwuliu.jieniu.bean.Car;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Label;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
