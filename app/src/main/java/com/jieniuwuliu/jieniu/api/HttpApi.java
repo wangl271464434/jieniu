@@ -6,6 +6,7 @@ import com.jieniuwuliu.jieniu.bean.AddressList;
 import com.jieniuwuliu.jieniu.bean.BJOrder;
 import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Coupon;
+import com.jieniuwuliu.jieniu.bean.ImgBanner;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.Notice;
@@ -51,6 +52,9 @@ public interface HttpApi {
     /**修改用户信息*/
     @PUT("users")
     Call<UserBean> modifyUserInfo(@Body RequestBody body);
+     /**获取轮播*/
+     @GET("users/getimgsrc")
+     Call<ImgBanner> getBanner();
     /**
      * 获取汽配商列表信息
      * */

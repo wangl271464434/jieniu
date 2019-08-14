@@ -14,7 +14,6 @@
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/size_150dp"
-                android:background="@mipmap/home_banner_1"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
