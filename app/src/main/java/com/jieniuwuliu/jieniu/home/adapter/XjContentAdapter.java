@@ -14,24 +14,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
+import com.jieniuwuliu.jieniu.Util.HttpUtil;
+import com.jieniuwuliu.jieniu.Util.MyToast;
+import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Machine;
 import com.jieniuwuliu.jieniu.bean.XjInfo;
+import com.jieniuwuliu.jieniu.home.XJContentActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
+import com.jieniuwuliu.jieniu.view.MyLoading;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.ViewHolder> implements View.OnClickListener {
 
     private Activity context;
     private OnItemClickListener listener;
     private List<XjInfo.DataBean> list;
+    private CallBack callBack;
     private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
             Manifest.permission.PROCESS_OUTGOING_CALLS};
     public XjContentAdapter(Activity context, List<XjInfo.DataBean> list) {
@@ -41,6 +55,10 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.listener = onItemClickListener;
+    }
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
     }
 
     @NonNull
@@ -92,8 +110,21 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
                 context.startActivity(intent);
             }
         });
+        if (XJContentActivity.state == 3){
+            viewHolder.tvBuy.setVisibility(View.GONE);
+        }else{
+            viewHolder.tvBuy.setVisibility(View.VISIBLE);
+        }
+        viewHolder.tvBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callBack.sureInfo(item);
+            }
+        });
     }
-
+    public interface CallBack{
+        void sureInfo(XjInfo.DataBean item);
+    }
     @Override
     public int getItemCount() {
         return list.size();
@@ -117,6 +148,8 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         TextView tvInfo;
         @BindView(R.id.tv_call)
         TextView tvCall;
+        @BindView(R.id.tv_buy)
+        TextView tvBuy;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

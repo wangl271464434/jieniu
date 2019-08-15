@@ -72,7 +72,16 @@ public class XJOrder implements Serializable {
         private String cartype;
         private String carbrand;
         private int stype;
+        private int count;
         private String partslist;
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
 
         public int getId() {
             return id;

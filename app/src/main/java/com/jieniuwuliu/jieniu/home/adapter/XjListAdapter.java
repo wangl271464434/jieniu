@@ -80,6 +80,12 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
                 info += ","+machine.getName();
             }
         }
+        if (item.getCount()!=0){
+            viewHolder.tvNum.setVisibility(View.VISIBLE);
+            viewHolder.tvNum.setText(item.getCount()+"人已报价");
+        }else {
+            viewHolder.tvNum.setVisibility(View.GONE);
+        }
         viewHolder.tvInfo.setText(info);
         switch (item.getStype()){
             case 1:
@@ -87,6 +93,10 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
                 break;
             case 2:
                 viewHolder.tvState.setText("已取消");
+                viewHolder.tvCancel.setVisibility(View.GONE);
+                break;
+            case 3:
+                viewHolder.tvState.setText("已购买");
                 viewHolder.tvCancel.setVisibility(View.GONE);
                 break;
         }
@@ -158,7 +168,8 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
         TextView tvState;
         @BindView(R.id.tv_cancel)
         TextView tvCancel;
-
+        @BindView(R.id.tv_num)
+        TextView tvNum;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -46,20 +46,43 @@
         android:layout_below="@id/tv_state"
         android:layout_alignParentRight="true"
         />
-    <TextView
-        android:id="@+id/tv_call"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray"
-        android:layout_marginTop="@dimen/size_10dp"
-        android:textSize="@dimen/size_16sp"
-        android:text="联系商家"
-        android:paddingTop="@dimen/size_5dp"
-        android:paddingBottom="@dimen/size_5dp"
-        android:paddingRight="@dimen/size_10dp"
-        android:paddingLeft="@dimen/size_10dp"
-        android:background="@drawable/btn_white_shape"
         android:layout_below="@id/tv_info"
         android:layout_alignParentRight="true"
-        />
+        >
+        <TextView
+            android:id="@+id/tv_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:textSize="@dimen/size_16sp"
+            android:text="联系商家"
+            android:paddingTop="@dimen/size_5dp"
+            android:paddingBottom="@dimen/size_5dp"
+            android:paddingRight="@dimen/size_10dp"
+            android:paddingLeft="@dimen/size_10dp"
+            android:background="@drawable/btn_white_shape"
+            android:layout_below="@id/tv_info"
+            android:layout_alignParentRight="true"
+            />
+        <TextView
+            android:id="@+id/tv_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/orange"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:textSize="@dimen/size_16sp"
+            android:text="确认购买"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:paddingTop="@dimen/size_5dp"
+            android:paddingBottom="@dimen/size_5dp"
+            android:paddingRight="@dimen/size_10dp"
+            android:paddingLeft="@dimen/size_10dp"
+            android:background="@drawable/orange_shape"
+            />
+    </LinearLayout>
+
 </RelativeLayout>

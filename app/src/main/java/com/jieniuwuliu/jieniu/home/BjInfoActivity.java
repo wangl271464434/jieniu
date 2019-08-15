@@ -77,7 +77,7 @@ public class BjInfoActivity extends BaseActivity {
         data = (BJOrder.DataBean) getIntent().getSerializableExtra("data");
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         GlideUtil.setImgUrl(this, data.getLogos(), img);
-        tvName.setText(data.getCartype());
+        tvName.setText(data.getCarbrand());
         tvTime.setText("发布时间：" + data.getCreatedAt());
         if (data.getRemarks().equals("")){
             tvRemark.setText("备注：无");

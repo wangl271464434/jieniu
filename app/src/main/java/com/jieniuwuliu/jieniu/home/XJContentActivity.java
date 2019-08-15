@@ -34,11 +34,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class XJContentActivity extends BaseActivity {
+public class XJContentActivity extends BaseActivity implements XjContentAdapter.CallBack {
     @BindView(R.id.img)
     ImageView img;
     @BindView(R.id.tv_name)
@@ -56,6 +58,7 @@ public class XJContentActivity extends BaseActivity {
     private MyLoading loading;
     private List<XjInfo.DataBean> list;
     private XjContentAdapter adapter;
+    public static int state;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_xjcontent;
@@ -64,11 +67,13 @@ public class XJContentActivity extends BaseActivity {
     @Override
     protected void init() {
         data = (XJOrder.DataBean) getIntent().getSerializableExtra("data");
+        state = data.getStype();
         loading = new MyLoading(this,R.style.CustomDialog);
         list = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         adapter = new XjContentAdapter(this,list);
+        adapter.setCallBack(this);
         recyclerView.setAdapter(adapter);
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
         GlideUtil.setImgUrl(this,data.getLogos(),img);
@@ -134,4 +139,46 @@ public class XJContentActivity extends BaseActivity {
         finish();
     }
 
+    @Override
+    public void sureInfo(XjInfo.DataBean item) {
+        loading.show();
+        try {
+            JSONObject object = new JSONObject();
+            object.put("ID",data.getId());
+            object.put("Pid",item.getPid());
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
+            Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).putXJOrderInfo(body);
+            call.enqueue(new SimpleCallBack<ResponseBody>(this) {
+                @Override
+                public void onSuccess(Response<ResponseBody> response) {
+                    loading.dismiss();
+                    MyToast.show(getApplicationContext(),"购买成功");
+                    finish();
+                }
+
+                @Override
+                public void onFail(int errorCode, Response<ResponseBody> response) {
+                    loading.dismiss();
+                    try {
+                        String s = response.errorBody().string();
+                        Log.w("result",s);
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(), object.getString("msg"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onNetError(String s) {
+                    loading.dismiss();
+                    MyToast.show(getApplicationContext(),s);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

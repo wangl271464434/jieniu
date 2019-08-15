@@ -317,6 +317,11 @@ public interface HttpApi {
     @GET("users/getofferinform")
     Call<XjInfo> getXJOrderInfo(@Query("Bid")int bid);
     /**
+     * 确认购买订单
+     * */
+    @PUT("users/offerqp")
+    Call<ResponseBody> putXJOrderInfo(@Body RequestBody body);
+    /**
      * 报价列表
      * */
     @GET("users/getofferlist")

@@ -42,10 +42,19 @@ public class XjInfo {
 
     public class DataBean{
         private String Name;
+        private int Pid;
         private int Bid;
         private String UpdatedAt;
         private String Phone;
         private String Partslist;
+
+        public int getPid() {
+            return Pid;
+        }
+
+        public void setPid(int pid) {
+            Pid = pid;
+        }
 
         public String getName() {
             return Name;
