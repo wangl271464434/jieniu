@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.home.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -61,12 +62,14 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
         return viewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
         BJOrder.DataBean item = list.get(i);
         GlideUtil.setImgUrl(context,item.getLogos(),viewHolder.img);
         viewHolder.tvTime.setText(item.getCreatedAt());
+        viewHolder.tvNum.setText(item.getPcount()+"人已报价");
         viewHolder.tvName.setText(item.getCarbrand());
         List<Object> list = GsonUtil.praseJsonToList(item.getPartslist(),Machine.class);
         String info = "";
@@ -115,6 +118,8 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
         TextView tvInfo;
         @BindView(R.id.tv_time)
         TextView tvTime;
+        @BindView(R.id.tv_num)
+        TextView tvNum;
         @BindView(R.id.tv_state)
         TextView tvState;
         ViewHolder(View view) {

@@ -50,7 +50,16 @@ public class BJOrder implements Serializable{
         private String Cartype;
         private String Carbrand;
         private int Stype;
+        private int Pcount;
         private String Partslist;
+
+        public int getPcount() {
+            return Pcount;
+        }
+
+        public void setPcount(int pcount) {
+            Pcount = pcount;
+        }
 
         public int getID() {
             return ID;
