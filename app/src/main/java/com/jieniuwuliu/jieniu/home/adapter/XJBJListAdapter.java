@@ -40,17 +40,13 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
         Machine item = list.get(i);
         viewHolder.tvName.setText((i+1)+"."+item.getName());
         viewHolder.tvType.setText(item.getType());
-        if ("".equals(item.getMoney())){
+        if ("".equals(item.getMoney()) && "0".equals(item.getMoney())
+                &&"0.0".equals(item.getMoney()) && "0.00".equals(item.getMoney())){
             viewHolder.tvPrice.setText("未报价");
         }else{
             viewHolder.tvPrice.setText("¥  "+item.getMoney());
         }
     }
-
-    public interface CallBack {
-        void sureInfo(XjInfo.DataBean item);
-    }
-
     @Override
     public int getItemCount() {
         return list.size();
