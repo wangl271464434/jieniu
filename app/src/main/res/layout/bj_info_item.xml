@@ -53,13 +53,15 @@
             />
         <EditText
             android:id="@+id/et_num"
-            android:layout_width="@dimen/size_100dp"
+            android:layout_width="@dimen/size_80dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:maxLength="8"
+            android:background="@drawable/edit_white_shape"
             android:layout_marginLeft="@dimen/size_10dp"
             android:inputType="numberDecimal"
             android:padding="@dimen/size_5dp"
+            android:textSize="@dimen/size_14sp"
             android:hint="请输入报价"
             />
     </LinearLayout>

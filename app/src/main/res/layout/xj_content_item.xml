@@ -11,6 +11,8 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/ic_dizhi"
+        android:drawablePadding="@dimen/size_5dp"
         android:textColor="@color/black"
         android:textSize="@dimen/size_14sp"
         android:text="name"

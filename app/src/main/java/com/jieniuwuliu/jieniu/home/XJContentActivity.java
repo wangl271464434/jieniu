@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,6 +50,8 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
     TextView tvInfo;
     @BindView(R.id.tv_time)
     TextView tvTime;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
@@ -105,9 +108,14 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
                 XjInfo xjInfo = response.body();
                 if (xjInfo.getData()!=null){
                     if (xjInfo.getData().size()>0){
+                        tvEmpty.setVisibility(View.GONE);
                         list.addAll(xjInfo.getData());
                         adapter.notifyDataSetChanged();
+                    }else{
+                        tvEmpty.setVisibility(View.VISIBLE);
                     }
+                }else{
+                    tvEmpty.setVisibility(View.VISIBLE);
                 }
             }
 

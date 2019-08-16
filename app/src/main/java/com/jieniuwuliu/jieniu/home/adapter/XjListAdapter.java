@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.home.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -63,6 +64,7 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
         return viewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
@@ -80,12 +82,7 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
                 info += ","+machine.getName();
             }
         }
-        if (item.getCount()!=0){
-            viewHolder.tvNum.setVisibility(View.VISIBLE);
-            viewHolder.tvNum.setText(item.getCount()+"个供应商已报价");
-        }else {
-            viewHolder.tvNum.setVisibility(View.GONE);
-        }
+        viewHolder.tvNum.setText(item.getCount()+"个供应商已报价");
         viewHolder.tvInfo.setText(info);
         switch (item.getStype()){
             case 1:
@@ -97,6 +94,10 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
                 break;
             case 3:
                 viewHolder.tvState.setText("已购买");
+                viewHolder.tvCancel.setVisibility(View.GONE);
+                break;
+            case 4:
+                viewHolder.tvState.setText("交易完成");
                 viewHolder.tvCancel.setVisibility(View.GONE);
                 break;
         }
