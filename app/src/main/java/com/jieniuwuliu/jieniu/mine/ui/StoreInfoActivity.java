@@ -351,8 +351,7 @@ public class StoreInfoActivity extends BaseActivity {
                 break;
             case R.id.layout_content://简介
                 intent = new Intent();
-                intent.setClass(StoreInfoActivity.this,EditInfoActivity.class);
-                intent.putExtra("title","门店简介");
+                intent.setClass(StoreInfoActivity.this,EditExpActivity.class);
                 intent.putExtra("info",storeBean.getStoreinform());
                 startActivityForResult(intent,4);
                 break;

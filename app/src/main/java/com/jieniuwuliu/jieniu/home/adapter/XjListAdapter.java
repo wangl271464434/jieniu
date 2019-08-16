@@ -82,7 +82,7 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
         }
         if (item.getCount()!=0){
             viewHolder.tvNum.setVisibility(View.VISIBLE);
-            viewHolder.tvNum.setText(item.getCount()+"人已报价");
+            viewHolder.tvNum.setText(item.getCount()+"个供应商已报价");
         }else {
             viewHolder.tvNum.setVisibility(View.GONE);
         }

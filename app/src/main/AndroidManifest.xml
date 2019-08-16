@@ -43,7 +43,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".home.MsgActivity"></activity>
+        <activity android:name=".mine.ui.EditExpActivity"></activity>
+        <activity android:name=".home.MsgActivity" />
         <activity
             android:name=".home.BjInfoActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />

@@ -56,8 +56,9 @@
             android:layout_width="@dimen/size_100dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:maxLength="8"
             android:layout_marginLeft="@dimen/size_10dp"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:padding="@dimen/size_5dp"
             android:hint="请输入报价"
             />

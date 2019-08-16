@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Machine;
 import com.jieniuwuliu.jieniu.bean.XJImg;
 import com.jieniuwuliu.jieniu.home.adapter.BJInfoAdapter;
+import com.jieniuwuliu.jieniu.luntan.LookPicActivity;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONException;
@@ -64,7 +66,9 @@ public class BjInfoActivity extends BaseActivity {
     private List<Machine> list;
     private MyLoading loading;
     private BJInfoAdapter adapter;
-
+    private Intent intent;
+    private XJImg xjImg;
+    private ArrayList<String> imgs = new ArrayList<>();
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bj_info;
@@ -87,7 +91,7 @@ public class BjInfoActivity extends BaseActivity {
         if (data.getPartsphoto().equals("")){
             layoutImg.setVisibility(View.GONE);
         }else{
-            XJImg xjImg = (XJImg) GsonUtil.praseJsonToModel(data.getPartsphoto(),XJImg.class);
+            xjImg = (XJImg) GsonUtil.praseJsonToModel(data.getPartsphoto(),XJImg.class);
             if (xjImg.getCjUrl().equals("")&&xjImg.getCtUrl().equals("")&&xjImg.getPjUrl().equals("")){
                 layoutImg.setVisibility(View.GONE);
             }else{
@@ -123,11 +127,35 @@ public class BjInfoActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    @OnClick({R.id.layout_back, R.id.btn})
+    @OnClick({R.id.layout_back,R.id.img1,R.id.img2,R.id.img3, R.id.btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
                 finish();
+                break;
+            case R.id.img1:
+                imgs.clear();
+                imgs.add(xjImg.getCjUrl());
+                intent = new Intent();
+                intent.setClass(this, LookPicActivity.class);
+                intent.putStringArrayListExtra("list", imgs);
+                startActivity(intent);
+                break;
+            case R.id.img2:
+                imgs.clear();
+                imgs.add(xjImg.getCtUrl());
+                intent = new Intent();
+                intent.setClass(this, LookPicActivity.class);
+                intent.putStringArrayListExtra("list", imgs);
+                startActivity(intent);
+                break;
+            case R.id.img3:
+                imgs.clear();
+                imgs.add(xjImg.getPjUrl());
+                intent = new Intent();
+                intent.setClass(this, LookPicActivity.class);
+                intent.putStringArrayListExtra("list", imgs);
+                startActivity(intent);
                 break;
             case R.id.btn:
                 addBjInfo();

@@ -79,6 +79,20 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
             }
         }
         viewHolder.tvInfo.setText(info);
+        switch (item.getStype()){
+            case 1:
+                viewHolder.tvState.setText("询价中");
+                break;
+            case 2:
+                viewHolder.tvState.setText("已取消");
+                break;
+            case 3:
+                viewHolder.tvState.setText("已报价");
+                break;
+            case 4:
+                viewHolder.tvState.setText("交易完成");
+                break;
+        }
     }
     @Override
     public int getItemCount() {
@@ -101,6 +115,8 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
         TextView tvInfo;
         @BindView(R.id.tv_time)
         TextView tvTime;
+        @BindView(R.id.tv_state)
+        TextView tvState;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
