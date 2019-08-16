@@ -46,7 +46,25 @@ public class XjInfo {
         private int Bid;
         private String UpdatedAt;
         private String Phone;
+        private String Address;
+        private String Label;
         private String Partslist;
+
+        public String getAddress() {
+            return Address;
+        }
+
+        public void setAddress(String address) {
+            Address = address;
+        }
+
+        public String getLabel() {
+            return Label;
+        }
+
+        public void setLabel(String label) {
+            Label = label;
+        }
 
         public int getPid() {
             return Pid;

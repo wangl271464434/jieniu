@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,26 +76,18 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         viewHolder.itemView.setTag(i);
         XjInfo.DataBean item = list.get(i);
         viewHolder.tvName.setText(item.getName());
+        viewHolder.tvAddress.setText(item.getAddress());
         viewHolder.tvTime.setText(item.getUpdatedAt());
-        String info = "";
         List<Object> objects = GsonUtil.praseJsonToList(item.getPartslist(),Machine.class);
-        for (int j = 0;j<objects.size();j++) {
-            Machine machine = (Machine) objects.get(j);
-            if (j==0){
-                if (machine.getMoney().equals("")|| machine.getMoney().equals("0")){
-                    info += machine.getName()+"   未报价";
-                }else{
-                    info += machine.getName()+"   "+machine.getMoney();
-                }
-            }else{
-                if (machine.getMoney().equals("")|| machine.getMoney().equals("0")){
-                    info += "\n"+machine.getName()+"   未报价";
-                }else{
-                    info += "\n"+machine.getName()+"   "+machine.getMoney();
-                }
-            }
+        List<Machine> machines = new ArrayList<>();
+        for (Object object:objects) {
+            Machine machine = (Machine) object;
+            machines.add(machine);
         }
-        viewHolder.tvInfo.setText(info);
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        viewHolder.recyclerView.setLayoutManager(manager);
+        XJBJListAdapter adapter = new XJBJListAdapter(context,machines);
+        viewHolder.recyclerView.setAdapter(adapter);
         viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,12 +133,14 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)
         TextView tvName;
+        @BindView(R.id.tv_address)
+        TextView tvAddress;
         @BindView(R.id.tv_time)
         TextView tvTime;
         @BindView(R.id.tv_state)
         TextView tvState;
-        @BindView(R.id.tv_info)
-        TextView tvInfo;
+        @BindView(R.id.recyclerView)
+        RecyclerView recyclerView;
         @BindView(R.id.tv_call)
         TextView tvCall;
         @BindView(R.id.tv_buy)
