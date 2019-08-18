@@ -37,6 +37,16 @@
             android:textSize="@dimen/size_18sp"
             />
     </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_title"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
     <LinearLayout
         android:id="@+id/info"
         android:layout_width="match_parent"
@@ -47,7 +57,6 @@
         android:paddingRight="@dimen/size_16dp"
         android:paddingBottom="@dimen/size_20dp"
         android:background="@color/white"
-        android:layout_below="@id/layout_title"
         >
         <RelativeLayout
             android:layout_width="match_parent"
@@ -134,21 +143,21 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/info"
         android:background="@color/white"
         android:layout_marginTop="@dimen/size_20dp"
-        android:layout_above="@id/btn"
         />
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="我要报价"
-        android:textStyle="bold"
-        android:textSize="@dimen/size_16sp"
-        android:textColor="@color/white"
-        android:background="@drawable/btn_orange_shape"
-        android:layout_margin="@dimen/size_30dp"
-        />
+            <Button
+                android:id="@+id/btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="我要报价"
+                android:textStyle="bold"
+                android:textSize="@dimen/size_16sp"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_orange_shape"
+                android:layout_margin="@dimen/size_30dp"
+                />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
