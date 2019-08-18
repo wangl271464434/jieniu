@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,6 +62,8 @@ public class BjInfoActivity extends BaseActivity {
     ImageView img3;
     @BindView(R.id.layout_img)
     LinearLayout layoutImg;
+    @BindView(R.id.btn)
+    Button btn;
     private BJOrder.DataBean data;
     private String token;
     private List<Machine> list;
@@ -68,6 +71,7 @@ public class BjInfoActivity extends BaseActivity {
     private BJInfoAdapter adapter;
     private Intent intent;
     private XJImg xjImg;
+    public static int state;
     private ArrayList<String> imgs = new ArrayList<>();
     @Override
     protected int getLayoutId() {
@@ -79,6 +83,12 @@ public class BjInfoActivity extends BaseActivity {
         loading = new MyLoading(this, R.style.CustomDialog);
         list = new ArrayList<>();
         data = (BJOrder.DataBean) getIntent().getSerializableExtra("data");
+        state = data.getStype();
+        if (state == 1){
+            btn.setVisibility(View.VISIBLE);
+        }else{
+            btn.setVisibility(View.GONE);
+        }
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         GlideUtil.setImgUrl(this, data.getLogos(), img);
         tvName.setText(data.getCarbrand());

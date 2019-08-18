@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.bean.Machine;
+import com.jieniuwuliu.jieniu.home.BjInfoActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
 import java.util.List;
@@ -51,6 +52,11 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
         viewHolder.tvType.setText(item.getType());
         viewHolder.etNum.setText(item.getMoney());
         viewHolder.etNum.setSelection(item.getMoney().length());
+        if (BjInfoActivity.state == 1){
+            viewHolder.etNum.setEnabled(true);
+        }else{
+            viewHolder.etNum.setEnabled(false);
+        }
         viewHolder.etNum.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

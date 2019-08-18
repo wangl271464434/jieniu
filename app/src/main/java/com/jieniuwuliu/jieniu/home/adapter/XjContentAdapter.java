@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +76,17 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
         XjInfo.DataBean item = list.get(i);
+        if (!item.getLabel().equals("")){
+            viewHolder.tabRv.setVisibility(View.VISIBLE);
+            String[] array = item.getLabel().split(",");
+            LinearLayoutManager tabManager = new LinearLayoutManager(context);
+            tabManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            viewHolder.tabRv.setLayoutManager(tabManager);
+            XJTabAdapter xjTabAdapter = new XJTabAdapter(context,array);
+            viewHolder.tabRv.setAdapter(xjTabAdapter);
+        }else{
+            viewHolder.tabRv.setVisibility(View.GONE);
+        }
         viewHolder.tvName.setText(item.getName());
         viewHolder.tvAddress.setText(item.getAddress());
         viewHolder.tvTime.setText(item.getUpdatedAt());
@@ -139,6 +151,8 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         TextView tvTime;
         @BindView(R.id.tv_state)
         TextView tvState;
+        @BindView(R.id.tab_rv)
+        RecyclerView tabRv;
         @BindView(R.id.recyclerView)
         RecyclerView recyclerView;
         @BindView(R.id.tv_call)
