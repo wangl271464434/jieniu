@@ -5,10 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/size_16dp"
-    android:paddingTop="@dimen/size_20dp"
-    android:paddingBottom="@dimen/size_20dp"
-    android:paddingRight="@dimen/size_16dp"
+    android:padding="@dimen/size_15dp"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -43,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
             android:layout_centerVertical="true"
             >
             <TextView
@@ -61,7 +59,7 @@
                 android:background="@drawable/edit_white_shape"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:inputType="numberDecimal"
-                android:padding="@dimen/size_5dp"
+                android:padding="@dimen/size_3dp"
                 android:textSize="@dimen/size_14sp"
                 android:hint="请输入报价"
                 />

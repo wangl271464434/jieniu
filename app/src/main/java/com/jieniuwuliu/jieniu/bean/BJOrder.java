@@ -42,17 +42,73 @@ public class BJOrder implements Serializable{
     }
 
     public static class DataBean implements Serializable {
-        private int ID;
-        private String CreatedAt;
-        private String Partsphoto;
-        private String Remarks;
-        private String Logos;
-        private String Cartype;
-        private String Carbrand;
+        private int id;
+        private String createdAt;
+        private String partsphoto;
+        private String remarks;
+        private String logos;
+        private String cartype;
+        private String carbrand;
         private String gode ="";
-        private int Stype;
-        private int Pcount;
-        private String Partslist;
+        private int stype;
+        private int pcount;
+        private String partslist;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getPartsphoto() {
+            return partsphoto;
+        }
+
+        public void setPartsphoto(String partsphoto) {
+            this.partsphoto = partsphoto;
+        }
+
+        public String getRemarks() {
+            return remarks;
+        }
+
+        public void setRemarks(String remarks) {
+            this.remarks = remarks;
+        }
+
+        public String getLogos() {
+            return logos;
+        }
+
+        public void setLogos(String logos) {
+            this.logos = logos;
+        }
+
+        public String getCartype() {
+            return cartype;
+        }
+
+        public void setCartype(String cartype) {
+            this.cartype = cartype;
+        }
+
+        public String getCarbrand() {
+            return carbrand;
+        }
+
+        public void setCarbrand(String carbrand) {
+            this.carbrand = carbrand;
+        }
 
         public String getGode() {
             return gode;
@@ -62,84 +118,28 @@ public class BJOrder implements Serializable{
             this.gode = gode;
         }
 
-        public int getPcount() {
-            return Pcount;
-        }
-
-        public void setPcount(int pcount) {
-            Pcount = pcount;
-        }
-
-        public int getID() {
-            return ID;
-        }
-
-        public void setID(int ID) {
-            this.ID = ID;
-        }
-
-        public String getCreatedAt() {
-            return CreatedAt;
-        }
-
-        public void setCreatedAt(String createdAt) {
-            CreatedAt = createdAt;
-        }
-
-        public String getPartsphoto() {
-            return Partsphoto;
-        }
-
-        public void setPartsphoto(String partsphoto) {
-            Partsphoto = partsphoto;
-        }
-
-        public String getRemarks() {
-            return Remarks;
-        }
-
-        public void setRemarks(String remarks) {
-            Remarks = remarks;
-        }
-
-        public String getLogos() {
-            return Logos;
-        }
-
-        public void setLogos(String logos) {
-            Logos = logos;
-        }
-
-        public String getCartype() {
-            return Cartype;
-        }
-
-        public void setCartype(String cartype) {
-            Cartype = cartype;
-        }
-
-        public String getCarbrand() {
-            return Carbrand;
-        }
-
-        public void setCarbrand(String carbrand) {
-            Carbrand = carbrand;
-        }
-
         public int getStype() {
-            return Stype;
+            return stype;
         }
 
         public void setStype(int stype) {
-            Stype = stype;
+            this.stype = stype;
+        }
+
+        public int getPcount() {
+            return pcount;
+        }
+
+        public void setPcount(int pcount) {
+            this.pcount = pcount;
         }
 
         public String getPartslist() {
-            return Partslist;
+            return partslist;
         }
 
         public void setPartslist(String partslist) {
-            Partslist = partslist;
+            this.partslist = partslist;
         }
     }
 }

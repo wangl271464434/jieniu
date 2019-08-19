@@ -66,6 +66,11 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
         adapter = new BJListAdapter(this,list);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getData();
     }
 

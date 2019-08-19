@@ -194,7 +194,7 @@ public class BjInfoActivity extends BaseActivity {
         String json = GsonUtil.listToJson(list);
         try {
             JSONObject object = new JSONObject();
-            object.put("ID", data.getID());
+            object.put("ID", data.getId());
             object.put("Partslist", json);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addBJInfo(body);
