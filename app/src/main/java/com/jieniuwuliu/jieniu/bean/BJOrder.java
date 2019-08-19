@@ -49,9 +49,18 @@ public class BJOrder implements Serializable{
         private String Logos;
         private String Cartype;
         private String Carbrand;
+        private String gode;
         private int Stype;
         private int Pcount;
         private String Partslist;
+
+        public String getGode() {
+            return gode;
+        }
+
+        public void setGode(String gode) {
+            this.gode = gode;
+        }
 
         public int getPcount() {
             return Pcount;

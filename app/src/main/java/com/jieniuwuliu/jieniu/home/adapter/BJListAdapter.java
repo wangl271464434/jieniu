@@ -95,6 +95,9 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
             case 4:
                 viewHolder.tvState.setText("交易完成");
                 break;
+            case 5:
+                viewHolder.tvState.setText("已在别处购买");
+                break;
         }
     }
     @Override

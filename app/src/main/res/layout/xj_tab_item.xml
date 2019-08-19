@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/orange"
-        android:textSize="@dimen/size_12sp"
+        android:textSize="@dimen/size_8sp"
         android:text="上门服务"
         />
 </LinearLayout>

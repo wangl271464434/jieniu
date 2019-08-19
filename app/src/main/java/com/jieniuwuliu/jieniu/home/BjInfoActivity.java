@@ -84,10 +84,27 @@ public class BjInfoActivity extends BaseActivity {
         list = new ArrayList<>();
         data = (BJOrder.DataBean) getIntent().getSerializableExtra("data");
         state = data.getStype();
-        if (state == 1){
-            btn.setVisibility(View.VISIBLE);
-        }else{
-            btn.setVisibility(View.GONE);
+        switch (state){
+            case 1:
+                btn.setText("我要报价");
+                btn.setEnabled(true);
+                break;
+            case 2:
+                btn.setText("已取消");
+                btn.setEnabled(false);
+                break;
+            case 3:
+                btn.setText("已报价");
+                btn.setEnabled(false);
+                break;
+            case 4:
+                btn.setText("交易完成");
+                btn.setEnabled(false);
+                break;
+            case 5:
+                btn.setText("已在别处购买");
+                btn.setEnabled(false);
+                break;
         }
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         GlideUtil.setImgUrl(this, data.getLogos(), img);

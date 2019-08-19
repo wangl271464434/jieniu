@@ -30,7 +30,6 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
         this.list = list;
         this.context = context;
     }
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.listener = onItemClickListener;
     }

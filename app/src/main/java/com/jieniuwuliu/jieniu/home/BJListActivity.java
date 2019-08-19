@@ -141,14 +141,9 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
 
     @Override
     public void onItemClick(View view, int position) {
-        if (list.get(position).getStype() == 1){
-            Intent intent = new Intent();
-            intent.setClass(this,BjInfoActivity.class);
-            intent.putExtra("data",list.get(position));
-            startActivity(intent);
-        }else{
-            MyToast.show(this,"不能报价");
-        }
-
+        Intent intent = new Intent();
+        intent.setClass(this,BjInfoActivity.class);
+        intent.putExtra("data",list.get(position));
+        startActivity(intent);
     }
 }

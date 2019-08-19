@@ -55,7 +55,7 @@
         android:paddingTop="@dimen/size_24dp"
         android:paddingLeft="@dimen/size_16dp"
         android:paddingRight="@dimen/size_16dp"
-        android:paddingBottom="@dimen/size_20dp"
+        android:paddingBottom="@dimen/size_10dp"
         android:background="@color/white"
         >
         <RelativeLayout
@@ -114,8 +114,8 @@
             android:id="@+id/layout_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/size_30dp"
-            android:paddingBottom="@dimen/size_30dp"
+            android:paddingTop="@dimen/size_10dp"
+            android:paddingBottom="@dimen/size_10dp"
             >
             <ImageView
                 android:id="@+id/img1"
@@ -151,7 +151,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:text="我要报价"
                 android:textStyle="bold"
                 android:textSize="@dimen/size_16sp"
                 android:textColor="@color/white"
