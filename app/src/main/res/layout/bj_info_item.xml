@@ -10,16 +10,16 @@
     android:paddingBottom="@dimen/size_20dp"
     android:paddingRight="@dimen/size_16dp"
     >
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         >
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="name"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/size_14sp"
             android:textColor="@color/black"
             />
@@ -28,7 +28,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="type"
+            android:layout_centerVertical="true"
             android:paddingTop="@dimen/size_3dp"
+            android:layout_toRightOf="@id/tv_name"
             android:paddingBottom="@dimen/size_3dp"
             android:paddingRight="@dimen/size_5dp"
             android:paddingLeft="@dimen/size_5dp"
@@ -38,9 +40,10 @@
             android:textColor="@color/orange"
             />
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/size_20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -63,6 +66,6 @@
                 android:hint="请输入报价"
                 />
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
