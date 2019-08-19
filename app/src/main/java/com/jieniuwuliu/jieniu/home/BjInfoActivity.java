@@ -98,7 +98,7 @@ public class BjInfoActivity extends BaseActivity {
                 btn.setEnabled(false);
                 break;
             case 4:
-                btn.setText("交易完成");
+                btn.setText("发货码："+data.getGode());
                 btn.setEnabled(false);
                 break;
             case 5:

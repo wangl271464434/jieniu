@@ -49,7 +49,7 @@ public class BJOrder implements Serializable{
         private String Logos;
         private String Cartype;
         private String Carbrand;
-        private String gode;
+        private String gode ="";
         private int Stype;
         private int Pcount;
         private String Partslist;
