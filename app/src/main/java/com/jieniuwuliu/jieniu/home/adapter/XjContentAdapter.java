@@ -84,7 +84,7 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
                 viewHolder.tvState.setText("交易完成");
                 break;
             case 2:
-                viewHolder.tvState.setText("已在别处购买");
+                viewHolder.tvState.setText("已报价");
                 break;
         }
         if (!item.getLabel().equals("")){
