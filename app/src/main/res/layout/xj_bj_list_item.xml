@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/orange"
-                android:background="@drawable/order_info_shape"
+                android:background="@drawable/orange_shape"
                 android:textSize="@dimen/size_12sp"
                 android:layout_marginLeft="@dimen/size_16dp"
                 android:text="123"

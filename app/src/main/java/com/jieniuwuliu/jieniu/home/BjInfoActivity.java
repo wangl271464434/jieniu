@@ -109,7 +109,7 @@ public class BjInfoActivity extends BaseActivity {
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         GlideUtil.setImgUrl(this, data.getLogos(), img);
         tvName.setText(data.getCarbrand());
-        tvTime.setText("发布时间：" + data.getCreatedAt());
+        tvTime.setText("发布时间：" + data.getCreatedat());
         if (data.getRemarks().equals("")){
             tvRemark.setText("备注：无");
         }else{

@@ -68,7 +68,7 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
         viewHolder.itemView.setTag(i);
         BJOrder.DataBean item = list.get(i);
         GlideUtil.setImgUrl(context,item.getLogos(),viewHolder.img);
-        viewHolder.tvTime.setText(item.getCreatedAt());
+        viewHolder.tvTime.setText(item.getCreatedat());
         viewHolder.tvNum.setText(item.getPcount()+"人已报价");
         viewHolder.tvName.setText(item.getCarbrand());
         List<Object> list = GsonUtil.praseJsonToList(item.getPartslist(),Machine.class);

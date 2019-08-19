@@ -76,6 +76,17 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
         XjInfo.DataBean item = list.get(i);
+        switch (item.getState()){
+            case 0:
+                viewHolder.tvState.setText("已报价");
+                break;
+            case 1:
+                viewHolder.tvState.setText("交易完成");
+                break;
+            case 2:
+                viewHolder.tvState.setText("已在别处购买");
+                break;
+        }
         if (!item.getLabel().equals("")){
             viewHolder.tabRv.setVisibility(View.VISIBLE);
             String[] array = item.getLabel().split(",");

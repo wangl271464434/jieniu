@@ -71,6 +71,8 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
     @Override
     protected void onResume() {
         super.onResume();
+        list.clear();
+        page = 1;
         getData();
     }
 

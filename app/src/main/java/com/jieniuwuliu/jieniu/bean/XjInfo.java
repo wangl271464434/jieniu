@@ -44,11 +44,20 @@ public class XjInfo {
         private String Name;
         private int Pid;
         private int Bid;
+        private int State;
         private String UpdatedAt;
         private String Phone;
         private String Address;
         private String Label;
         private String Partslist;
+
+        public int getState() {
+            return State;
+        }
+
+        public void setState(int state) {
+            State = state;
+        }
 
         public String getAddress() {
             return Address;

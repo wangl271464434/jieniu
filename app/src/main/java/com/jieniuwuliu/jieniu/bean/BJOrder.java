@@ -43,7 +43,7 @@ public class BJOrder implements Serializable{
 
     public static class DataBean implements Serializable {
         private int id;
-        private String createdAt;
+        private String createdat;
         private String partsphoto;
         private String remarks;
         private String logos;
@@ -62,12 +62,12 @@ public class BJOrder implements Serializable{
             this.id = id;
         }
 
-        public String getCreatedAt() {
-            return createdAt;
+        public String getCreatedat() {
+            return createdat;
         }
 
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
+        public void setCreatedat(String createdat) {
+            this.createdat = createdat;
         }
 
         public String getPartsphoto() {
