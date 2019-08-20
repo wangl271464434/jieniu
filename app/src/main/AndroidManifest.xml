@@ -46,20 +46,18 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".mine.ui.EditExpActivity"
-            android:launchMode="singleInstance"
             />
         <activity android:name=".home.MsgActivity"
-            android:launchMode="singleInstance"/>
+         />
         <activity
             android:name=".home.BjInfoActivity"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".home.BJListActivity"
-            android:launchMode="singleInstance"/>
+           />
         <activity android:name=".home.XJContentActivity"
-            android:launchMode="singleInstance"/>
+           />
         <activity android:name=".home.AddCarDateActivity"
-            android:launchMode="singleInstance"/> <!-- 获取临时读取存储权限 -->
+         /> <!-- 获取临时读取存储权限 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.jieniuwuliu.jieniu.fileprovider"
@@ -84,7 +82,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".WelcomeActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -94,12 +91,11 @@
         </activity>
         <activity
             android:name=".GuideActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/> <!-- 高德地图 -->
+           /> <!-- 高德地图 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="014dc2eaeb4cbdedf205634f82cc75d9" />
@@ -107,52 +103,50 @@
         <activity
             android:name=".mine.ui.SettingActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.ModifyPwdActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".ScanQCActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.MyScoreActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".mine.ui.MyTicketActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.MyCardActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".qipeishang.QPSORQXInfoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.StoreCertifyActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateAlwaysHidden|adjustUnspecified" />
         <activity
             android:name=".mine.ui.AboutActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".home.OrderInfoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.FeedBackActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".CarTypeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".jijian.JiJianActivity"
             android:launchMode="singleTask"
@@ -165,133 +159,120 @@
         <activity
             android:name=".mine.ui.AddPicActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".mine.ui.SuoQuFaPiaoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".ForgetPwdActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.AppearTextActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".mine.ui.AddressListActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".jijian.JiJianSelectActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".jijian.JiJianNumActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateAlwaysHidden|adjustUnspecified" />
         <activity
             android:name=".mine.ui.StoreInfoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.EditInfoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".mine.ui.MyFollowActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.MyStoreActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.ModifyAddressActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.LuntanInfoActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.ChooseAddressActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".YinSIActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FuWuActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.QXActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".mine.ui.WorkTypeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".MoreCarActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+         />
         <activity
             android:name=".mine.ui.AddStorePicActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+          />
         <activity
             android:name=".luntan.CameraActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".mine.ui.EditFapiaoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".jijian.EditShouAdrActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".luntan.LookPicActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+          />
         <activity
             android:name=".luntan.VideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensor"
-            android:launchMode="singleInstance"/>
+            />
         <activity
             android:name=".jijian.PayTypeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".luntan.MsgListActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
         <activity android:name=".mine.ui.MonthCardPayActivity"
-            android:launchMode="singleInstance"/>
+           />
         <activity android:name=".home.QPShopActivity"
-            android:launchMode="singleInstance"/>
+           />
         <activity android:name=".jijian.ChoosePsyActivity"
-            android:launchMode="singleInstance"/>
+            />
         <activity android:name=".home.OrderDescActivity"
-            android:launchMode="singleInstance"/>
+           />
         <activity android:name=".mine.ui.BindWechatActivity"
-            android:launchMode="singleInstance"/>
+           />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
@@ -301,15 +282,13 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".jijian.SearchStoreActivity"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".home.XJCarTypeActivity"
-            android:launchMode="singleInstance"/>
+            />
         <activity android:name=".home.XjInfoActivity"
-            android:launchMode="singleInstance"/>
+          />
         <activity
             android:name=".home.XjAddCarTypeActivity"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".home.XJListActivity" />
 

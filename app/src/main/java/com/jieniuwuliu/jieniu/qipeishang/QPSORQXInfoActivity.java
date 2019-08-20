@@ -393,6 +393,7 @@ public class QPSORQXInfoActivity extends BaseActivity{
                         return;
                     }
                 }
+                dialog.dismiss();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
                 intent.setData(data);
@@ -408,6 +409,7 @@ public class QPSORQXInfoActivity extends BaseActivity{
                         return;
                     }
                 }
+                dialog.dismiss();
                 Constant.CALLPHONE = storeBean.getAddress().getPhone();
                 Constant.isCall = false;
                 callPhone();

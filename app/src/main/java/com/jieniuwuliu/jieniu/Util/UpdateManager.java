@@ -10,6 +10,7 @@ import java.net.URL;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
@@ -24,17 +25,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 
 public class UpdateManager {
-	private Context mContext;
+	private Activity mContext;
 	//apk下载地址
 	private String apkUrl = "https://jieniu-1254151230.cos.ap-beijing.myqcloud.com/app/jieniu.apk";
 	 //apk路径
@@ -68,7 +71,7 @@ public class UpdateManager {
 			}
     	};
     };
-	public UpdateManager(Context context) {
+	public UpdateManager(Activity context) {
 		this.mContext = context;
 	}
 
@@ -80,9 +83,14 @@ public class UpdateManager {
 	private void showDownloadDialog(){
 		dialog = new AlertDialog.Builder(mContext).create();
 		Window window = dialog.getWindow();
+		WindowManager m = mContext.getWindowManager();
+		Display defaultDisplay = m.getDefaultDisplay();
 		window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
 		window.setGravity(Gravity.CENTER);
 		dialog.show();
+		WindowManager.LayoutParams params = window.getAttributes();
+		params.width = (int) (defaultDisplay.getWidth()*0.8);
+		window.setAttributes(params);
 		dialog.setContentView(R.layout.update_progress);
 		dialog.setCanceledOnTouchOutside(false);
 		mProgress = dialog.findViewById(R.id.progress);

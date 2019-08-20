@@ -34,6 +34,7 @@
     <dimen name="size_200dp">200dp</dimen>
     <dimen name="size_220dp">220dp</dimen>
     <dimen name="size_240dp">240dp</dimen>
+    <dimen name="size_280dp">280dp</dimen>
     <dimen name="size_300dp">300dp</dimen>
     <dimen name="size_320dp">320dp</dimen>
     <dimen name="size_330dp">330dp</dimen>

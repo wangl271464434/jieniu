@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity{
         registerReceiver(receiver, filter);
         homeFragment = new HomeFragment();
         getFragment(homeFragment);
-        checkVerSion();
+//        checkVerSion();
     }
 
     private void checkVerSion() {
@@ -129,9 +129,14 @@ public class MainActivity extends BaseActivity{
     private void showCheck(Version.Data data) {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
         window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
         window.setGravity(Gravity.CENTER);
         dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
         dialog.setContentView(R.layout.check_update_dialog);
         dialog.setCanceledOnTouchOutside(false);
         TextView tvVersion = dialog.findViewById(R.id.tv_version);
