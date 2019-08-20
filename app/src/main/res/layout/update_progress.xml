@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+	android:background="@color/white"
+	android:padding="@dimen/size_10dp"
+  android:orientation="vertical">
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="下载中..."
+		android:textColor="@color/black"
+		android:textSize="@dimen/size_18sp"
+		android:textStyle="bold"
+		/>
+	<ProgressBar
+		android:id="@+id/progress"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/size_3dp"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:progressDrawable="@drawable/check_shape"
+		android:layout_marginTop="@dimen/size_50dp"
+		/>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/size_20dp"
+		>
+		<TextView
+			android:id="@+id/tv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/size_16sp"
+			android:textColor="@color/black"
+			android:text="0%"
+			/>
+		<TextView
+			android:id="@+id/tv_num"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/size_16sp"
+			android:layout_alignParentRight="true"
+			android:textColor="@color/black"
+			android:text="0/100"
+			/>
+	</RelativeLayout>
+
+</LinearLayout>

@@ -65,7 +65,7 @@ import retrofit2.Response;
 /**
  * 门店详情
  */
-public class QPSORQXInfoActivity extends BaseActivity implements View.OnClickListener {
+public class QPSORQXInfoActivity extends BaseActivity{
 
 
     @BindView(R.id.title)
@@ -384,17 +384,12 @@ public class QPSORQXInfoActivity extends BaseActivity implements View.OnClickLis
         }else{
             tvPhone.setText("移动电话：  "+storeBean.getAddress().getPhone());
         }
-        tvTelephone.setOnClickListener(this);
-        tvPhone.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.tv_telephone:
+        tvTelephone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, permissions, 100);
+                    if (ContextCompat.checkSelfPermission(QPSORQXInfoActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(QPSORQXInfoActivity.this, permissions, 100);
                         return;
                     }
                 }
@@ -402,18 +397,21 @@ public class QPSORQXInfoActivity extends BaseActivity implements View.OnClickLis
                 Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
                 intent.setData(data);
                 startActivity(intent);
-                break;
-            case R.id.tv_phone:
+            }
+        });
+        tvPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, permissions, 100);
+                    if (ContextCompat.checkSelfPermission(QPSORQXInfoActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(QPSORQXInfoActivity.this, permissions, 100);
                         return;
                     }
                 }
                 Constant.CALLPHONE = storeBean.getAddress().getPhone();
                 Constant.isCall = false;
                 callPhone();
-                break;
-        }
+            }
+        });
     }
 }

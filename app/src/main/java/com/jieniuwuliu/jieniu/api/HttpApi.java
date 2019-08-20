@@ -12,6 +12,7 @@ import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.Notice;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.UserBean;
+import com.jieniuwuliu.jieniu.bean.Version;
 import com.jieniuwuliu.jieniu.bean.VinCar;
 import com.jieniuwuliu.jieniu.bean.XJCarType;
 import com.jieniuwuliu.jieniu.bean.XJOrder;
@@ -34,6 +35,9 @@ public interface HttpApi {
     /**获取通告*/
     @GET("users/notices")
     Call<Notice> getNotice();
+    /**版本更新*/
+    @GET("edition")
+    Call<Version> checkVersion();
     /**登录*/
     @POST("login")
     Call<LoginBean> login(@Body RequestBody body);

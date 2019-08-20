@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,15 +26,18 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.Util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.Util.AppUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.Util.StringUtil;
+import com.jieniuwuliu.jieniu.Util.UpdateManager;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Notice;
+import com.jieniuwuliu.jieniu.bean.Version;
 import com.jieniuwuliu.jieniu.fragment.HomeFragment;
 import com.jieniuwuliu.jieniu.fragment.LunTanFragment;
 import com.jieniuwuliu.jieniu.fragment.MineFragment;
@@ -72,6 +76,7 @@ public class MainActivity extends BaseActivity{
     private String token;
     private int userType;
     private String scoketService = "com.jieniuwuliu.jieniu.service.SocketService";
+    private String localVersion ="";
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -80,6 +85,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void init() {
         activity = this;
+        localVersion = APKVersionCodeUtils.getVersionName(this)+"."+APKVersionCodeUtils.getVersionCode(this);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
 
@@ -95,8 +101,56 @@ public class MainActivity extends BaseActivity{
         registerReceiver(receiver, filter);
         homeFragment = new HomeFragment();
         getFragment(homeFragment);
-        getNotice();
+        checkVerSion();
     }
+
+    private void checkVerSion() {
+        Call<Version> call = HttpUtil.getInstance().getApi(token).checkVersion();
+        call.enqueue(new Callback<Version>() {
+            @Override
+            public void onResponse(Call<Version> call, Response<Version> response) {
+                if (!localVersion.equals(response.body().getData().getVersion())){
+                    showCheck(response.body().getData());
+                }else{
+                    getNotice();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Version> call, Throwable t) {
+
+            }
+        });
+    }
+    /**
+     * 版本更新提示
+     * */
+    @SuppressLint("SetTextI18n")
+    private void showCheck(Version.Data data) {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        dialog.setContentView(R.layout.check_update_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView tvVersion = dialog.findViewById(R.id.tv_version);
+        TextView tvSize = dialog.findViewById(R.id.tv_size);
+        TextView tvInfo = dialog.findViewById(R.id.tv_info);
+        TextView tvSure = dialog.findViewById(R.id.tv_sure);
+        tvVersion.setText("最新版本："+data.getVersion());
+        tvSize.setText("新版本大小："+data.getTotal());
+        tvInfo.setText(data.getInfom());
+        tvSure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                UpdateManager updateManager = new UpdateManager(MainActivity.this);
+                updateManager.checkUpdateInfo();
+            }
+        });
+    }
+
     /**
      * 获取通告
      * */

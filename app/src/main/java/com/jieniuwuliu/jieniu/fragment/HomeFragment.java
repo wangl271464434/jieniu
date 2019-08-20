@@ -99,6 +99,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
     private List<ImgBanner.DataBean> imgs;
+    private String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.home;
@@ -245,7 +250,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
             if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+                ActivityCompat.requestPermissions(getActivity(), permissions, 200);
             }else{
                 location();
             }

@@ -52,7 +52,7 @@ public class App extends Application {
         api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
         api.registerApp(Constant.WXAPPID);
         //初始化Bugly
-        initBugly();
+//        initBugly();
     }
     private void initBugly() {
         /***** Beta高级设置 *****/
