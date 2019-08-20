@@ -70,7 +70,7 @@ public class RegisterActivity extends BaseActivity {
      */
     private void getPhoneCode(String phone) {
         loading.show();
-        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone);
+        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"1");
         observable.enqueue(new Callback<CodeBean>() {
             @Override
             public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {

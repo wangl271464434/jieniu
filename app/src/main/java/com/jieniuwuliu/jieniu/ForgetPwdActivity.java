@@ -174,7 +174,7 @@ public class ForgetPwdActivity extends BaseActivity {
     //获取验证码
     private void getPhoneCode(String phone) {
         loading.show();
-        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone);
+        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"2");
         observable.enqueue(new Callback<CodeBean>() {
             @Override
             public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {

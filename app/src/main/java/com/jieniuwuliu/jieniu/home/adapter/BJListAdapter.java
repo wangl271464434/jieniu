@@ -69,7 +69,7 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
         BJOrder.DataBean item = list.get(i);
         GlideUtil.setImgUrl(context,item.getLogos(),viewHolder.img);
         viewHolder.tvTime.setText(item.getCreatedat());
-        viewHolder.tvNum.setText(item.getPcount()+"人已报价");
+        viewHolder.tvNum.setText(item.getPcount()+"个供应商已报价");
         viewHolder.tvName.setText(item.getCarbrand());
         List<Object> list = GsonUtil.praseJsonToList(item.getPartslist(),Machine.class);
         String info = "";
@@ -81,7 +81,7 @@ public class BJListAdapter extends RecyclerView.Adapter<BJListAdapter.ViewHolder
                 info += ","+machine.getName();
             }
         }
-        viewHolder.tvInfo.setText(info);
+        viewHolder.tvInfo.setText("配件："+info);
         switch (item.getStype()){
             case 1:
                 viewHolder.tvState.setText("询价中");
