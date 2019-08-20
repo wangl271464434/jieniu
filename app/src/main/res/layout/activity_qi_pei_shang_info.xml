@@ -57,7 +57,7 @@
                 android:paddingLeft="@dimen/size_15dp"
                 android:paddingRight="@dimen/size_15dp"
                 android:paddingBottom="@dimen/size_15dp"
-                android:textSize="@dimen/size_16sp"
+                android:textSize="@dimen/size_14sp"
                 android:textColor="@color/gray"
                 />
             <LinearLayout
@@ -79,13 +79,12 @@
                         android:text="经营车型："
                         android:layout_marginTop="@dimen/size_10dp"
                         android:layout_marginLeft="@dimen/size_15dp"
-                        android:textSize="@dimen/size_20sp"
+                        android:textSize="@dimen/size_16sp"
                         android:textColor="@color/black"
                         />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/size_10dp"
                         android:layout_marginRight="@dimen/size_15dp"
                         android:layout_marginLeft="@dimen/size_15dp"
                         >

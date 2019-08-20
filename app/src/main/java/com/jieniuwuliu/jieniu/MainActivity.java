@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity{
         registerReceiver(receiver, filter);
         homeFragment = new HomeFragment();
         getFragment(homeFragment);
-//        checkVerSion();
+        checkVerSion();
     }
 
     private void checkVerSion() {

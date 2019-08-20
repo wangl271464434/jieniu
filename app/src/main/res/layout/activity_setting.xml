@@ -75,11 +75,20 @@
             android:background="@color/white"
             >
             <TextView
+                android:id="@+id/tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/setting_tab7"
                 android:textSize="@dimen/size_16sp"
                 android:textColor="@color/black"
+                />
+            <TextView
+                android:id="@+id/point"
+                android:layout_width="@dimen/size_10dp"
+                android:layout_height="@dimen/size_10dp"
+                android:background="@drawable/red_point"
+                android:layout_toRightOf="@id/tv"
+                android:visibility="gone"
                 />
         </RelativeLayout>
     </LinearLayout>
