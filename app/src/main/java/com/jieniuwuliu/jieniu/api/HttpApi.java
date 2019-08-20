@@ -42,7 +42,7 @@ public interface HttpApi {
     Call<ResponseBody> register(@Body RequestBody body);
     /**获取验证码*/
     @POST("sms/{phone}")
-    Call<CodeBean> code(@Path("phone") String phone);
+    Call<CodeBean> code(@Path("phone") String phone,@Query("st")String type);
     /**忘记密码*/
     @PUT("password")
     Call<ResponseBody> forgetPwd(@Body RequestBody body);
