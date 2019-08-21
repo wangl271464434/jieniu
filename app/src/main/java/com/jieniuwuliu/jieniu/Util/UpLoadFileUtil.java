@@ -79,26 +79,6 @@ public class UpLoadFileUtil {
         return null;
     }
     /**
-     * 多图片上传
-     * */
-    public void upLoadList(String type,List<String> list){
-        final List<String> urls = new ArrayList<>();
-        for (String s:list) {
-            COSXMLUploadTask task =  upload(type,new File(s).getName(),s);
-            task.setCosXmlResultListener(new CosXmlResultListener() {
-                @Override
-                public void onSuccess(CosXmlRequest request, CosXmlResult result) {
-                    Log.w("返回结果","Success: " +result.accessUrl);
-                    urls.add(result.accessUrl);
-                }
-                @Override
-                public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
-                    Log.w("返回结果", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
-                }
-            });
-        }
-    }
-    /**
      * 删除文件
      * */
     public void  delete(String key){

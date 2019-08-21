@@ -154,7 +154,7 @@ public class AddStorePicActivity extends BaseActivity implements AddStorePicAdap
                     updateData(data);
                 }
             }else {
-                COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(AddStorePicActivity.this).upload("img",new File(s).getName(),s);
+                COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(AddStorePicActivity.this).upload("img",FileUtil.getFileName("storeInfo"),s);
                 storeTask.setCosXmlResultListener(new CosXmlResultListener() {
                         @Override
                         public void onSuccess(CosXmlRequest request, final CosXmlResult result) {

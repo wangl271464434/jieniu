@@ -46,6 +46,11 @@ public class FileUtil {
         // Create an image file name
         return videoFile;
     }
+    public static String getFileName(String type){
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JieNiu_"+type+"_"+timeStamp+".jpg";
+        return imageFileName;
+    }
     /**
      * 创建用来存储图片的文件，以时间来命名就不会产生命名冲突
      * @return 创建的图片文件

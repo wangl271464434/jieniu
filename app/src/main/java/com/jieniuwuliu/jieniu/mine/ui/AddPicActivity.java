@@ -149,7 +149,7 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
                 }
                 dialog.show();
                 //上传门店照片
-                COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(AddPicActivity.this).upload("img",new File(storeImgUrl).getName(),storeImgUrl);
+                COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(AddPicActivity.this).upload("img",FileUtil.getFileName("store"),storeImgUrl);
                 storeTask.setCosXmlResultListener(new CosXmlResultListener() {
                     @Override
                     public void onSuccess(CosXmlRequest request, CosXmlResult result) {

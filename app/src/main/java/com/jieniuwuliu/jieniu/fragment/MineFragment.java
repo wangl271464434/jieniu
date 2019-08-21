@@ -455,7 +455,7 @@ public class MineFragment extends BaseFragment implements OnItemClickListener, P
      * 上传图片
      * */
     private void upload(String path) {
-        COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(getActivity()).upload("img",new File(path).getName(),path);
+        COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(getActivity()).upload("img",FileUtil.getFileName("head"),path);
         storeTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {

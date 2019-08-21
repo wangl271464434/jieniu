@@ -155,7 +155,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
 
     private void uploadImg(String path, int imgType) {
         loading.show();
-        COSXMLUploadTask storeTask = UpLoadFileUtil.getIntance(this).upload("img", new File(path).getName(), path);
+        COSXMLUploadTask storeTask = UpLoadFileUtil.getIntance(this).upload("img", FileUtil.getFileName("xj"), path);
         storeTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
