@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.Util;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -25,7 +26,7 @@ import static com.zhihu.matisse.internal.utils.PathUtils.getDataColumn;
 import static com.zhihu.matisse.internal.utils.PathUtils.isDownloadsDocument;
 import static com.zhihu.matisse.internal.utils.PathUtils.isExternalStorageDocument;
 import static com.zhihu.matisse.internal.utils.PathUtils.isMediaDocument;
-
+@SuppressLint("SimpleDateFormat")
 public class FileUtil {
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -49,6 +50,11 @@ public class FileUtil {
     public static String getFileName(String type){
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JieNiu_"+type+"_"+timeStamp+".jpg";
+        return imageFileName;
+    }
+    public static String getVideoFileName(String type){
+         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JieNiu_"+type+"_"+timeStamp+".mp4";
         return imageFileName;
     }
     /**

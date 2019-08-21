@@ -199,7 +199,7 @@ public class AppearTextActivity extends BaseActivity implements OnItemClickListe
 //        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(list.get(0), MediaStore.Images.Thumbnails.MICRO_KIND);
         // 图片Bitmap转file
         File file = FileUtil.createImageFile(this,bitmap);
-        COSXMLUploadTask imgTask =  UpLoadFileUtil.getIntance(AppearTextActivity.this).upload("img",FileUtil.getFileName("video"),file.getPath());
+        COSXMLUploadTask imgTask =  UpLoadFileUtil.getIntance(AppearTextActivity.this).upload("img",FileUtil.getFileName("videoImg"),file.getPath());
         imgTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, final CosXmlResult result) {
@@ -214,7 +214,7 @@ public class AppearTextActivity extends BaseActivity implements OnItemClickListe
                 Log.w("返回结果", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
             }
         });
-        COSXMLUploadTask videoTask =  UpLoadFileUtil.getIntance(AppearTextActivity.this).upload("video",FileUtil.getFileName("videoImg"),list.get(0));
+        COSXMLUploadTask videoTask =  UpLoadFileUtil.getIntance(AppearTextActivity.this).upload("video",FileUtil.getVideoFileName("video"),list.get(0));
         videoTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, final CosXmlResult result) {
