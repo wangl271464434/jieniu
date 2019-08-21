@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void init() {
         activity = this;
-        localVersion = APKVersionCodeUtils.getVersionName(this)+"."+APKVersionCodeUtils.getVersionCode(this);
+        localVersion = APKVersionCodeUtils.getVersionName(this);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
 
@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity{
         window.setAttributes(params);
         dialog.setContentView(R.layout.check_update_dialog);
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         TextView tvVersion = dialog.findViewById(R.id.tv_version);
         TextView tvSize = dialog.findViewById(R.id.tv_size);
         TextView tvInfo = dialog.findViewById(R.id.tv_info);

@@ -29,7 +29,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void init() {
         title.setText("关于捷牛");
-        String version = APKVersionCodeUtils.getVersionName(this)+"."+APKVersionCodeUtils.getVersionCode(this);
+        String version = APKVersionCodeUtils.getVersionName(this);
         tvVersion.setText("版本号：V"+version);
     }
 

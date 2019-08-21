@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -52,7 +53,8 @@ public class App extends Application {
         api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
         api.registerApp(Constant.WXAPPID);
         //初始化Bugly
-//        initBugly();
+        CrashReport.initCrashReport(getApplicationContext(),Constant.BuglyId,false);
+        initBugly();
     }
     private void initBugly() {
         /***** Beta高级设置 *****/

@@ -93,6 +93,7 @@ public class UpdateManager {
 		window.setAttributes(params);
 		dialog.setContentView(R.layout.update_progress);
 		dialog.setCanceledOnTouchOutside(false);
+		dialog.setCancelable(false);
 		mProgress = dialog.findViewById(R.id.progress);
 		tvPrecent = dialog.findViewById(R.id.tv);
 		tvNum = dialog.findViewById(R.id.tv_num);

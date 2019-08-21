@@ -14,7 +14,7 @@
             android:id="@+id/img"
             android:layout_width="@dimen/size_100dp"
             android:layout_height="@dimen/size_80dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/loading"
             android:scaleType="centerCrop"
             />
         <TextView

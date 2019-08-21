@@ -51,7 +51,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void init() {
         title.setText(R.string.setting);
-        localVersion = APKVersionCodeUtils.getVersionName(this) + "." + APKVersionCodeUtils.getVersionCode(this);
+        localVersion = APKVersionCodeUtils.getVersionName(this);
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         checkVerSion();
     }

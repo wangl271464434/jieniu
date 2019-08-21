@@ -67,7 +67,7 @@
                     android:id="@+id/img"
                     android:layout_width="@dimen/size_30dp"
                     android:layout_height="@dimen/size_30dp"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@mipmap/loading"
                     />
                 <TextView
                     android:id="@+id/name"
