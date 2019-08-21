@@ -39,7 +39,7 @@ import com.jieniuwuliu.jieniu.R;
 public class UpdateManager {
 	private Activity mContext;
 	//apk下载地址
-	private String apkUrl = "https://jieniu-1254151230.cos.ap-beijing.myqcloud.com/app/jieniu.apk";
+	private String apkUrl = "https://jieniu-1254151230.cos.ap-beijing.myqcloud.com/app/app_1.apk";
 	 //apk路径
     private static final String saveFileName = "jieniu";
     //进度条
