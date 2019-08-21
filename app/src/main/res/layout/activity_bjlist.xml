@@ -37,6 +37,16 @@
             android:textSize="@dimen/size_18sp"
             />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="暂无报价单"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/size_20sp"
+        android:layout_marginTop="@dimen/size_80dp"
+        />
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"

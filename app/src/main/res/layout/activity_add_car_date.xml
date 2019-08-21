@@ -94,7 +94,7 @@
                 android:padding="@dimen/size_10dp"
                 android:textSize="@dimen/size_16sp"
                 android:textColor="@color/black"
-                android:hint="请输入年份、款式"
+                android:hint="请输入年份、排量"
                 />
         </LinearLayout>
     </LinearLayout>

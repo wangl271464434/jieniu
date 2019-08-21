@@ -67,13 +67,14 @@
         >
         <TextView
             android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_num"
             android:drawableLeft="@mipmap/ic_vip"
-            android:drawablePadding="@dimen/size_10dp"
-            android:textSize="@dimen/size_12sp"
+            android:drawablePadding="@dimen/size_5dp"
+            android:textSize="@dimen/size_10sp"
             android:textColor="@color/xj_text"
-            android:text="2019-07-30  12:14:30"
+            android:layout_marginRight="@dimen/size_20dp"
             />
         <TextView
             android:id="@+id/tv_num"
@@ -81,8 +82,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/qipeishang"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/size_20dp"
-            android:textSize="@dimen/size_14sp"
+            android:textSize="@dimen/size_10sp"
             />
     </RelativeLayout>
 

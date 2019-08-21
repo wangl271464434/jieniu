@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
@@ -44,6 +45,8 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
+    @BindView(R.id.empty)
+    TextView empty;
     private int page = 1,num = 10;
     private List<BJOrder.DataBean> list;
     private MyLoading loading;
@@ -96,9 +99,17 @@ public class BJListActivity extends BaseActivity implements OnRefreshListener, O
                             refresh.setNoMoreData(false);
                         }
                         if (xjOrder.getData().size()>0){
+                            refresh.setVisibility(View.VISIBLE);
+                            empty.setVisibility(View.GONE);
                             list.addAll(xjOrder.getData());
                             adapter.notifyDataSetChanged();
+                        }else{
+                            refresh.setVisibility(View.GONE);
+                            empty.setVisibility(View.VISIBLE);
                         }
+                    }else{
+                        refresh.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
