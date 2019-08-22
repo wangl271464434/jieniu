@@ -102,6 +102,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.CAMERA,
             Manifest.permission.CALL_PHONE,
+            Manifest.permission.PROCESS_OUTGOING_CALLS,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override

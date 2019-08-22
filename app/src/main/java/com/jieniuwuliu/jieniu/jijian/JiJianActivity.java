@@ -170,7 +170,20 @@ public class JiJianActivity extends BaseActivity implements RouteSearch.OnRouteS
 
     private void setData() {
         layoutShou.setVisibility(View.VISIBLE);
-        search(orderInfo.getToName());
+        if (orderInfo.getToUid()!=0){
+            search(orderInfo.getToName());
+        }else{
+            tvShouName.setText(orderInfo.getToName());
+            tvShouAddress.setText(orderInfo.getToAddress().replace("陕西省",""));
+            tvShouPhone.setText(orderInfo.getToPhone());
+            end = new LatLonPoint(orderInfo.getToLat(),orderInfo.getToLng());
+            RouteSearch routeSearch = new RouteSearch(JiJianActivity.this);
+            routeSearch.setRouteSearchListener(JiJianActivity.this);
+            RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(start, end);
+            RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo,
+                    RouteSearch.DRIVING_SINGLE_SHORTEST, null, null, "");
+            routeSearch.calculateDriveRouteAsyn(query);
+        }
     }
     /**
      * 搜索
