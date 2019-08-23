@@ -17,6 +17,7 @@
         android:layout_height="@dimen/size_1dp"
         android:background="@color/line_gray"
         android:layout_above="@id/bottom"
+
         />
 
     <RadioGroup

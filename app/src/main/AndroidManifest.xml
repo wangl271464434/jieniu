@@ -69,6 +69,7 @@
         </provider> <!-- socket服务 -->
         <service
             android:name=".service.SocketService"
+            tools:remove="1000"
             android:process=":remote" />
 
         <activity

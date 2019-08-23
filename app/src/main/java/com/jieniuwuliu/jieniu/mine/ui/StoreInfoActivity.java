@@ -218,7 +218,7 @@ public class StoreInfoActivity extends BaseActivity {
                     if (storeBean.getLandline().equals("")){
                         etTelephone.setText("暂无");
                     }else{
-                        etTelephone.setText(storeBean.getLandline());
+                        etTelephone.setText(storeBean.getLandline().replace(" ",""));
                     }
                     if (storeBean.getStoreinform().equals("")){
                         tvContent.setText("暂无");
@@ -346,7 +346,7 @@ public class StoreInfoActivity extends BaseActivity {
                 intent = new Intent();
                 intent.setClass(StoreInfoActivity.this,EditInfoActivity.class);
                 intent.putExtra("title","固定电话");
-                intent.putExtra("info",storeBean.getLandline());
+                intent.putExtra("info",storeBean.getLandline().replace(" ",""));
                 startActivityForResult(intent,3);
                 break;
             case R.id.layout_content://简介

@@ -377,7 +377,7 @@ public class QPSORQXInfoActivity extends BaseActivity{
         if (storeBean.getLandline().equals("")){
             tvTelephone.setText("固定电话：暂无");
         }else{
-            tvTelephone.setText("固定电话：  "+storeBean.getLandline());
+            tvTelephone.setText("固定电话：  "+storeBean.getLandline().replace(" ",""));
         }
         if (storeBean.getAddress().getPhone().equals("")){
             tvPhone.setText("移动电话：暂无");
@@ -395,7 +395,7 @@ public class QPSORQXInfoActivity extends BaseActivity{
                 }
                 dialog.dismiss();
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                Uri data = Uri.parse("tel:" + storeBean.getAddress().getPhone());
+                Uri data = Uri.parse("tel:" + storeBean.getLandline().replace(" ",""));
                 intent.setData(data);
                 startActivity(intent);
             }
