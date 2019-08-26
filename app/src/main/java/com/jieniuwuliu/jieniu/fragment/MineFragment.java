@@ -181,6 +181,7 @@ public class MineFragment extends BaseFragment implements OnItemClickListener, P
                             imgVip.setVisibility(View.GONE);
                         }
                         GlideUtil.setUserImgUrl(getActivity(),user.getShopPhoto(),headImg);
+                        SPUtil.put(getActivity(), Constant.USERTYPE, Constant.USERTYPE,user.getPersonType());
                         switch (user.getPersonType()){
                             case 0:
                                 tvType.setVisibility(View.GONE);

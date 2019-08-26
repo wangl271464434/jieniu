@@ -4,6 +4,7 @@ public class Machine {
     private String name = "";
     private String type = "";
     private String money = "";
+    private String exp = "";
 
     public String getName() {
         return name;
@@ -27,5 +28,13 @@ public class Machine {
 
     public void setMoney(String money) {
         this.money = money;
+    }
+
+    public String getExp() {
+        return exp;
+    }
+
+    public void setExp(String exp) {
+        this.exp = exp;
     }
 }
