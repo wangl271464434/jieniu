@@ -148,6 +148,10 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
                 showPicDialog();
                 break;
             case R.id.btn:
+                if("".equals(xjImg.getCjUrl())){
+                    MyToast.show(this,"请您上传车架号的照片");
+                    return;
+                }
                 addXJOrder();
                 break;
         }

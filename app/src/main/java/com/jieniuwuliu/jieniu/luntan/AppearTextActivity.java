@@ -280,8 +280,8 @@ public class AppearTextActivity extends BaseActivity implements OnItemClickListe
      * 上传图片
      * */
     private void updateImg() {
-        for (String s:list){
-            COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(AppearTextActivity.this).upload("img",FileUtil.getFileName("imgs"),s);
+        for (int i = 0;i<list.size();i++){
+            COSXMLUploadTask storeTask =  UpLoadFileUtil.getIntance(AppearTextActivity.this).upload("img",FileUtil.getFileName("imgs_"+i),list.get(i));
             storeTask.setCosXmlResultListener(new CosXmlResultListener() {
                 @Override
                 public void onSuccess(CosXmlRequest request, final CosXmlResult result) {
