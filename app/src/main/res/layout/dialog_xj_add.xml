@@ -17,36 +17,50 @@
         android:textColor="@color/black"
         android:layout_margin="@dimen/size_10dp"
         />
-    <RadioGroup
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/size_10dp"
         android:orientation="horizontal"
         >
-        <RadioButton
-            android:id="@+id/yuding_btn"
-            android:text="接受预订"
-            style="@style/xj_btn"
-            />
-        <RadioButton
-            android:id="@+id/yuanjian_btn"
-            android:text="原厂件"
+        <CheckBox
+            android:id="@+id/ycbz"
+            android:text="原厂件(带包装)"
             style="@style/xj_btn"
             android:layout_marginLeft="@dimen/size_10dp"
             />
-        <RadioButton
-            android:id="@+id/fujian_btn"
-            android:text="副厂件"
+        <CheckBox
+            android:id="@+id/ycnbz"
+            android:text="原厂件(不带包装)"
             style="@style/xj_btn"
             android:layout_marginLeft="@dimen/size_10dp"
             />
-        <RadioButton
-            android:id="@+id/chaijian_btn"
-            android:text="拆车件"
+        <CheckBox
+            android:id="@+id/pp"
+            android:text="品牌件"
             style="@style/xj_btn"
             android:layout_marginLeft="@dimen/size_10dp"
             />
-    </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_10dp"
+        android:orientation="horizontal"
+        >
+        <CheckBox
+            android:id="@+id/cc"
+            android:text="纯拆件"
+            style="@style/xj_btn"
+            android:layout_marginLeft="@dimen/size_10dp"
+            />
+        <CheckBox
+            android:id="@+id/ccxf"
+            android:text="纯拆件(修复)"
+            style="@style/xj_btn"
+            android:layout_marginLeft="@dimen/size_10dp"
+            />
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1dp"

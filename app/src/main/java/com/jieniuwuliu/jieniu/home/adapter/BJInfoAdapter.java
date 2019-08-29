@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.home.adapter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -48,15 +49,17 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
         viewHolder.itemView.setTag(i);
         Machine item = list.get(i);
         viewHolder.tvName.setText(item.getName());
-        viewHolder.tvType.setText(item.getType());
-        viewHolder.etNum.setText(item.getMoney());
-        viewHolder.etNum.setSelection(item.getMoney().length());
+        viewHolder.etExp.setText(item.getExp());
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        viewHolder.recyclerView.setLayoutManager(manager);
+        BJTypeAdapter adapter = new BJTypeAdapter(context,item.getList());
+        viewHolder.recyclerView.setAdapter(adapter);
         if (BjInfoActivity.state == 1){
-            viewHolder.etNum.setEnabled(true);
+            viewHolder.etExp.setEnabled(true);
         }else{
-            viewHolder.etNum.setEnabled(false);
+            viewHolder.etExp.setEnabled(false);
         }
-        viewHolder.etNum.addTextChangedListener(new TextWatcher() {
+        viewHolder.etExp.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -69,8 +72,8 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String num = viewHolder.etNum.getText().toString();
-                item.setMoney(num);
+                String exp = viewHolder.etExp.getText().toString();
+                item.setExp(exp);
             }
         });
     }
@@ -90,11 +93,10 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.tv_type)
-        TextView tvType;
-        @BindView(R.id.et_num)
-        EditText etNum;
-
+        @BindView(R.id.recyclerView)
+        RecyclerView recyclerView;
+        @BindView(R.id.et_exp)
+        EditText etExp;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

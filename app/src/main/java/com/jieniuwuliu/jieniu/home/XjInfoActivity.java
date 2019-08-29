@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     private List<Machine> list;
     private XjAddMachieAdapter adapter;
     private EditText etName;
+    private CheckBox ycbz,ycnbz,pp,cc,ccxf;
     private String name,token, type = "",remark = "";
     private VinCar.Data data;
     private int imgType;
@@ -263,10 +265,11 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         dialog.setContentView(R.layout.dialog_xj_add);
         window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         etName = dialog.findViewById(R.id.et_name);
-        dialog.findViewById(R.id.yuding_btn).setOnClickListener(this);
-        dialog.findViewById(R.id.yuanjian_btn).setOnClickListener(this);
-        dialog.findViewById(R.id.fujian_btn).setOnClickListener(this);
-        dialog.findViewById(R.id.chaijian_btn).setOnClickListener(this);
+        ycbz = dialog.findViewById(R.id.ycbz);
+        ycnbz = dialog.findViewById(R.id.ycnbz);
+        pp = dialog.findViewById(R.id.pp);
+        cc = dialog.findViewById(R.id.cc);
+        ccxf = dialog.findViewById(R.id.ccxf);
         dialog.findViewById(R.id.tv_cancel).setOnClickListener(this);
         dialog.findViewById(R.id.tv_sure).setOnClickListener(this);
     }
@@ -274,31 +277,45 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.yuding_btn:
-                type = "接受预订";
-                break;
-            case R.id.yuanjian_btn:
-                type = "原厂件";
-                break;
-            case R.id.fujian_btn:
-                type = "副厂件";
-                break;
-            case R.id.chaijian_btn:
-                type = "拆车件";
-                break;
             case R.id.tv_cancel:
                 dialog.dismiss();
                 break;
             case R.id.tv_sure:
+                List<Machine.Type> types = new ArrayList<>();
                 name = etName.getText().toString();
                 if (name.isEmpty()) {
                     MyToast.show(getApplicationContext(), "请输入配件名称");
                     return;
                 }
+                if (ycbz.isChecked()){
+                    Machine.Type type = new Machine.Type();
+                    type.setType("原厂带包装");
+                    types.add(type);
+                }
+                if (ycnbz.isChecked()){
+                    Machine.Type type = new Machine.Type();
+                    type.setType("原厂不带包装");
+                    types.add(type);
+                }
+                if (pp.isChecked()){
+                    Machine.Type type = new Machine.Type();
+                    type.setType("品牌");
+                    types.add(type);
+                }
+                if (cc.isChecked()){
+                    Machine.Type type = new Machine.Type();
+                    type.setType("纯拆件");
+                    types.add(type);
+                }
+                if (ccxf.isChecked()){
+                    Machine.Type type = new Machine.Type();
+                    type.setType("纯拆修复");
+                    types.add(type);
+                }
                 dialog.dismiss();
                 Machine machine = new Machine();
                 machine.setName(name);
-                machine.setType(type);
+                machine.setList(types);
                 list.add(machine);
                 adapter.notifyDataSetChanged();
                 break;

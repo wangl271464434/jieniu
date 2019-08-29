@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.home.adapter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +40,15 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
         viewHolder.itemView.setTag(i);
         Machine item = list.get(i);
         viewHolder.tvName.setText((i+1)+"."+item.getName());
-        viewHolder.tvType.setText(item.getType());
-        if ("".equals(item.getMoney()) && "0".equals(item.getMoney())
-                &&"0.0".equals(item.getMoney()) && "0.00".equals(item.getMoney())){
-            viewHolder.tvPrice.setText("未报价");
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        viewHolder.recyclerView.setLayoutManager(manager);
+        XJTypeAdapter adapter = new XJTypeAdapter(context,item.getList());
+        viewHolder.recyclerView.setAdapter(adapter);
+        if (!item.getExp().equals("")){
+            viewHolder.tvExp.setVisibility(View.VISIBLE);
+            viewHolder.tvExp.setText(item.getExp());
         }else{
-            viewHolder.tvPrice.setText("¥  "+item.getMoney());
+            viewHolder.tvExp.setVisibility(View.GONE);
         }
     }
     @Override
@@ -55,10 +59,10 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.tv_type)
-        TextView tvType;
-        @BindView(R.id.tv_price)
-        TextView tvPrice;
+        @BindView(R.id.recyclerView)
+        RecyclerView recyclerView;
+        @BindView(R.id.tv_exp)
+        TextView tvExp;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
