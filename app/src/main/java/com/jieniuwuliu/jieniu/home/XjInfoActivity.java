@@ -93,7 +93,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     private XjAddMachieAdapter adapter;
     private EditText etName;
     private CheckBox ycbz,ycnbz,pp,cc,ccxf;
-    private String name,token, type = "",remark = "";
+    private String name,token, type = "",remark = "",carNo="";
     private VinCar.Data data;
     private int imgType;
     private XJImg xjImg;
@@ -117,6 +117,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         loading = new MyLoading(this,R.style.CustomDialog);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         data = (VinCar.Data) getIntent().getSerializableExtra("data");
+        carNo = getIntent().getStringExtra("carNo");
         if (data != null) {
             GlideUtil.setImgUrl(this, data.getLogos(), img);
             tvName.setText(data.getCartype());
@@ -218,6 +219,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
             object.put("Logos",data.getLogos());
             object.put("Cartype",data.getBrand());
             object.put("Carbrand",data.getCartype());
+            object.put("Carvin",carNo);
             object.put("Partslist",pjStr);
             object.put("Stype",1);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
