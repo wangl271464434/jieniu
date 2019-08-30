@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     >
     <TextView
@@ -11,95 +11,99 @@
         android:text="添加配件"
         android:textColor="@color/black"
         android:gravity="center"
-        android:background="@color/white"
+        android:background="@color/comment_bg"
         android:padding="@dimen/size_10dp"
         android:textSize="@dimen/size_16sp"
         />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_1dp"
-        android:background="@color/line_gray"
-        />
-    <EditText
-        android:id="@+id/et_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入您要添加的配件名称"
+        android:orientation="vertical"
         android:background="@color/white"
-        android:padding="@dimen/size_5dp"
-        android:singleLine="true"
-        android:textSize="@dimen/size_16sp"
-        android:textColor="@color/black"
-        android:layout_margin="@dimen/size_10dp"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_10dp"
-        android:orientation="horizontal"
+        android:padding="@dimen/size_10dp"
         >
-        <CheckBox
-            android:id="@+id/ycbz"
-            android:text="原厂件(带包装)"
-            style="@style/xj_btn"
-            android:layout_marginLeft="@dimen/size_10dp"
-            />
-        <CheckBox
-            android:id="@+id/ycnbz"
-            android:text="原厂件(不带包装)"
-            style="@style/xj_btn"
-            android:layout_marginLeft="@dimen/size_10dp"
-            />
-        <CheckBox
-            android:id="@+id/pp"
-            android:text="品牌件"
-            style="@style/xj_btn"
-            android:layout_marginLeft="@dimen/size_10dp"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_10dp"
-        android:orientation="horizontal"
-        >
-        <CheckBox
-            android:id="@+id/cc"
-            android:text="纯拆件"
-            style="@style/xj_btn"
-            android:layout_marginLeft="@dimen/size_10dp"
-            />
-        <CheckBox
-            android:id="@+id/ccxf"
-            android:text="纯拆件(修复)"
-            style="@style/xj_btn"
-            android:layout_marginLeft="@dimen/size_10dp"
-            />
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_1dp"
-        android:background="@color/line_gray"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_45dp">
-        <TextView
-            android:id="@+id/tv_cancel"
-           style="@style/xj_add_text"
-            android:text="取消"
-            android:textColor="@color/gray"
-            />
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/line_gray"
-            />
-        <TextView
-            android:id="@+id/tv_sure"
-            style="@style/xj_add_text"
-            android:text="确定"
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入您要添加的配件名称"
+            android:background="@color/white"
+            android:padding="@dimen/size_10dp"
+            android:singleLine="true"
+            android:textSize="@dimen/size_16sp"
             android:textColor="@color/black"
+            android:layout_margin="@dimen/size_5dp"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <CheckBox
+                android:id="@+id/ycbz"
+                android:text="原厂件(带包装)"
+                style="@style/xj_btn"
+                android:layout_marginLeft="@dimen/size_10dp"
+                />
+            <CheckBox
+                android:id="@+id/ycnbz"
+                android:text="原厂件(不带包装)"
+                style="@style/xj_btn"
+                android:layout_marginLeft="@dimen/size_10dp"
+                />
+            <CheckBox
+                android:id="@+id/pp"
+                android:text="品牌件"
+                style="@style/xj_btn"
+                android:layout_marginLeft="@dimen/size_10dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:orientation="horizontal"
+            >
+            <CheckBox
+                android:id="@+id/cc"
+                android:text="纯拆件"
+                style="@style/xj_btn"
+                android:layout_marginLeft="@dimen/size_10dp"
+                />
+            <CheckBox
+                android:id="@+id/ccxf"
+                android:text="纯拆件(修复)"
+                style="@style/xj_btn"
+                android:layout_marginLeft="@dimen/size_10dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/size_10dp"
+            android:paddingBottom="@dimen/size_10dp"
+            >
+            <TextView
+                android:id="@+id/tv_cancel"
+                style="@style/xj_add_text"
+                android:text="取消"
+                android:background="@drawable/edit_white_shape"
+                android:textColor="@color/gray"
+                android:padding="@dimen/size_10dp"
+                android:layout_marginLeft="@dimen/size_30dp"
+                android:layout_marginRight="@dimen/size_20dp"
+                />
+            <TextView
+                android:id="@+id/tv_sure"
+                style="@style/xj_add_text"
+                android:text="确定"
+                android:layout_marginRight="@dimen/size_30dp"
+                android:layout_marginLeft="@dimen/size_20dp"
+                android:background="@drawable/btn_orange_shape"
+                android:textColor="@color/white"
+                android:padding="@dimen/size_10dp"
+                />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

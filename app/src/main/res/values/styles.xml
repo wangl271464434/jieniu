@@ -52,21 +52,20 @@
         <item name="android:layout_weight">1</item>
     </style>
     <style name="xj_btn">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">@dimen/size_10dp</item>
-        <item name="android:textSize">@dimen/size_12sp</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@drawable/check_text</item>
+        <item name="android:padding">@dimen/size_8dp</item>
+        <item name="android:textSize">@dimen/size_10sp</item>
         <item name="android:button">@null</item>
         <item name="android:background">@drawable/xj_sel</item>
     </style>
     <style name="xj_add_text">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">@dimen/size_10dp</item>
-        <item name="android:textSize">@dimen/size_16sp</item>
+        <item name="android:textSize">@dimen/size_12sp</item>
         <item name="android:drawablePadding">@dimen/size_3dp</item>
         <item name="android:layout_weight">1</item>
     </style>
