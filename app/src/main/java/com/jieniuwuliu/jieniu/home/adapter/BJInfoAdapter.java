@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.home.adapter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -50,7 +51,7 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
         Machine item = list.get(i);
         viewHolder.tvName.setText(item.getName());
         viewHolder.etExp.setText(item.getExp());
-        LinearLayoutManager manager = new LinearLayoutManager(context);
+        GridLayoutManager manager = new GridLayoutManager(context,2);
         viewHolder.recyclerView.setLayoutManager(manager);
         BJTypeAdapter adapter = new BJTypeAdapter(context,item.getList());
         viewHolder.recyclerView.setAdapter(adapter);

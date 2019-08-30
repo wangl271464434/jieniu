@@ -111,9 +111,9 @@ public class BjInfoActivity extends BaseActivity {
         tvName.setText(data.getCarbrand());
         tvTime.setText("发布时间：" + data.getCreatedat());
         if (data.getRemarks().equals("")){
-            tvRemark.setText("备注：无");
+            tvRemark.setText("询价备注：无");
         }else{
-            tvRemark.setText("备注："+data.getRemarks());
+            tvRemark.setText("询价备注："+data.getRemarks());
         }
         if (data.getPartsphoto().equals("")){
             layoutImg.setVisibility(View.GONE);
