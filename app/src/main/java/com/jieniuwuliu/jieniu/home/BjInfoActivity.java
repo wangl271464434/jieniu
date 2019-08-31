@@ -15,6 +15,7 @@ import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
 import com.jieniuwuliu.jieniu.Util.GsonUtil;
 import com.jieniuwuliu.jieniu.Util.HttpUtil;
+import com.jieniuwuliu.jieniu.Util.JwtUtil;
 import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.Util.SPUtil;
 import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
@@ -196,6 +197,7 @@ public class BjInfoActivity extends BaseActivity {
             JSONObject object = new JSONObject();
             object.put("ID", data.getId());
             object.put("Partslist", json);
+            Log.i("json",object.toString());
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).addBJInfo(body);
             call.enqueue(new SimpleCallBack<ResponseBody>(this) {

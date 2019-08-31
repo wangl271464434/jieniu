@@ -51,6 +51,11 @@ public class BJTypeAdapter extends RecyclerView.Adapter<BJTypeAdapter.ViewHolder
         Machine.Type item = list.get(i);
         viewHolder.tvType.setText(item.getType());
         viewHolder.etNum.setText(item.getMoney());
+        if (item.isChecked()){
+            viewHolder.tvState.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.tvState.setVisibility(View.GONE);
+        }
         if (BjInfoActivity.state == 1) {
             viewHolder.etNum.setEnabled(true);
         } else {
@@ -90,6 +95,8 @@ public class BJTypeAdapter extends RecyclerView.Adapter<BJTypeAdapter.ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_type)
         TextView tvType;
+        @BindView(R.id.tv_state)
+        TextView tvState;
         @BindView(R.id.et_num)
         EditText etNum;
 

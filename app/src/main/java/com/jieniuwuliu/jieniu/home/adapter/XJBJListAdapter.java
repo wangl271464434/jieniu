@@ -40,13 +40,15 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
         viewHolder.itemView.setTag(i);
         Machine item = list.get(i);
         viewHolder.tvName.setText((i+1)+"."+item.getName());
-        LinearLayoutManager manager = new LinearLayoutManager(context);
-        viewHolder.recyclerView.setLayoutManager(manager);
-        XJTypeAdapter adapter = new XJTypeAdapter(context,item.getList());
-        viewHolder.recyclerView.setAdapter(adapter);
+        if(item.getList()!=null){
+            LinearLayoutManager manager = new LinearLayoutManager(context);
+            viewHolder.recyclerView.setLayoutManager(manager);
+            XJTypeAdapter adapter = new XJTypeAdapter(context,item.getList());
+            viewHolder.recyclerView.setAdapter(adapter);
+        }
         if (!item.getExp().equals("")){
             viewHolder.tvExp.setVisibility(View.VISIBLE);
-            viewHolder.tvExp.setText(item.getExp());
+            viewHolder.tvExp.setText("报价备注："+item.getExp());
         }else{
             viewHolder.tvExp.setVisibility(View.GONE);
         }

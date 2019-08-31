@@ -42,6 +42,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Machine;
 import com.jieniuwuliu.jieniu.bean.VinCar;
 import com.jieniuwuliu.jieniu.bean.XJImg;
+import com.jieniuwuliu.jieniu.bean.XjInfo;
 import com.jieniuwuliu.jieniu.home.adapter.XjAddMachieAdapter;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.jieniuwuliu.jieniu.view.PicDialog;
@@ -93,7 +94,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     private XjAddMachieAdapter adapter;
     private EditText etName;
     private CheckBox ycbz,ycnbz,pp,cc,ccxf;
-    private String name,token, type = "",remark = "",carNo="";
+    private String name,token, type = "",remark = "",carNo="暂无车架号";
     private VinCar.Data data;
     private int imgType;
     private XJImg xjImg;

@@ -31,6 +31,15 @@ public class Machine {
    public static class Type{
         private String type = "";
         private String money = "";
+        private boolean isChecked = false;
+
+       public boolean isChecked() {
+           return isChecked;
+       }
+
+       public void setChecked(boolean checked) {
+           isChecked = checked;
+       }
 
        public String getType() {
            return type;

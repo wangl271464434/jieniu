@@ -39,6 +39,8 @@
             android:layout_height="@dimen/size_40dp"
             android:hint="你想说些什么……"
             android:padding="@dimen/size_5dp"
+            android:textSize="@dimen/size_10sp"
+            android:textColor="@color/black"
             android:gravity="top"
             android:background="@drawable/edittext_bg"
             />

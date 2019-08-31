@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -50,12 +52,26 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
         viewHolder.itemView.setTag(i);
         Machine.Type item = list.get(i);
         viewHolder.tvType.setText(item.getType());
+        if (item.isChecked()){
+            viewHolder.checkBox.setChecked(true);
+        }else{
+            viewHolder.checkBox.setChecked(false);
+        }
         if ("".equals(item.getMoney()) && "0".equals(item.getMoney())
                 &&"0.0".equals(item.getMoney()) && "0.00".equals(item.getMoney())){
             viewHolder.tvMoney.setText("未报价");
         }else{
             viewHolder.tvMoney.setText("¥  "+item.getMoney());
         }
+        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isPressed()){
+                    item.setChecked(isChecked);
+                    notifyItemChanged(i);
+                }
+            }
+        });
     }
 
     @Override
@@ -75,6 +91,8 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
         TextView tvType;
         @BindView(R.id.tv_money)
         TextView tvMoney;
+        @BindView(R.id.checkbox)
+        CheckBox checkBox;
 
         ViewHolder(View view) {
             super(view);

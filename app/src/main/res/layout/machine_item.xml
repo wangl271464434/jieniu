@@ -19,16 +19,18 @@
             android:textColor="@color/black"
             android:textSize="@dimen/size_14sp"
             />
+
         <TextView
             android:id="@+id/tv_type"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="类型"
+            android:layout_toLeftOf="@id/tv_delete"
+            android:layout_marginRight="@dimen/size_5dp"
             android:layout_marginLeft="@dimen/size_20dp"
-            android:textColor="@color/black"
             android:layout_toRightOf="@id/tv_name"
-            android:textSize="@dimen/size_14sp"
-            />
+            android:text="类型"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_14sp" />
         <TextView
             android:id="@+id/tv_delete"
             android:layout_width="wrap_content"

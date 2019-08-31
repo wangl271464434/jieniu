@@ -154,6 +154,7 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
             JSONObject object = new JSONObject();
             object.put("ID",data.getId());
             object.put("Pid",item.getPid());
+            object.put("Partslist",item.getPartslist());
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).putXJOrderInfo(body);
             call.enqueue(new SimpleCallBack<ResponseBody>(this) {

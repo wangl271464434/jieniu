@@ -40,7 +40,7 @@ public class XjInfo {
         this.data = data;
     }
 
-    public class DataBean{
+    public  class DataBean{
         private String Name;
         private int Pid;
         private int Bid;
