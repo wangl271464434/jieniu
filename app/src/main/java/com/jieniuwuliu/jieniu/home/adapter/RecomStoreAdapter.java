@@ -58,6 +58,7 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
             if (item.getFuwuCar()!=null){
                 if (item.getFuwuCar().size()>0){
                     viewHolder.rv.setVisibility(View.VISIBLE);
+                    viewHolder.tvInfo.setVisibility(View.GONE);
                     LinearLayoutManager carManager = new LinearLayoutManager(context);
                     carManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                     viewHolder.rv.setLayoutManager(carManager);
@@ -68,6 +69,10 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
                 }
             }else{
                 viewHolder.rv.setVisibility(View.GONE);
+                if ("".equals(item.getYewu())){
+                    viewHolder.tvInfo.setVisibility(View.VISIBLE);
+                    viewHolder.tvInfo.setText("经营范围："+item.getYewu());
+                }
             }
             GlideUtil.setRoundImg(context,item.getPhoto(),viewHolder.img);
             viewHolder.name.setText(item.getName());
@@ -104,6 +109,8 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         ImageView img;
         @BindView(R.id.name)
         TextView name;
+        @BindView(R.id.tv_info)
+        TextView tvInfo;
         @BindView(R.id.address)
         TextView address;
         @BindView(R.id.rv)

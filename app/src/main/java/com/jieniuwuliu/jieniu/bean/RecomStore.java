@@ -56,7 +56,16 @@ public class RecomStore {
         private String photo;
         private String address;
         private String label;
+        private String yewu;
         private List<Car> fuwuCar;
+
+        public String getYewu() {
+            return yewu;
+        }
+
+        public void setYewu(String yewu) {
+            this.yewu = yewu;
+        }
 
         public int getId() {
             return id;
