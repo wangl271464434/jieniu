@@ -7,20 +7,25 @@
     android:orientation="vertical"
     android:padding="@dimen/size_15dp"
     >
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="name"
-        android:textSize="@dimen/size_14sp"
-        android:textColor="@color/black"
-        />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_10dp"
-        />
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="name"
+            android:textSize="@dimen/size_14sp"
+            android:textColor="@color/black"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_10dp"
+            />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,10 +41,10 @@
         <EditText
             android:id="@+id/et_exp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_40dp"
+            android:layout_height="wrap_content"
             android:hint="你想说些什么……"
             android:padding="@dimen/size_5dp"
-            android:textSize="@dimen/size_10sp"
+            android:textSize="@dimen/size_14sp"
             android:textColor="@color/black"
             android:gravity="top"
             android:background="@drawable/edittext_bg"

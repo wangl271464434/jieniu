@@ -71,6 +71,13 @@ public class XJListActivity extends BaseActivity implements OnRefreshListener, O
         adapter = new XjListAdapter(this,list);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        list.clear();
+        page = 1;
         getData();
     }
 

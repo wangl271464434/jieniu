@@ -21,6 +21,7 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Machine;
 import com.jieniuwuliu.jieniu.bean.XJOrder;
 import com.jieniuwuliu.jieniu.bean.XjInfo;
+import com.jieniuwuliu.jieniu.home.adapter.XJBJListAdapter;
 import com.jieniuwuliu.jieniu.home.adapter.XjContentAdapter;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -150,11 +151,12 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
     @Override
     public void sureInfo(XjInfo.DataBean item) {
         loading.show();
+        String json = GsonUtil.listToJson(XJBJListAdapter.list);
         try {
             JSONObject object = new JSONObject();
             object.put("ID",data.getId());
             object.put("Pid",item.getPid());
-            object.put("Partslist",item.getPartslist());
+            object.put("Partslist",json);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).putXJOrderInfo(body);
             call.enqueue(new SimpleCallBack<ResponseBody>(this) {

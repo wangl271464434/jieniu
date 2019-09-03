@@ -49,9 +49,9 @@ public class BJInfoAdapter extends RecyclerView.Adapter<BJInfoAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.itemView.setTag(i);
         Machine item = list.get(i);
-        viewHolder.tvName.setText(item.getName());
+        viewHolder.tvName.setText((i+1)+"."+item.getName());
         viewHolder.etExp.setText(item.getExp());
-        GridLayoutManager manager = new GridLayoutManager(context,2);
+        LinearLayoutManager manager = new LinearLayoutManager(context);
         viewHolder.recyclerView.setLayoutManager(manager);
         BJTypeAdapter adapter = new BJTypeAdapter(context,item.getList());
         viewHolder.recyclerView.setAdapter(adapter);

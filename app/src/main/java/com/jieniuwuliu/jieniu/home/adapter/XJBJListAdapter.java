@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHolder> {
     private Activity context;
-    private List<Machine> list;
+    public static List<Machine> list;
 
     public XJBJListAdapter(Activity context, List<Machine> list) {
         this.list = list;
