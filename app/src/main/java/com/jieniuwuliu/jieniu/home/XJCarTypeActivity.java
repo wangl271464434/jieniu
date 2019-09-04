@@ -74,7 +74,7 @@ public class XJCarTypeActivity extends BaseActivity {
                 String carNum = edit.getText().toString();
                 intent = new Intent();
                 intent.setClass(this,XjInfoActivity.class);
-                intent.putExtra("data",vinCar.getData()+" "+carNum);
+                intent.putExtra("data",vinCar.getData());
                 intent.putExtra("carNo",carNum);
                 startActivity(intent);
                 finish();

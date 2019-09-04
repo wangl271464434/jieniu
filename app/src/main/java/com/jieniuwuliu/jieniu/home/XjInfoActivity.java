@@ -121,7 +121,11 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         carNo = getIntent().getStringExtra("carNo");
         if (data != null) {
             GlideUtil.setImgUrl(this, data.getLogos(), img);
-            tvName.setText(data.getCartype());
+            if ("暂无车架号".equals(carNo)){
+                tvName.setText(data.getCartype());
+            }else{
+                tvName.setText(data.getCartype()+" "+carNo);
+            }
         }
         list = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -219,7 +223,11 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
             object.put("Remarks",remark);
             object.put("Logos",data.getLogos());
             object.put("Cartype",data.getBrand());
-            object.put("Carbrand",data.getCartype());
+            if ("暂无车架号".equals(carNo)){
+                object.put("Carbrand",data.getCartype());
+            }else{
+                object.put("Carbrand",data.getCartype()+" "+carNo);
+            }
             object.put("Carvin",carNo);
             object.put("Partslist",pjStr);
             object.put("Stype",1);
