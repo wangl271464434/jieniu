@@ -61,7 +61,7 @@ public class VinCar implements Serializable {
         }
 
         public String getLogos() {
-            return Logos;
+            return Logos.replace("https:////","https://");
         }
 
         public void setLogos(String Logos) {

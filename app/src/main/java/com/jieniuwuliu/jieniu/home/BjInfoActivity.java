@@ -65,6 +65,10 @@ public class BjInfoActivity extends BaseActivity {
     LinearLayout layoutImg;
     @BindView(R.id.btn)
     Button btn;
+    @BindView(R.id.layout_no)
+    LinearLayout layoutNo;
+    @BindView(R.id.tv_no)
+    TextView tvNo;
     private BJOrder.DataBean data;
     private String token;
     private List<Machine> list;

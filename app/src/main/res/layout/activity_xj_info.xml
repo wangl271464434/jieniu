@@ -63,14 +63,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/img"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/size_15dp"
             android:layout_marginRight="@dimen/size_10dp"
             android:text="福特 福克斯 2017款 三厢1.6L自动风尚型智行版"
-            android:lineSpacingExtra="@dimen/size_3dp"
             android:textSize="@dimen/size_16sp"
             android:textColor="@color/black"
             />
+        <LinearLayout
+            android:id="@+id/layout_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/img"
+            android:layout_below="@id/tv_name"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_5dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="车架号："
+                android:textSize="@dimen/size_15sp"
+                android:textColor="@color/xj_text"
+                />
+            <TextView
+                android:id="@+id/tv_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/size_15sp"
+                android:textColor="@color/blue"
+                />
+        </LinearLayout>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

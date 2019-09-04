@@ -71,7 +71,7 @@ public class XJCarTypeActivity extends BaseActivity {
                 searchCar(vin);
                 break;
             case R.id.layout_vin:
-                String carNum = edit.getText().toString();
+                String carNum = edit.getText().toString().toUpperCase();
                 intent = new Intent();
                 intent.setClass(this,XjInfoActivity.class);
                 intent.putExtra("data",vinCar.getData());

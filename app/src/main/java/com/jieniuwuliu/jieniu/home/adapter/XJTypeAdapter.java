@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.bean.Machine;
 import com.jieniuwuliu.jieniu.home.BjInfoActivity;
+import com.jieniuwuliu.jieniu.home.XJContentActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
 import java.util.List;
@@ -56,6 +57,11 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
             viewHolder.checkBox.setChecked(true);
         }else{
             viewHolder.checkBox.setChecked(false);
+        }
+        if (XJContentActivity.state == 3){
+            viewHolder.checkBox.setEnabled(false);
+        }else{
+            viewHolder.checkBox.setEnabled(true);
         }
         if ("".equals(item.getMoney()) && "0".equals(item.getMoney())
                 &&"0.0".equals(item.getMoney()) && "0.00".equals(item.getMoney())){

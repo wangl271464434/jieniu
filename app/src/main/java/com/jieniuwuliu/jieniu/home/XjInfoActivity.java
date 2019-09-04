@@ -3,8 +3,11 @@ package com.jieniuwuliu.jieniu.home;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -26,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
@@ -68,6 +72,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -89,6 +94,10 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
     RecyclerView recyclerView;
     @BindView(R.id.et_remark)
     EditText etRemark;
+    @BindView(R.id.layout_no)
+    LinearLayout layoutNo;
+    @BindView(R.id.tv_no)
+    TextView tvNo;
     private AlertDialog dialog;
     private List<Machine> list;
     private XjAddMachieAdapter adapter;
@@ -122,9 +131,10 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         if (data != null) {
             GlideUtil.setImgUrl(this, data.getLogos(), img);
             if ("暂无车架号".equals(carNo)){
-                tvName.setText(data.getCartype());
+               layoutNo.setVisibility(View.GONE);
             }else{
-                tvName.setText(data.getCartype()+" "+carNo);
+                layoutNo.setVisibility(View.VISIBLE);
+                tvNo.setText(carNo);
             }
         }
         list = new ArrayList<>();
@@ -133,7 +143,14 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         adapter = new XjAddMachieAdapter(this, list);
         recyclerView.setAdapter(adapter);
     }
-
+    @OnLongClick(R.id.tv_no)
+    public boolean onLongClicked(View view){
+        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Label", carNo);
+        manager.setPrimaryClip(clipData);
+        MyToast.show(this, "复制成功");
+        return false;
+    }
     @OnClick({R.id.layout_back, R.id.tv_add, R.id.img1, R.id.img2, R.id.img3, R.id.btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -223,11 +240,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
             object.put("Remarks",remark);
             object.put("Logos",data.getLogos());
             object.put("Cartype",data.getBrand());
-            if ("暂无车架号".equals(carNo)){
-                object.put("Carbrand",data.getCartype());
-            }else{
-                object.put("Carbrand",data.getCartype()+" "+carNo);
-            }
+            object.put("Carbrand",data.getCartype());
             object.put("Carvin",carNo);
             object.put("Partslist",pjStr);
             object.put("Stype",1);
