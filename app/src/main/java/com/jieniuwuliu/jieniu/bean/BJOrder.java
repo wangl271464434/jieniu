@@ -49,10 +49,19 @@ public class BJOrder implements Serializable{
         private String logos;
         private String cartype;
         private String carbrand;
+        private String carvin;
         private String gode ="";
         private int stype;
         private int pcount;
         private String partslist;
+
+        public String getCarvin() {
+            return carvin;
+        }
+
+        public void setCarvin(String carvin) {
+            this.carvin = carvin;
+        }
 
         public int getId() {
             return id;

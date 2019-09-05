@@ -75,14 +75,12 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     MapView map;
     @BindView(R.id.rv)
     RecyclerView rv;
-
     @BindView(R.id.tv_state)
     TextView tvState;
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
-
     private boolean isShow = false;
     private AMap aMap;
     protected Unbinder unbinder;
@@ -299,9 +297,21 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                         return;
                     }
                     long duration = drivePath.getDuration();
-                    tvState.setText("正在配送中");
                     tvTime.setVisibility(View.VISIBLE);
-                    tvTime.setText("预计"+TimeUtil.formatDateTime(duration)+"后送达");
+                    if (orderWuliuInfo.getOrderList()!=null){
+                        if (orderWuliuInfo.getOrderList().size()>0){
+                            if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")){
+                                tvState.setText("已签收");
+                                tvTime.setText("已送达");
+                            }else{
+                                tvState.setText("正在配送中");
+                                tvTime.setText("预计"+TimeUtil.formatDateTime(duration)+"后送达");
+                            }
+                        }
+                    }else{
+                        tvState.setText("正在配送中");
+                        tvTime.setText("预计"+TimeUtil.formatDateTime(duration)+"后送达");
+                    }
                     DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(
                             mContext,
                             aMap,

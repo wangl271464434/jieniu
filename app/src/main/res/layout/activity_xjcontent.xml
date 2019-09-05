@@ -65,12 +65,35 @@
                 android:textColor="@color/black"
                 android:text="福特 福克斯 2017款 三厢1.6L自动风尚型智行版"
                 />
+            <LinearLayout
+                android:id="@+id/layout_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/img"
+                android:layout_below="@id/tv_name"
+                android:layout_marginTop="@dimen/size_5dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="车架号："
+                    android:textSize="@dimen/size_15sp"
+                    android:textColor="@color/black"
+                    />
+                <TextView
+                    android:id="@+id/tv_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/size_15sp"
+                    android:textColor="@color/blue"
+                    />
+            </LinearLayout>
             <TextView
                 android:id="@+id/tv_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/size_12sp"
-                android:layout_marginTop="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_5dp"
                 android:text="前轮"
                 android:textColor="@color/xj_text"
                 />
@@ -79,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/size_12sp"
-                android:layout_marginTop="@dimen/size_10dp"
+                android:layout_marginTop="@dimen/size_5dp"
                 android:textColor="@color/xj_text"
                 android:text="2019-07-30  12:14:30"
                 />

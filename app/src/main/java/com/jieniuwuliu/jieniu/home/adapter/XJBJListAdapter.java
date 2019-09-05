@@ -18,9 +18,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHolder> {
+public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHolder> implements XJTypeAdapter.CallBack {
     private Activity context;
-    public static List<Machine> list;
+    private  List<Machine> list;
+    private CallBack callBack;
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
 
     public XJBJListAdapter(Activity context, List<Machine> list) {
         this.list = list;
@@ -45,6 +50,7 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
             viewHolder.recyclerView.setLayoutManager(manager);
             XJTypeAdapter adapter = new XJTypeAdapter(context,item.getList());
             viewHolder.recyclerView.setAdapter(adapter);
+            adapter.setCallBack(this);
         }
         if (!item.getExp().equals("")){
             viewHolder.tvExp.setVisibility(View.VISIBLE);
@@ -58,6 +64,13 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
         return list.size();
     }
 
+    @Override
+    public void notifyData() {
+        callBack.notifyList(list);
+    }
+    public interface CallBack{
+        void notifyList(List<Machine> machines);
+    }
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)
         TextView tvName;

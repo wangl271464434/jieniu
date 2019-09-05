@@ -1,5 +1,8 @@
 package com.jieniuwuliu.jieniu.home;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -88,6 +92,12 @@ public class BjInfoActivity extends BaseActivity {
         loading = new MyLoading(this, R.style.CustomDialog);
         list = new ArrayList<>();
         data = (BJOrder.DataBean) getIntent().getSerializableExtra("data");
+        if ("暂无车架号".equals(data.getCarvin())||"".equals(data.getCarvin())){
+            layoutNo.setVisibility(View.GONE);
+        }else{
+            layoutNo.setVisibility(View.VISIBLE);
+            tvNo.setText(data.getCarvin());
+        }
         state = data.getStype();
         switch (state){
             case 1:
@@ -158,7 +168,14 @@ public class BjInfoActivity extends BaseActivity {
         adapter = new BJInfoAdapter(this, list);
         recyclerView.setAdapter(adapter);
     }
-
+    @OnLongClick(R.id.tv_no)
+    public boolean onLongClicked(View view){
+        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Label", data.getCarvin());
+        manager.setPrimaryClip(clipData);
+        MyToast.show(this, "复制成功");
+        return false;
+    }
     @OnClick({R.id.layout_back,R.id.img1,R.id.img2,R.id.img3, R.id.btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {

@@ -29,6 +29,11 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
     private Activity context;
     private OnItemClickListener listener;
     private List<Machine.Type> list;
+    private CallBack callBack;
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
 
     public XJTypeAdapter(Activity context, List<Machine.Type> list) {
         this.list = list;
@@ -75,6 +80,7 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
                 if (buttonView.isPressed()){
                     item.setChecked(isChecked);
                     notifyItemChanged(i);
+                    callBack.notifyData();
                 }
             }
         });
@@ -84,7 +90,9 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
     public int getItemCount() {
         return list.size();
     }
-
+    public interface CallBack{
+        void notifyData();
+    }
     @Override
     public void onClick(View view) {
         if (listener != null) {

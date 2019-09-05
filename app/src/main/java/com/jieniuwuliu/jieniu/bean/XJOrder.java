@@ -74,6 +74,15 @@ public class XJOrder implements Serializable {
         private int stype;
         private int count;
         private String partslist;
+        private String carvin;
+
+        public String getCarvin() {
+            return carvin;
+        }
+
+        public void setCarvin(String carvin) {
+            this.carvin = carvin;
+        }
 
         public int getCount() {
             return count;

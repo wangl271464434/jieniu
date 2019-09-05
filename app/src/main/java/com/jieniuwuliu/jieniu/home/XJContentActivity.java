@@ -1,11 +1,15 @@
 package com.jieniuwuliu.jieniu.home;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -36,6 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -57,6 +62,10 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
     RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SmartRefreshLayout refresh;
+    @BindView(R.id.layout_no)
+    LinearLayout layoutNo;
+    @BindView(R.id.tv_no)
+    TextView tvNo;
     private XJOrder.DataBean data;
     private String token;
     private MyLoading loading;
@@ -71,6 +80,12 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
     @Override
     protected void init() {
         data = (XJOrder.DataBean) getIntent().getSerializableExtra("data");
+        if ("暂无车架号".equals(data.getCarvin())||"".equals(data.getCarvin())){
+            layoutNo.setVisibility(View.GONE);
+        }else{
+            layoutNo.setVisibility(View.VISIBLE);
+            tvNo.setText(data.getCarvin());
+        }
         state = data.getStype();
         loading = new MyLoading(this,R.style.CustomDialog);
         list = new ArrayList<>();
@@ -142,7 +157,14 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
             }
         });
     }
-
+    @OnLongClick(R.id.tv_no)
+    public boolean onLongClicked(View view){
+        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Label", data.getCarvin());
+        manager.setPrimaryClip(clipData);
+        MyToast.show(this, "复制成功");
+        return false;
+    }
     @OnClick(R.id.layout_back)
     public void onViewClicked() {
         finish();
@@ -151,12 +173,11 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
     @Override
     public void sureInfo(XjInfo.DataBean item) {
         loading.show();
-        String json = GsonUtil.listToJson(XJBJListAdapter.list);
         try {
             JSONObject object = new JSONObject();
             object.put("ID",data.getId());
             object.put("Pid",item.getPid());
-            object.put("Partslist",json);
+            object.put("Partslist",item.getPartslist());
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).putXJOrderInfo(body);
             call.enqueue(new SimpleCallBack<ResponseBody>(this) {

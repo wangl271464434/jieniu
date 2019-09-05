@@ -42,7 +42,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.ViewHolder> implements View.OnClickListener {
+public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.ViewHolder> implements View.OnClickListener{
 
     private Activity context;
     private OnItemClickListener listener;
@@ -111,6 +111,12 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         viewHolder.recyclerView.setLayoutManager(manager);
         XJBJListAdapter adapter = new XJBJListAdapter(context,machines);
         viewHolder.recyclerView.setAdapter(adapter);
+        adapter.setCallBack(new XJBJListAdapter.CallBack() {
+            @Override
+            public void notifyList(List<Machine> machines) {
+                item.setPartslist(GsonUtil.listToJson(machines));
+            }
+        });
         viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
