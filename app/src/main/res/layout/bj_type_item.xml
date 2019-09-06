@@ -25,7 +25,7 @@
             >
             <EditText
                 android:id="@+id/et_num"
-                android:layout_width="@dimen/size_50dp"
+                android:layout_width="@dimen/size_70dp"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:maxLength="8"
