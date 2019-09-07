@@ -55,24 +55,25 @@ public class RecomStoreAdapter extends RecyclerView.Adapter<RecomStoreAdapter.Vi
         viewHolder.itemView.setTag(i);
         if (list.size()>0){
             RecomStore.DataBean item = list.get(i);
-            if (item.getFuwuCar()!=null){
-                if (item.getFuwuCar().size()>0){
-                    viewHolder.rv.setVisibility(View.VISIBLE);
-                    viewHolder.tvInfo.setVisibility(View.GONE);
-                    LinearLayoutManager carManager = new LinearLayoutManager(context);
-                    carManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                    viewHolder.rv.setLayoutManager(carManager);
-                    CartypeAdapter cartypeAdapter = new CartypeAdapter(context,item.getFuwuCar());
-                    viewHolder.rv.setAdapter(cartypeAdapter);
-                }else{
-                    viewHolder.rv.setVisibility(View.GONE);
-                }
-            }else{
-                viewHolder.rv.setVisibility(View.GONE);
-                if ("".equals(item.getYewu())){
-                    viewHolder.tvInfo.setVisibility(View.VISIBLE);
-                    viewHolder.tvInfo.setText("经营范围："+item.getYewu());
-                }
+            switch (item.getPsntype()){
+                case 1:
+                    if (item.getFuwuCar()!=null){
+                        viewHolder.rv.setVisibility(View.VISIBLE);
+                        viewHolder.tvInfo.setVisibility(View.GONE);
+                        LinearLayoutManager carManager = new LinearLayoutManager(context);
+                        carManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                        viewHolder.rv.setLayoutManager(carManager);
+                        CartypeAdapter cartypeAdapter = new CartypeAdapter(context,item.getFuwuCar());
+                        viewHolder.rv.setAdapter(cartypeAdapter);
+                    }
+                    break;
+                    default:
+                        viewHolder.rv.setVisibility(View.GONE);
+                        if (!"".equals(item.getYewu())){
+                            viewHolder.tvInfo.setVisibility(View.VISIBLE);
+                            viewHolder.tvInfo.setText("经营范围："+item.getYewu());
+                        }
+                        break;
             }
             GlideUtil.setRoundImg(context,item.getPhoto(),viewHolder.img);
             viewHolder.name.setText(item.getName());

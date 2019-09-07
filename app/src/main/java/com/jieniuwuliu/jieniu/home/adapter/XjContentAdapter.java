@@ -48,6 +48,7 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
     private OnItemClickListener listener;
     private List<XjInfo.DataBean> list;
     private CallBack callBack;
+    private int current = -1 ;
     private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
             Manifest.permission.PROCESS_OUTGOING_CALLS};
     public XjContentAdapter(Activity context, List<XjInfo.DataBean> list) {
@@ -113,8 +114,8 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         viewHolder.recyclerView.setAdapter(adapter);
         adapter.setCallBack(new XJBJListAdapter.CallBack() {
             @Override
-            public void notifyList(List<Machine> machines) {
-                item.setPartslist(GsonUtil.listToJson(machines));
+            public void current(int currentPosition) {
+
             }
         });
         viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +141,20 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         viewHolder.tvBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callBack.sureInfo(item);
+                if (current != -1){
+                    if (current == i){
+                        if (Constant.LIST.size()>0){
+                            callBack.sureInfo(item);
+                        }else{
+                            MyToast.show(context,"请选择您想购买的配件");
+                        }
+                    }else{
+                        MyToast.show(context,"请点击正确的购买按键");
+                    }
+                }else{
+                    MyToast.show(context,"请选择您想购买的配件");
+                }
+
             }
         });
     }

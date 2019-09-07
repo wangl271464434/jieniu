@@ -182,7 +182,9 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                     }
-                    RecomStore recomStore = (RecomStore) GsonUtil.praseJsonToModel(response.body().string(),RecomStore.class);
+                    String json = response.body().string();
+                    Log.i("json",json);
+                    RecomStore recomStore = (RecomStore) GsonUtil.praseJsonToModel(json,RecomStore.class);
                     if (recomStore.getData().size()<10){
                         refreshLayout.setNoMoreData(true);
                     }else{

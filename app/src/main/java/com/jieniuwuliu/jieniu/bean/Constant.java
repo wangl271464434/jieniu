@@ -1,5 +1,8 @@
 package com.jieniuwuliu.jieniu.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constant {
     public static String PHONE = "phone";//手机号
     public static String PWD = "pwd";//手机号
@@ -20,4 +23,5 @@ public class Constant {
     public static boolean isCall = false;
     public static final int PIC_CODE = 1001;//请求系统相册的请求码
     public static final int CAMERA_CODE = 1002;//请求相机的请求码
+    public static final List<Machine> LIST = new ArrayList<>();//请求相机的请求码
 }

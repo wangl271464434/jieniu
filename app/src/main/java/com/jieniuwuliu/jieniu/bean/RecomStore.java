@@ -3,13 +3,6 @@ package com.jieniuwuliu.jieniu.bean;
 import java.util.List;
 
 public class RecomStore {
-
-    /**
-     * status : 0
-     * msg : 成功
-     * data : [{"id":4,"CreatedAt":"2019-05-13T10:39:01Z","UpdatedAt":"2019-05-13T10:39:01Z","uid":36,"name":"玉林汽配","photo":"http://jieniu-1254151230.cos.ap-beijing.myqcloud.com/img/IMG20190401120155.jpg"}]
-     */
-
     private int status;
     private String msg;
     private List<DataBean> data;
@@ -52,12 +45,21 @@ public class RecomStore {
         private String CreatedAt;
         private String UpdatedAt;
         private int uid;
+        private int psntype;
         private String name;
         private String photo;
         private String address;
         private String label;
         private String yewu;
         private List<Car> fuwuCar;
+
+        public int getPsntype() {
+            return psntype;
+        }
+
+        public void setPsntype(int psntype) {
+            this.psntype = psntype;
+        }
 
         public String getYewu() {
             return yewu;

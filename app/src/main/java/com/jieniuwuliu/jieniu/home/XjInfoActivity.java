@@ -130,7 +130,7 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         carNo = getIntent().getStringExtra("carNo");
         if (data != null) {
             GlideUtil.setImgUrl(this, data.getLogos(), img);
-            if ("暂无车架号".equals(carNo)){
+            if ("暂无车架号".equals(carNo) || carNo == null){
                layoutNo.setVisibility(View.GONE);
             }else{
                 layoutNo.setVisibility(View.VISIBLE);

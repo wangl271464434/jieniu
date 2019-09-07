@@ -39,7 +39,7 @@
                 android:id="@+id/tv_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="经营车型："
+                android:text="经营范围："
                 android:textSize="@dimen/size_12sp"
                 android:textColor="@color/light_black"
                 android:singleLine="true"

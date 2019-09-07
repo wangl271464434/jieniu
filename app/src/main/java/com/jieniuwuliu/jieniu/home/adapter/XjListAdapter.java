@@ -87,6 +87,7 @@ public class XjListAdapter extends RecyclerView.Adapter<XjListAdapter.ViewHolder
         switch (item.getStype()){
             case 1:
                 viewHolder.tvState.setText("询价中");
+                viewHolder.tvCancel.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 viewHolder.tvState.setText("已取消");
