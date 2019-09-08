@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.Machine;
+import com.jieniuwuliu.jieniu.bean.XjInfo;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHolder>{
+public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHolder> implements XJTypeAdapter.CallBack {
     private Activity context;
     private  List<Machine> list;
     private CallBack callBack;
@@ -50,17 +50,7 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
             viewHolder.recyclerView.setLayoutManager(manager);
             XJTypeAdapter adapter = new XJTypeAdapter(context,item.getList());
             viewHolder.recyclerView.setAdapter(adapter);
-            adapter.setCallBack(new XJTypeAdapter.CallBack() {
-                @Override
-                public void notifyData(boolean isChecked) {
-                    if (isChecked){
-                        Constant.LIST.add(list.get(i));
-                    }else{
-                        Constant.LIST.remove(list.get(i));
-                    }
-                    callBack.current(i);
-                }
-            });
+            adapter.setCallBack(this);
         }
         if (!item.getExp().equals("")){
             viewHolder.tvExp.setVisibility(View.VISIBLE);
@@ -73,8 +63,13 @@ public class XJBJListAdapter extends RecyclerView.Adapter<XJBJListAdapter.ViewHo
     public int getItemCount() {
         return list.size();
     }
+
+    @Override
+    public void notifyData() {
+        callBack.notifyList(list);
+    }
     public interface CallBack{
-        void current(int currentPosition);
+        void notifyList(List<Machine> machines);
     }
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)

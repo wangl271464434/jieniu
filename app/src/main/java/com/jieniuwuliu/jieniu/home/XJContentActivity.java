@@ -171,14 +171,14 @@ public class XJContentActivity extends BaseActivity implements XjContentAdapter.
     }
 
     @Override
-    public void sureInfo(XjInfo.DataBean item) {
+    public void sureInfo(int position) {
         loading.show();
+        XjInfo.DataBean item = list.get(position);
         try {
-            String json = GsonUtil.listToJson(Constant.LIST);
             JSONObject object = new JSONObject();
             object.put("ID",data.getId());
             object.put("Pid",item.getPid());
-            object.put("Partslist",json);
+            object.put("Partslist",item.getPartslist());
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).putXJOrderInfo(body);
             call.enqueue(new SimpleCallBack<ResponseBody>(this) {

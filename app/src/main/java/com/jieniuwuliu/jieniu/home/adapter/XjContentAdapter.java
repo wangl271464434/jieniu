@@ -29,6 +29,7 @@ import com.jieniuwuliu.jieniu.bean.XjInfo;
 import com.jieniuwuliu.jieniu.home.XJContentActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.view.MyLoading;
+import com.lljjcoder.citylist.Toast.ToastUtils;
 
 import org.json.JSONObject;
 
@@ -48,7 +49,7 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
     private OnItemClickListener listener;
     private List<XjInfo.DataBean> list;
     private CallBack callBack;
-    private int current = -1 ;
+    private int current = -1;
     private String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
             Manifest.permission.PROCESS_OUTGOING_CALLS};
     public XjContentAdapter(Activity context, List<XjInfo.DataBean> list) {
@@ -114,8 +115,9 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
         viewHolder.recyclerView.setAdapter(adapter);
         adapter.setCallBack(new XJBJListAdapter.CallBack() {
             @Override
-            public void current(int currentPosition) {
-
+            public void notifyList(List<Machine> machines) {
+                current = i;
+                item.setPartslist(GsonUtil.listToJson(machines));
             }
         });
         viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
@@ -143,23 +145,19 @@ public class XjContentAdapter extends RecyclerView.Adapter<XjContentAdapter.View
             public void onClick(View view) {
                 if (current != -1){
                     if (current == i){
-                        if (Constant.LIST.size()>0){
-                            callBack.sureInfo(item);
-                        }else{
-                            MyToast.show(context,"请选择您想购买的配件");
-                        }
+                        callBack.sureInfo(i);
+                        current = -1;
                     }else{
-                        MyToast.show(context,"请点击正确的购买按键");
+                        MyToast.show(context,"请您选择想要购买的配件");
                     }
                 }else{
-                    MyToast.show(context,"请选择您想购买的配件");
+                    MyToast.show(context,"请您选择想要购买的配件");
                 }
-
             }
         });
     }
     public interface CallBack{
-        void sureInfo(XjInfo.DataBean item);
+        void sureInfo(int position);
     }
     @Override
     public int getItemCount() {

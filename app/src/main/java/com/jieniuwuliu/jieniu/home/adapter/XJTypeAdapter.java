@@ -3,15 +3,19 @@ package com.jieniuwuliu.jieniu.home.adapter;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.bean.Machine;
+import com.jieniuwuliu.jieniu.home.BjInfoActivity;
 import com.jieniuwuliu.jieniu.home.XJContentActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
@@ -26,6 +30,7 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
     private OnItemClickListener listener;
     private List<Machine.Type> list;
     private CallBack callBack;
+
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
     }
@@ -75,7 +80,7 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
                 if (buttonView.isPressed()){
                     item.setChecked(isChecked);
                     notifyItemChanged(i);
-                    callBack.notifyData(isChecked);
+                    callBack.notifyData();
                 }
             }
         });
@@ -86,7 +91,7 @@ public class XJTypeAdapter extends RecyclerView.Adapter<XJTypeAdapter.ViewHolder
         return list.size();
     }
     public interface CallBack{
-        void notifyData(boolean isChecked);
+        void notifyData();
     }
     @Override
     public void onClick(View view) {

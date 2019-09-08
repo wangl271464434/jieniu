@@ -9,7 +9,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword '123456'
-            storeFile file('F:\\AndroidProject\\jieniu\\jieniu.jks')
+            storeFile file('C:/Users/wl/Desktop/jieniu/jieniu.jks')
             storePassword '123456'
         }
     }
@@ -19,8 +19,8 @@ android {
         applicationId "com.jieniuwuliu.jieniu"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 12
-        versionName "2.0.1"
+        versionCode 13
+        versionName "2.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64', 'mips', "mips64"
