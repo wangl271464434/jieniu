@@ -67,7 +67,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/orange"
                 android:textSize="@dimen/size_15sp"
-                android:visibility="invisible"
                 />
         </RelativeLayout>
         <TextView

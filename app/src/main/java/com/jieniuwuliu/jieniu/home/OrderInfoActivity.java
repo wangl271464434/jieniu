@@ -161,7 +161,33 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 try {
                     String json = new JSONObject(response.body().string()).getString("data");
                     orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
-                    tvState.setText("正在发货中");
+                    if (orderWuliuInfo.getPtime() != null){
+                        if (Constant.DEFAULTTIME.equals(orderWuliuInfo.getPtime())){
+                            tvState.setText("正在发货中");
+                            tvTime.setText("等待配送员配送");
+                        }else{
+                            long  a = TimeUtil.getMiliSecond(orderWuliuInfo.getPtime());
+                            for (int i = 0;i<orderWuliuInfo.getOrderList().size();i++){
+                                if ("已签收".equals(orderWuliuInfo.getOrderList().get(i).getMsg())){
+                                    long time = TimeUtil.getMiliSecond(orderWuliuInfo.getOrderList().get(i).getCreatedAt()) - a;
+                                    String s = TimeUtil.formatDateTime(time/1000) ;
+                                    tvState.setText("已完成");
+                                    tvTime.setText("共耗时"+s+"完成");
+                                    break;
+                                }else{
+                                    long b = a - System.currentTimeMillis();
+                                    if (b>0){
+                                        tvState.setText("正在配送中");
+                                        tvTime.setText("预计"+TimeUtil.formatDateTime(b/1000)+"后到达");
+                                    }else{
+                                        tvState.setText("正在配送中");
+                                        tvTime.setText("已超时"+TimeUtil.formatDateTime(Math.abs(b/1000))+"后到达");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     list.addAll(orderWuliuInfo.getOrderList());
                     adapter.notifyDataSetChanged();
                     setLine();
@@ -295,22 +321,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                     DrivePath drivePath = driveRouteResult.getPaths().get(0);
                     if (drivePath == null) {
                         return;
-                    }
-                    long duration = drivePath.getDuration();
-                    tvTime.setVisibility(View.VISIBLE);
-                    if (orderWuliuInfo.getOrderList()!=null){
-                        if (orderWuliuInfo.getOrderList().size()>0){
-                            if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")){
-                                tvState.setText("已签收");
-                                tvTime.setText("已送达");
-                            }else{
-                                tvState.setText("正在配送中");
-                                tvTime.setText("预计"+TimeUtil.formatDateTime(duration)+"后送达");
-                            }
-                        }
-                    }else{
-                        tvState.setText("正在配送中");
-                        tvTime.setText("预计"+TimeUtil.formatDateTime(duration)+"后送达");
                     }
                     DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(
                             mContext,

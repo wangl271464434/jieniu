@@ -21,6 +21,7 @@ public class OrderInfo implements Serializable{
     private String toPhone;
     private int sendType;
     private String weight;
+    private String ptime;
     private int number;
     private int couponID;
     private int yunfeiMoney;
@@ -38,6 +39,14 @@ public class OrderInfo implements Serializable{
     private boolean cancelStatus;//是否取消
     private boolean isInvoice = false;//是否开发票
     private List<OrderListBean> orderList;
+
+    public String getPtime() {
+        return ptime;
+    }
+
+    public void setPtime(String ptime) {
+        this.ptime = ptime;
+    }
 
     public boolean isCancel() {
         return isCancel;
@@ -311,21 +320,6 @@ public class OrderInfo implements Serializable{
         this.info = info;
     }
     public static class OrderListBean implements Serializable {
-        /**
-         * ID : 1
-         * CreatedAt : 2019-04-30T18:22:18Z
-         * UpdatedAt : 2019-04-30T18:22:26Z
-         * OrderNumber : 1122395766657126400
-         * Uid : 2
-         * Name : 老王
-         * Status : false
-         * Phone : 18691487231
-         * Lat : 34.039598
-         * Lng : 108.58623
-         * Region : 东区
-         * Level : 1
-         */
-
         private int ID;
         private String CreatedAt;
         private String UpdatedAt;
