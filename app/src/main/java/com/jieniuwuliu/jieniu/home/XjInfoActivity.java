@@ -128,8 +128,8 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         data = (VinCar.Data) getIntent().getSerializableExtra("data");
         carNo = getIntent().getStringExtra("carNo");
-        tvName.setText(data.getCartype());
         if (data != null) {
+            tvName.setText(data.getCartype());
             GlideUtil.setImgUrl(this, data.getLogos(), img);
             if ("暂无车架号".equals(carNo) || carNo == null){
                layoutNo.setVisibility(View.GONE);
