@@ -181,7 +181,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                                         tvTime.setText("预计"+TimeUtil.formatDateTime(b/1000)+"后到达");
                                     }else{
                                         tvState.setText("正在配送中");
-                                        tvTime.setText("已超时"+TimeUtil.formatDateTime(Math.abs(b/1000))+"后到达");
+                                        tvTime.setText("已超时"+TimeUtil.formatDateTime(Math.abs(b/1000)));
                                     }
                                 }
                             }
