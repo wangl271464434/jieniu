@@ -54,7 +54,7 @@ public class App extends Application {
         api.registerApp(Constant.WXAPPID);
         //初始化Bugly
         CrashReport.initCrashReport(getApplicationContext(),Constant.BuglyId,false);
-        initBugly();
+//        initBugly();
     }
     private void initBugly() {
         /***** Beta高级设置 *****/

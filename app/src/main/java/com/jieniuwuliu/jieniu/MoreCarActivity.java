@@ -34,8 +34,6 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
     private MoreCarSortAdapter adapter;
     private List<Object> objects;
     private List<SortModel> SourceDateList;
-    private List<SortModel> list;//要传的数组
-    private List<SortModel> chooseList;//要传的数组
     /**
      * 根据拼音来排列RecyclerView里面的数据类
      */

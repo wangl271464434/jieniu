@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 允许程序设置内置sd卡的写权限 -->
@@ -26,14 +26,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
     <uses-feature
         android:name="android.hardware.camera2"
-        android:required="true" /> <!-- 打电话 -->
+        android:required="true" />
 
     <application
         android:name=".App"
@@ -45,19 +45,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".mine.ui.EditExpActivity"
-            />
-        <activity android:name=".home.MsgActivity"
-         />
+        <activity android:name=".qipeishang.QPSListActivity"></activity>
+        <activity android:name=".mine.ui.EditExpActivity" />
+        <activity android:name=".home.MsgActivity" />
         <activity
             android:name=".home.BjInfoActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".home.BJListActivity"
-           />
-        <activity android:name=".home.XJContentActivity"
-           />
-        <activity android:name=".home.AddCarDateActivity"
-         /> <!-- 获取临时读取存储权限 -->
+        <activity android:name=".home.BJListActivity" />
+        <activity android:name=".home.XJContentActivity" />
+        <activity android:name=".home.AddCarDateActivity" /> <!-- 获取临时读取存储权限 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.jieniuwuliu.jieniu.fileprovider"
@@ -69,8 +65,8 @@
         </provider> <!-- socket服务 -->
         <service
             android:name=".service.SocketService"
-            tools:remove="1000"
-            android:process=":remote" />
+            android:process=":remote"
+            tools:remove="1000" />
 
         <activity
             android:name=".MainActivity"
@@ -95,40 +91,32 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
-            android:screenOrientation="portrait"
-           /> <!-- 高德地图 -->
+            android:screenOrientation="portrait" /> <!-- 高德地图 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="014dc2eaeb4cbdedf205634f82cc75d9" />
 
         <activity
             android:name=".mine.ui.SettingActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.ModifyPwdActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ScanQCActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.MyScoreActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.MyTicketActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.MyCardActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".qipeishang.QPSORQXInfoActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.StoreCertifyActivity"
             android:screenOrientation="portrait"
@@ -138,16 +126,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.OrderInfoActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.FeedBackActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CarTypeActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".jijian.JiJianActivity"
             android:launchMode="singleTask"
@@ -159,12 +144,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.AddPicActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.SuoQuFaPiaoActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ForgetPwdActivity"
             android:screenOrientation="portrait" />
@@ -174,8 +157,7 @@
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".mine.ui.AddressListActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".jijian.JiJianSelectActivity"
             android:screenOrientation="portrait"
@@ -186,8 +168,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustUnspecified" />
         <activity
             android:name=".mine.ui.StoreInfoActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.EditInfoActivity"
             android:screenOrientation="portrait"
@@ -220,60 +201,45 @@
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".mine.ui.WorkTypeActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MoreCarActivity"
-            android:screenOrientation="portrait"
-         />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.AddStorePicActivity"
-            android:screenOrientation="portrait"
-          />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.CameraActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".mine.ui.EditFapiaoActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".jijian.EditShouAdrActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.LookPicActivity"
-            android:screenOrientation="portrait"
-          />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.VideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor"
-            />
+            android:screenOrientation="sensor" />
         <activity
             android:name=".jijian.PayTypeActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".luntan.MsgListActivity"
-            android:screenOrientation="portrait"
-           />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-        <activity android:name=".mine.ui.MonthCardPayActivity"
-           />
-        <activity android:name=".home.QPShopActivity"
-           />
-        <activity android:name=".jijian.ChoosePsyActivity"
-            />
-        <activity android:name=".home.OrderDescActivity"
-           />
-        <activity android:name=".mine.ui.BindWechatActivity"
-           />
+        <activity android:name=".mine.ui.MonthCardPayActivity" />
+        <activity android:name=".home.QPShopActivity" />
+        <activity android:name=".jijian.ChoosePsyActivity" />
+        <activity android:name=".home.OrderDescActivity" />
+        <activity android:name=".mine.ui.BindWechatActivity" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
@@ -284,10 +250,8 @@
         <activity
             android:name=".jijian.SearchStoreActivity"
             android:windowSoftInputMode="adjustPan|adjustResize" />
-        <activity android:name=".home.XJCarTypeActivity"
-            />
-        <activity android:name=".home.XjInfoActivity"
-          />
+        <activity android:name=".home.XJCarTypeActivity" />
+        <activity android:name=".home.XjInfoActivity" />
         <activity
             android:name=".home.XjAddCarTypeActivity"
             android:windowSoftInputMode="adjustPan|adjustResize" />
