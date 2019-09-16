@@ -40,6 +40,11 @@ import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
+import com.amap.api.services.weather.LocalWeatherForecastResult;
+import com.amap.api.services.weather.LocalWeatherLive;
+import com.amap.api.services.weather.LocalWeatherLiveResult;
+import com.amap.api.services.weather.WeatherSearch;
+import com.amap.api.services.weather.WeatherSearchQuery;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.Util.AMapUtil;
 import com.jieniuwuliu.jieniu.Util.GlideUtil;
@@ -70,7 +75,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener {
+public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener {
     @BindView(R.id.map)
     MapView map;
     @BindView(R.id.rv)
@@ -127,6 +132,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             //设置缩放级别
             aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         }
+        getWeather();
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
             @Override
             public void onTouch(MotionEvent motionEvent) {
@@ -145,6 +151,16 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         orderNo = getIntent().getStringExtra("orderNo");
         getOrderInfo();
+    }
+    /**
+     * 获取天气信息
+     * */
+    private void getWeather() {
+        WeatherSearchQuery query = new WeatherSearchQuery(Constant.CITY, WeatherSearchQuery.WEATHER_TYPE_LIVE);
+        WeatherSearch search = new WeatherSearch(this);
+        search.setOnWeatherSearchListener(this);
+        search.setQuery(query);
+        search.searchWeatherAsyn();
     }
 
     /**
@@ -350,6 +366,24 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 
     @Override
     public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {
+        if (i == 1000){
+            if (localWeatherLiveResult!=null){
+              LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
+              MyToast.show(getApplicationContext(),"当前城市天气为:"+weatherLive.getWeather());
+            }else{
+                MyToast.show(getApplicationContext(),"未查询到当前城市天气");
+
+            }
+        }
+    }
+
+    @Override
+    public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
 
     }
 }

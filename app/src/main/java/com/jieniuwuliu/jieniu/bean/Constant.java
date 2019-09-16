@@ -18,6 +18,7 @@ public class Constant {
     public static String MONTH_CARD = "月卡费用";
     public static String JIJIAN = "快递费用";
     public static String CALLPHONE = "";
+    public static String CITY = "";
     public static String DEFAULTTIME = "1970-01-01 08:00:00";
     public static boolean isCall = false;
     public static final int PIC_CODE = 1001;//请求系统相册的请求码

@@ -357,8 +357,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
-                String s = aMapLocation.getCity();
-               tvPosition.setText(s.substring(0,2));
+                Constant.CITY = aMapLocation.getCity();
+               tvPosition.setText(Constant.CITY.substring(0,2));
                getData();
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
