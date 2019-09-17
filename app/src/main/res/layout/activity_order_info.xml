@@ -59,6 +59,14 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_15sp"
                 />
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/orange"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/size_15sp"
+                android:textStyle="bold" />
         </RelativeLayout>
         <TextView
             android:id="@+id/btn_info"
@@ -73,15 +81,6 @@
             android:textSize="@dimen/size_13sp"
             android:textColor="@color/blue"
             />
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="411dp"
-            android:textColor="@color/orange"
-            android:textSize="@dimen/size_15sp"
-            android:textStyle="bold" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
