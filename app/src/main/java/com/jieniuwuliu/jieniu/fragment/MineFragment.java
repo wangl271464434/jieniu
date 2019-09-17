@@ -175,7 +175,7 @@ public class MineFragment extends BaseFragment implements OnItemClickListener, P
                                 tvType.setVisibility(View.GONE);
                                 break;
                             case 1:
-                                type = "配件商";
+                                type = "轿车客车";
                                 break;
                             case 2:
                                 type = "汽修厂";
@@ -185,6 +185,12 @@ public class MineFragment extends BaseFragment implements OnItemClickListener, P
                                 break;
                             case 4:
                                 type = "汽保工具";
+                                break;
+                            case 8:
+                                type = "货车轻卡";
+                                break;
+                            case 9:
+                                type = "单项易损";
                                 break;
                         }
                         tvType.setText(type);
