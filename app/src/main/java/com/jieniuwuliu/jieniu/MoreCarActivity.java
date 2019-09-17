@@ -1,13 +1,12 @@
 package com.jieniuwuliu.jieniu;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.LocalFileUtil;
-import com.jieniuwuliu.jieniu.Util.PinyinComparator;
+import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.LocalFileUtil;
+import com.jieniuwuliu.jieniu.util.PinyinComparator;
 import com.jieniuwuliu.jieniu.adapter.MoreCarSortAdapter;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.SortModel;
@@ -22,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MoreCarActivity extends BaseActivity implements OnItemClickListener {

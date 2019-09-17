@@ -11,6 +11,7 @@ public class StoreInfoBean implements Serializable{
     private String UpdatedAt;
     private int auth;
     private int personType;
+    private int partscity;
     private String nickname;
     private Address address;
     private String shopPhoto;
@@ -25,6 +26,14 @@ public class StoreInfoBean implements Serializable{
     private String wxName;
     private boolean isFollow;
     private List<Car> fuwuCar;
+
+    public int getPartscity() {
+        return partscity;
+    }
+
+    public void setPartscity(int partscity) {
+        this.partscity = partscity;
+    }
 
     public String getStoreinform() {
         return storeinform;

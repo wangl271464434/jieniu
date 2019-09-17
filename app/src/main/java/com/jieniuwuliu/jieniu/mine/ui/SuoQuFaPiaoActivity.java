@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.HttpUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
+import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.OrderInfo;

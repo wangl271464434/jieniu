@@ -1,15 +1,6 @@
 package com.jieniuwuliu.jieniu.jijian;
 
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +9,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.FileUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.messageEvent.WeightEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**

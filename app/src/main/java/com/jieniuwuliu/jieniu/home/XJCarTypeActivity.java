@@ -1,7 +1,6 @@
 package com.jieniuwuliu.jieniu.home;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,13 +9,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.GlideUtil;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.HttpUtil;
-import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
+import com.jieniuwuliu.jieniu.util.GlideUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
+import com.jieniuwuliu.jieniu.util.KeyboardUtil;
+import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.SPUtil;
+import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.VinCar;
@@ -25,9 +23,7 @@ import com.jieniuwuliu.jieniu.view.MyLoading;
 import org.json.JSONObject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 

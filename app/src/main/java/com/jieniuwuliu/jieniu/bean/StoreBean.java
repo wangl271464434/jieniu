@@ -63,6 +63,7 @@ public class StoreBean {
         private String CreatedAt;
         private String UpdatedAt;
         private int auth;
+        private int partscity;
         private int personType;
         private String nickname;
         private AddressBean address;
@@ -73,6 +74,14 @@ public class StoreBean {
         private String wechat;
         private List<Car> fuwuCar;
         private double distance;
+
+        public int getPartscity() {
+            return partscity;
+        }
+
+        public void setPartscity(int partscity) {
+            this.partscity = partscity;
+        }
 
         public double getDistance() {
             return distance;

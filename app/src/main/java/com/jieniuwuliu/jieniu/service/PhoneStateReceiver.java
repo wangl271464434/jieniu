@@ -8,9 +8,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.jieniuwuliu.jieniu.Util.HttpUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
+import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
 
 import okhttp3.ResponseBody;

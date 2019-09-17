@@ -1,7 +1,6 @@
 package com.jieniuwuliu.jieniu.mine.ui;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -10,36 +9,24 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
-import com.fasterxml.jackson.core.io.JsonEOFException;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.AliPayUtil;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.HttpUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
-import com.jieniuwuliu.jieniu.Util.TimeUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
+import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.SPUtil;
+import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.PayResult;
-import com.jieniuwuliu.jieniu.jijian.PayTypeActivity;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -48,7 +35,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**

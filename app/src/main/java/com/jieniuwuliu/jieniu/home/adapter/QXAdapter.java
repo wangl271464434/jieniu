@@ -3,27 +3,19 @@ package com.jieniuwuliu.jieniu.home.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.route.DistanceResult;
-import com.amap.api.services.route.DistanceSearch;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.DistanceUtil;
-import com.jieniuwuliu.jieniu.Util.GlideUtil;
+import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
-import com.jieniuwuliu.jieniu.home.QXActivity;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

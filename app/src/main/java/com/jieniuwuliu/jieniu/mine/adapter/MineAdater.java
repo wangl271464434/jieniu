@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.MenuItem;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;

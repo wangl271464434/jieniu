@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 
 import java.io.File;

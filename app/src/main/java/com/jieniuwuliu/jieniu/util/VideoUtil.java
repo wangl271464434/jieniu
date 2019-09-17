@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;

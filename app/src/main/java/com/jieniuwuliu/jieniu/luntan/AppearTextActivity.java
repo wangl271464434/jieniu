@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -22,14 +21,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.FileUtil;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.HttpUtil;
-import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
-import com.jieniuwuliu.jieniu.Util.UpLoadFileUtil;
+import com.jieniuwuliu.jieniu.util.FileUtil;
+import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
+import com.jieniuwuliu.jieniu.util.KeyboardUtil;
+import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.SPUtil;
+import com.jieniuwuliu.jieniu.util.SimpleCallBack;
+import com.jieniuwuliu.jieniu.util.UpLoadFileUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -58,7 +57,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +65,6 @@ import butterknife.OnClick;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 

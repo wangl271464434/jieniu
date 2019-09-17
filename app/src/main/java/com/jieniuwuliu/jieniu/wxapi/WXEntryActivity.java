@@ -4,9 +4,8 @@ package com.jieniuwuliu.jieniu.wxapi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.jieniuwuliu.jieniu.Util.MyToast;
+import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.messageEvent.WeChatEvent;
 import com.tencent.mm.opensdk.modelbase.BaseReq;

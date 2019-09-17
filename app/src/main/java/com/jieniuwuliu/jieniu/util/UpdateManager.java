@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,12 +12,7 @@ import java.net.URL;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.AlertDialog.Builder;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -27,8 +22,6 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;

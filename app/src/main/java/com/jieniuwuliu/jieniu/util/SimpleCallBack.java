@@ -1,13 +1,10 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.jieniuwuliu.jieniu.LoginActivity;
-
-import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;

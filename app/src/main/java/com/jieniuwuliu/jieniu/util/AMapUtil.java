@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;

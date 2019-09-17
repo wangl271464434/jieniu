@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

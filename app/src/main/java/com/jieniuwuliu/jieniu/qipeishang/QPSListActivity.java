@@ -56,6 +56,7 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
     private boolean isShow = false;
     private List<String> types;
     private TypeQPSAdater typeQPSAdater;
+    private int partsType = 2;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qpslist;
@@ -67,9 +68,9 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
         refreshlayout.setOnRefreshListener(this);
         refreshlayout.setOnLoadMoreListener(this);
         types = new ArrayList<>();
-        types.add("全部汽配城");
+        types.add("欢乐港汽配城");
         types.add("海纳汽配城");
-        types.add("三桥汽配城");
+        types.add("玉林汽配城");
         types.add("其他汽配城");
         LinearLayoutManager typeManager = new LinearLayoutManager(this);
         rvType.setLayoutManager(typeManager);
@@ -79,6 +80,20 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
             @Override
             public void onItemClick(View view, int position) {
                 title.setText(types.get(position));
+                switch (types.get(position)){
+                    case "欢乐港汽配城":
+                        partsType = 1;
+                        break;
+                    case "海纳汽配城":
+                        partsType = 2;
+                        break;
+                    case "玉林汽配城":
+                        partsType = 3;
+                        break;
+                    case "其他汽配城":
+                        partsType = 0;
+                        break;
+                }
                 img.setImageResource(R.mipmap.qps_down);
                 rvType.setVisibility(View.GONE);
                 isShow = false;

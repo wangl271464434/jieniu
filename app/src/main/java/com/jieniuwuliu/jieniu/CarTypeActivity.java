@@ -3,9 +3,9 @@ package com.jieniuwuliu.jieniu;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.LocalFileUtil;
-import com.jieniuwuliu.jieniu.Util.PinyinComparator;
+import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.LocalFileUtil;
+import com.jieniuwuliu.jieniu.util.PinyinComparator;
 import com.jieniuwuliu.jieniu.adapter.SortAdapter;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
@@ -39,7 +39,8 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
      * 根据拼音来排列RecyclerView里面的数据类
      */
     private PinyinComparator pinyinComparator;
-    private String json,type;
+    private String json;
+    private int personType;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_car_type;
@@ -49,7 +50,7 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
     protected void init() {
         list = new ArrayList<>();
         chooseList = (List<SortModel>) getIntent().getSerializableExtra("list");
-        type = getIntent().getStringExtra("type");
+        personType = getIntent().getIntExtra("type",0);
         pinyinComparator = new PinyinComparator();
         //设置右侧SideBar触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -62,7 +63,7 @@ public class CarTypeActivity extends BaseActivity implements SortAdapter.CallBac
                 }
             }
         });
-        if (type.equals("小型汽车")){
+        if (personType == 1){
             json = LocalFileUtil.readTextFromSDcard(this);
         }else{
             json = LocalFileUtil.readKaCar(this);

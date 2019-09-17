@@ -9,11 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 
-import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.messageEvent.LuntanMsgEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

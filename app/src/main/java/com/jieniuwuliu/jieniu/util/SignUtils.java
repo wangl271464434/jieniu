@@ -1,7 +1,5 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
-
-import android.util.Log;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;

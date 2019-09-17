@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

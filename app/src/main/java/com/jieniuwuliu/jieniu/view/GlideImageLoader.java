@@ -3,9 +3,8 @@ package com.jieniuwuliu.jieniu.view;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.GlideUtil;
+import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.bean.ImgBanner;
 import com.youth.banner.loader.ImageLoader;
 

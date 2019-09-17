@@ -1,11 +1,8 @@
-package com.jieniuwuliu.jieniu.Util;
-
-import android.util.Log;
+package com.jieniuwuliu.jieniu.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class TimeUtil {
    /* public static String getDateStr(String string){

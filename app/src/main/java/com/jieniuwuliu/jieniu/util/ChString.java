@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 public class ChString {
 	public static final String Kilometer = "\u516c\u91cc";// "公里";

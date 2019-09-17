@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

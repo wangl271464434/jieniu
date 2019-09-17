@@ -2,7 +2,6 @@ package com.jieniuwuliu.jieniu.mine.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
@@ -12,27 +11,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.CarTypeActivity;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.GlideUtil;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.HttpUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
-import com.jieniuwuliu.jieniu.Util.SimpleCallBack;
+import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
+import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.SPUtil;
+import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.SortModel;
-import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.StoreCerity;
 import com.jieniuwuliu.jieniu.bean.StoreInfoBean;
 import com.jieniuwuliu.jieniu.bean.WorkType;
 import com.jieniuwuliu.jieniu.messageEvent.CarEvent;
-import com.jieniuwuliu.jieniu.qipeishang.QPSORQXInfoActivity;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,17 +37,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -88,6 +80,10 @@ public class StoreInfoActivity extends BaseActivity {
     TextView etTelephone;
     @BindView(R.id.tv_content)
     TextView tvContent;
+    @BindView(R.id.layout_part)
+    LinearLayout layoutPart;
+    @BindView(R.id.tv_part)
+    TextView tvPart;
     private StoreInfoBean storeBean;
     private Intent intent;
     private String token,carType="";
@@ -212,6 +208,25 @@ public class StoreInfoActivity extends BaseActivity {
                     ResponseBody body = response.body();
                     String json = body.string();
                     storeBean = (StoreInfoBean) GsonUtil.praseJsonToModel(new JSONObject(json).getString("data"),StoreInfoBean.class);
+                    if (storeBean.getPersonType()==2){
+                      layoutPart.setVisibility(View.GONE);
+                    }else{
+                       layoutPart.setVisibility(View.VISIBLE);
+                       switch (storeBean.getPartscity()){
+                           case 0:
+                               tvPart.setText("其他汽配城");
+                               break;
+                           case 1:
+                               tvPart.setText("欢乐港汽配城");
+                               break;
+                           case 2:
+                               tvPart.setText("海纳汽配城");
+                               break;
+                           case 3:
+                               tvPart.setText("玉林汽配城");
+                               break;
+                       }
+                    }
                     etStoreName.setText(storeBean.getNickname());
                     etContact.setText(storeBean.getAddress().getName());
                     etPhone.setText(storeBean.getAddress().getPhone());

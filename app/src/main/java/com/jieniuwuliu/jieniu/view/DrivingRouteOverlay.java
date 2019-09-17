@@ -19,7 +19,7 @@ import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveStep;
 import com.amap.api.services.route.TMC;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.AMapUtil;
+import com.jieniuwuliu.jieniu.util.AMapUtil;
 
 
 /**

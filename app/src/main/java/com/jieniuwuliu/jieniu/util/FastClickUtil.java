@@ -1,4 +1,4 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 public class FastClickUtil {
     private static final int MIN_DELAY_TIME= 1000;  // 两次点击间隔不能少于1000ms

@@ -1,16 +1,11 @@
-package com.jieniuwuliu.jieniu.Util;
+package com.jieniuwuliu.jieniu.util;
 
 import android.content.Context;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.widget.ImageView;
 
-import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.jieniuwuliu.jieniu.R;
@@ -18,8 +13,6 @@ import com.jieniuwuliu.jieniu.view.GlideCircleTransform;
 import com.jieniuwuliu.jieniu.view.GlideRoundTransform;
 
 import java.io.File;
-
-import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 /**

@@ -2,10 +2,8 @@ package com.jieniuwuliu.jieniu.mine.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -15,17 +13,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.geocoder.GeocodeQuery;
-import com.amap.api.services.geocoder.GeocodeResult;
-import com.amap.api.services.geocoder.GeocodeSearch;
-import com.amap.api.services.geocoder.RegeocodeResult;
 import com.jieniuwuliu.jieniu.CarTypeActivity;
 import com.jieniuwuliu.jieniu.R;
-import com.jieniuwuliu.jieniu.Util.GsonUtil;
-import com.jieniuwuliu.jieniu.Util.KeyboardUtil;
-import com.jieniuwuliu.jieniu.Util.MyToast;
-import com.jieniuwuliu.jieniu.Util.SPUtil;
+import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.KeyboardUtil;
+import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.adapter.ListAdapter;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Address;
@@ -36,7 +29,6 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.SortModel;
 import com.jieniuwuliu.jieniu.bean.StoreCerity;
 import com.jieniuwuliu.jieniu.bean.WorkType;
-import com.lljjcoder.citypickerview.widget.CityPicker;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,6 +48,10 @@ public class StoreCertifyActivity extends BaseActivity {
 
     @BindView(R.id.title)
     TextView title;
+    @BindView(R.id.layout_part)
+    LinearLayout layoutPart;
+    @BindView(R.id.tv_part)
+    TextView tvPart;
     @BindView(R.id.layout1)
     LinearLayout layout1;
     @BindView(R.id.layout2)
@@ -91,7 +87,9 @@ public class StoreCertifyActivity extends BaseActivity {
     private List<WorkType> workTypes;//业务
     private  Intent intent;
     private List<String> typeList;
+    private List<String> partList;
     private double lat,lng;
+    private int partscity = 0;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_store_certify;
@@ -150,7 +148,7 @@ public class StoreCertifyActivity extends BaseActivity {
                 break;
         }
     }
-    @OnClick({R.id.back, R.id.tv_type, R.id.et_context, R.id.tv_city,R.id.layout2, R.id.submit})
+    @OnClick({R.id.back, R.id.tv_type,R.id.tv_part, R.id.et_context, R.id.tv_city,R.id.layout2, R.id.submit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -159,11 +157,19 @@ public class StoreCertifyActivity extends BaseActivity {
             case R.id.tv_type://门店类型
                 showTypeDialog();
                 break;
+            case R.id.tv_part://归属地
+                showPartDialog();
+                break;
             case R.id.et_context://主营业务
                startAcy(WorkTypeActivity.class);
                 break;
             case R.id.layout2://服务车型
-                showCarType();
+                intent = new Intent();
+                intent.setClass(StoreCertifyActivity.this,CarTypeActivity.class);
+                intent.putExtra("list", (Serializable) list);
+                intent.putExtra("type",personType);
+                startActivity(intent);
+//                showCarType();
                 break;
             case R.id.tv_city:
                 KeyboardUtil.hideSoftKeyboard(this);
@@ -209,6 +215,7 @@ public class StoreCertifyActivity extends BaseActivity {
                 storeCerity.setPersonType(personType);
                 storeCerity.setYewu(context);
                 storeCerity.setLandline(telephone);
+                storeCerity.setPartscity(partscity);
                 if (carTypeList.size()!=0){
                     storeCerity.setFuwuCars(GsonUtil.listToJson(carTypeList));
                 }
@@ -227,10 +234,54 @@ public class StoreCertifyActivity extends BaseActivity {
                 break;
         }
     }
+    //归属地
+    private void showPartDialog() {
+        partList = new ArrayList<>();
+        partList.add("欢乐港汽配城");
+        partList.add("海纳汽配城");
+        partList.add("玉林汽配城");
+        partList.add("其他汽配城");
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        dialog.show();
+        dialog.setContentView(R.layout.dialog_list);
+        dialog.setCanceledOnTouchOutside(true);
+        RecyclerView recyclerView = dialog.findViewById(R.id.rv);
+        ListAdapter adapter = new ListAdapter(this,partList);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                switch (position){
+                    case 0:
+                        partscity = 1;
+                        dialog.dismiss();
+                        break;
+                    case 1:
+                        partscity = 2;
+                        dialog.dismiss();
+                        break;
+                    case 2:
+                        partscity = 3;
+                        dialog.dismiss();
+                        break;
+                    case 3:
+                        partscity = 0;
+                        dialog.dismiss();
+                        break;
+                }
+                tvPart.setText(partList.get(position));
+            }
+        });
+    }
+
     /**
      * 车型选择弹框
      * */
-    private void showCarType() {
+  /*  private void showCarType() {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
         WindowManager m = getWindowManager();
@@ -275,7 +326,7 @@ public class StoreCertifyActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-    }
+    }*/
 
     /**
      * 门店类型
@@ -283,9 +334,11 @@ public class StoreCertifyActivity extends BaseActivity {
     private void showTypeDialog() {
         typeList = new ArrayList<>();
         typeList.add("汽修厂");
-        typeList.add("配件商");
+        typeList.add("轿车客车");
+        typeList.add("货车轻卡");
         typeList.add("汽车用品");
         typeList.add("汽保工具");
+        typeList.add("单项易损");
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
@@ -304,24 +357,42 @@ public class StoreCertifyActivity extends BaseActivity {
                 switch (typeList.get(position)){
                     case "汽修厂":
                         personType = 2;
+                        layoutPart.setVisibility(View.GONE);
                         layout1.setVisibility(View.VISIBLE);
                         layout2.setVisibility(View.GONE);
                         layout3.setVisibility(View.GONE);
                         break;
-                    case "配件商":
+                    case "轿车客车":
                         personType = 1;
+                        layoutPart.setVisibility(View.VISIBLE);
                         layout1.setVisibility(View.GONE);
                         layout2.setVisibility(View.VISIBLE);
                         layout3.setVisibility(View.GONE);
                         break;
                     case "汽车用品":
                         personType = 3;
+                        layoutPart.setVisibility(View.VISIBLE);
                         layout1.setVisibility(View.GONE);
                         layout2.setVisibility(View.GONE);
                         layout3.setVisibility(View.VISIBLE);
                         break;
                     case "汽保工具":
                         personType = 4;
+                        layoutPart.setVisibility(View.VISIBLE);
+                        layout1.setVisibility(View.GONE);
+                        layout2.setVisibility(View.GONE);
+                        layout3.setVisibility(View.VISIBLE);
+                        break;
+                    case "货车轻卡":
+                        personType = 8;
+                        layoutPart.setVisibility(View.VISIBLE);
+                        layout1.setVisibility(View.GONE);
+                        layout2.setVisibility(View.VISIBLE);
+                        layout3.setVisibility(View.GONE);
+                        break;
+                    case "单项易损":
+                        personType = 9;
+                        layoutPart.setVisibility(View.VISIBLE);
                         layout1.setVisibility(View.GONE);
                         layout2.setVisibility(View.GONE);
                         layout3.setVisibility(View.VISIBLE);
