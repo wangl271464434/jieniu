@@ -163,7 +163,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 if (!name.isEmpty()){
                     KeyboardUtil.hideSoftKeyboard(QXActivity.this);
                     list.clear();
-                    search(name);
+//                    search(name);
                 }else {
                     MyToast.show(getApplicationContext(),"请输入您要搜索的店名");
                 }
@@ -188,7 +188,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
         }
     }
     /**按照店名搜索*/
-    private void search(String name) {
+/*    private void search(String name) {
         loading.show();
         Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(2,name,1,10);
         call.enqueue(new SimpleCallBack<StoreBean>(QXActivity.this) {
@@ -231,7 +231,7 @@ public class QXActivity extends BaseActivity implements AMapLocationListener, On
                 MyToast.show(getApplicationContext(),s);
             }
         });
-    }
+    }*/
 
     /***
      * 业务谈框

@@ -124,10 +124,10 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 list.clear();
                 switch (type){
                     case "汽车用品":
-                        getStoreList(3);
+//                        getStoreList(3);
                         break;
                     case "汽保工具":
-                        getStoreList(4);
+//                        getStoreList(4);
                         break;
                         default:
                             getStoreList();
@@ -148,9 +148,9 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
         getStoreList();
     }
-    /**
+/*    *//**
      * 通过门店类型筛选门店
-     * */
+     * *//*
     private void getStoreList(int i) {
         loading.show();
         Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(i,storeName,page,pageNum);
@@ -194,7 +194,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 MyToast.show(getActivity(),s);
             }
         });
-    }
+    }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(CarTypeEvent event) {
@@ -260,7 +260,7 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
                 storeName = etSearch.getText().toString();
                 type = "";
                 list.clear();
-                getStoreList(5);
+//                getStoreList(5);
                 KeyboardUtil.hideSoftKeyboard(getActivity());
                 etSearch.setText("");
                 break;
@@ -314,13 +314,13 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
     /**
      * 复制微信
      * */
-    @Override
+    /*@Override
     public void callWeChat(int positon) {
         ClipboardManager manager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clipData = ClipData.newPlainText("Label",list.get(positon).getWechat());
         manager.setPrimaryClip(clipData);
         MyToast.show(getActivity(),"复制成功");
-    }
+    }*/
     //动态权限申请后处理
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults){
@@ -340,10 +340,10 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
         page++;
         switch (type){
             case "汽车用品":
-                getStoreList(3);
+//                getStoreList(3);
                 break;
             case "汽保工具":
-                getStoreList(4);
+//                getStoreList(4);
                 break;
             default:
                 getStoreList();
@@ -357,10 +357,10 @@ public class QiPeiShangFragment extends Fragment implements OnItemClickListener,
         list.clear();
         switch (type){
             case "汽车用品":
-                getStoreList(3);
+//                getStoreList(3);
                 break;
             case "汽保工具":
-                getStoreList(4);
+//                getStoreList(4);
                 break;
             default:
                 getStoreList();

@@ -10,13 +10,40 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/size_15dp"
         >
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="@dimen/size_100dp"
-            android:layout_height="@dimen/size_80dp"
-            android:src="@mipmap/loading"
-            android:scaleType="centerCrop"
-            />
+        <LinearLayout
+            android:id="@+id/layout_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="@dimen/size_100dp"
+                android:layout_height="@dimen/size_80dp"
+                android:src="@mipmap/loading"
+                android:scaleType="centerCrop"
+                />
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="@dimen/size_12sp"
+                android:gravity="center"
+                android:paddingTop="@dimen/size_3dp"
+                android:paddingBottom="@dimen/size_3dp"
+                android:paddingLeft="@dimen/size_8dp"
+                android:paddingRight="@dimen/size_8dp"
+                android:background="@drawable/gray_shape"
+                android:layout_marginTop="@dimen/size_10dp"
+                android:drawablePadding="@dimen/size_5dp"
+                android:drawableLeft="@mipmap/ic_autodealer_dial"
+                android:textColor="@color/gray"
+                android:text="联系他"
+                />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
@@ -25,7 +52,7 @@
             android:textSize="@dimen/size_18sp"
             android:textStyle="bold"
             android:text="A汽修商"
-            android:layout_toRightOf="@id/img"
+            android:layout_toRightOf="@id/layout_img"
             android:layout_marginLeft="@dimen/size_10dp"
             />
         <TextView
@@ -34,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/light_black"
             android:textSize="@dimen/size_12sp"
-            android:layout_toRightOf="@id/img"
+            android:layout_toRightOf="@id/layout_img"
             android:layout_marginLeft="@dimen/size_10dp"
             android:layout_below="@id/tv_name"
             android:layout_marginTop="@dimen/size_10dp"
@@ -42,7 +69,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/img"
+            android:layout_toRightOf="@id/layout_img"
             android:layout_marginLeft="@dimen/size_10dp"
             android:layout_marginTop="@dimen/size_5dp"
             android:gravity="center_vertical"
@@ -70,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1dp"
         android:background="@color/line_gray"/>
-    <LinearLayout
+ <!--   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_40dp"
         android:gravity="center"
@@ -109,5 +136,5 @@
             android:drawableLeft="@mipmap/wechat"
             android:text="加微信"
             />
-    </LinearLayout>
+    </LinearLayout>-->
 </LinearLayout>

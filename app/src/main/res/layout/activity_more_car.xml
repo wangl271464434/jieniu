@@ -28,7 +28,7 @@
             android:textColor="@color/black"
             />
     </RelativeLayout>
-    <View
+    <!--<View
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1dp"
         android:background="@color/line_gray"/>
@@ -55,7 +55,7 @@
             android:text="大型汽车"
             android:padding="@dimen/size_10dp"
             />
-    </RadioGroup>
+    </RadioGroup>-->
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1dp"

@@ -72,8 +72,8 @@ public interface HttpApi {
    /**
     * 获取汽修工具或汽车用品列表
     * */
-    @GET("users/stores")
-    Call<StoreBean> getQXORQBList(@Query("type")int type,@Query("nickname")String nickname,@Query("page")int page,@Query("number")int num);
+    @POST("users/stores")
+    Call<StoreBean> getQXORQBList(@Body RequestBody body);
     /**
      * 获取门店详情
      * @path sid

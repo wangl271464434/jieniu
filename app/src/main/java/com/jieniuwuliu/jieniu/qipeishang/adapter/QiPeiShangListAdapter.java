@@ -80,16 +80,16 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
                 callBack.callPhone(i);
             }
         });
-        viewHolder.tvWechat.setOnClickListener(new View.OnClickListener() {
+      /*  viewHolder.tvWechat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callBack.callWeChat(i);
             }
-        });
+        });*/
     }
     public interface CallBack{
         void callPhone(int positon);
-        void callWeChat(int positon);
+//        void callWeChat(int positon);
     }
     @Override
     public int getItemCount() {
@@ -116,8 +116,8 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
         RecyclerView rv;
         @BindView(R.id.tv_phone)
         TextView tvPhone;
-        @BindView(R.id.tv_wechat)
-        TextView tvWechat;
+      /*  @BindView(R.id.tv_wechat)
+        TextView tvWechat;*/
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

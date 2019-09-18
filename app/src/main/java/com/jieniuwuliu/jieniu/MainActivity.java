@@ -23,6 +23,8 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.messageEvent.CarTypeEvent;
+import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.AppUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
@@ -41,6 +43,8 @@ import com.jieniuwuliu.jieniu.fragment.MineFragment;
 import com.jieniuwuliu.jieniu.fragment.QiPeiShangFragment;
 import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.service.SocketService;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -293,10 +297,11 @@ public class MainActivity extends BaseActivity{
                     MyToast.show(MainActivity.this,"请去进行认证");
                     return;
                 }
-                if (qipeishangFragment == null){
+                qpsDialogType();
+               /* if (qipeishangFragment == null){
                     qipeishangFragment = new QiPeiShangFragment();
                 }
-                getFragment(qipeishangFragment);
+                getFragment(qipeishangFragment);*/
                 break;
             case R.id.jijian://寄件
                 if (status != 1){
@@ -330,6 +335,75 @@ public class MainActivity extends BaseActivity{
                 getFragment(mineFragment);
                 break;
         }
+    }
+    /**汽配商弹框*/
+    private void qpsDialogType(){
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
+        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
+        dialog.setContentView(R.layout.dialog_qps);
+        ImageView img1 = dialog.findViewById(R.id.img1);
+        ImageView img2 = dialog.findViewById(R.id.img2);
+        ImageView img3 = dialog.findViewById(R.id.img3);
+        ImageView img4 = dialog.findViewById(R.id.img4);
+        ImageView img5 = dialog.findViewById(R.id.img5);
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                intent = new Intent();
+                intent.setClass(MainActivity.this,MoreCarActivity.class);
+                intent.putExtra("type",1);
+                startActivity(intent);
+            }
+        });
+        img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent();
+                intent.setClass(MainActivity.this,MoreCarActivity.class);
+                intent.putExtra("type",8);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        img3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent();
+                intent.setClass(MainActivity.this,QPSListActivity.class);
+                intent.putExtra("type",3);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        img4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent();
+                intent.setClass(MainActivity.this,QPSListActivity.class);
+                intent.putExtra("type",9);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        img5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent();
+                intent.setClass(MainActivity.this, QPSListActivity.class);
+                intent.putExtra("type",4);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
     }
     /**寄件弹框**/
     private void setDialog() {

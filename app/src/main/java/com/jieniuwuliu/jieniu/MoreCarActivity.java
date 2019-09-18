@@ -1,9 +1,11 @@
 package com.jieniuwuliu.jieniu;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.LocalFileUtil;
 import com.jieniuwuliu.jieniu.util.PinyinComparator;
@@ -32,6 +34,7 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
     private MoreCarSortAdapter adapter;
     private List<Object> objects;
     private List<SortModel> SourceDateList;
+    private int type;
     /**
      * 根据拼音来排列RecyclerView里面的数据类
      */
@@ -45,6 +48,7 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     protected void init() {
+        type = getIntent().getIntExtra("type",0);
         pinyinComparator = new PinyinComparator();
         //设置右侧SideBar触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -58,7 +62,12 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
             }
         });
         SourceDateList = new ArrayList<>();
-        json = LocalFileUtil.readTextFromSDcard(this);
+        if (type == 1){
+            json = LocalFileUtil.readTextFromSDcard(this);
+        }else{
+            json = LocalFileUtil.readKaCar(this);
+        }
+//        json = LocalFileUtil.readTextFromSDcard(this);
         json = json.replace(" ", "");
         setData(json);
     }
@@ -81,29 +90,21 @@ public class MoreCarActivity extends BaseActivity implements OnItemClickListener
 
     @Override
     public void onItemClick(View view, int position) {
-        CarTypeEvent event = new CarTypeEvent();
+       /* CarTypeEvent event = new CarTypeEvent();
+        event.setType(type);
         event.setName(SourceDateList.get(position).getName());
-        EventBus.getDefault().post(event);
+        EventBus.getDefault().post(event);*/
+        Intent intent = new Intent();
+        intent.setClass(this, QPSListActivity.class);
+        intent.putExtra("type",type);
+        intent.putExtra("car",SourceDateList.get(position).getName());
+        startActivity(intent);
         finish();
     }
 
 
-    @OnClick({R.id.close,R.id.big_car_btn,R.id.small_car_btn})
+    @OnClick(R.id.close)
     public void onViewClicked(View view) {
-        switch (view.getId()){
-            case R.id.close:
-                finish();
-                break;
-            case R.id.big_car_btn://大型汽车
-                json = LocalFileUtil.readKaCar(this);
-                json = json.replace(" ", "");
-                setData(json);
-                break;
-            case R.id.small_car_btn://小型汽车
-                json = LocalFileUtil.readTextFromSDcard(this);
-                json = json.replace(" ", "");
-                setData(json);
-                break;
-        }
+        finish();
     }
 }

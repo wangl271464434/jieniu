@@ -1,64 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/line_gray"
         android:gravity="center"
-        android:padding="@dimen/size_15dp"
+        android:padding="@dimen/size_10dp"
         android:text="选择分类"
         android:textColor="@color/black"
-        android:textSize="@dimen/size_25sp"
-        android:background="@color/line_gray"
-        />
+        android:textSize="@dimen/size_18sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/size_15dp"
-        >
+        android:padding="@dimen/size_15dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            >
+            android:gravity="center">
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/fenlei1"
-                />
+                android:id="@+id/img1"
+                android:layout_width="@dimen/size_70dp"
+                android:layout_height="@dimen/size_70dp"
+                android:src="@mipmap/fenlei1" />
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/fenlei2"
-                android:layout_marginLeft="@dimen/size_20dp"
-                />
+                android:id="@+id/img2"
+                android:layout_width="@dimen/size_70dp"
+                android:layout_height="@dimen/size_70dp"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:src="@mipmap/fenlei2" />
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/size_20dp"
-                android:src="@mipmap/fenlei3"
-                />
+                android:id="@+id/img3"
+                android:layout_width="@dimen/size_70dp"
+                android:layout_height="@dimen/size_70dp"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:src="@mipmap/fenlei3" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/size_30dp"
-            >
+            android:layout_marginTop="@dimen/size_20dp"
+            android:gravity="center">
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/fenlei4"
-                />
+                android:id="@+id/img4"
+                android:layout_width="@dimen/size_70dp"
+                android:layout_height="@dimen/size_70dp"
+                android:src="@mipmap/fenlei4" />
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/fenlei5"
-                android:layout_marginLeft="@dimen/size_20dp"
-                />
+                android:id="@+id/img5"
+                android:layout_width="@dimen/size_70dp"
+                android:layout_height="@dimen/size_70dp"
+                android:layout_marginLeft="@dimen/size_15dp"
+                android:src="@mipmap/fenlei5" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
