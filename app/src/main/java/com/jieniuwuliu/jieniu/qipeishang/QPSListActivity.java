@@ -130,6 +130,7 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
                 rvType.setVisibility(View.GONE);
                 isShow = false;
                 page = 1;
+                list.clear();
                 getData();
             }
         });
@@ -168,6 +169,8 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
                     }
                     if (response.body().getData().size()==0||response.body().getData().size()<10){
                         refreshlayout.setNoMoreData(true);
+                    }else{
+                        refreshlayout.setNoMoreData(false);
                     }
                     list.addAll(response.body().getData());
 //                    MyToast.show(getApplicationContext(),"获取到的数据数："+list.size());
@@ -214,6 +217,8 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
             right.setVisibility(View.VISIBLE);
             right.setText(car);
         }
+        page = 1;
+        list.clear();
         getData();
     }
 
