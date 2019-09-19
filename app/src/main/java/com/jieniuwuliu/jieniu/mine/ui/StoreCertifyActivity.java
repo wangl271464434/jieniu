@@ -4,18 +4,23 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.CarTypeActivity;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.bean.QPType;
+import com.jieniuwuliu.jieniu.mine.adapter.QpTypeAdapter;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
+import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.KeyboardUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
@@ -33,6 +38,7 @@ import com.jieniuwuliu.jieniu.bean.WorkType;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,6 +46,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 门店认证
@@ -87,7 +96,6 @@ public class StoreCertifyActivity extends BaseActivity {
     private List<WorkType> workTypes;//业务
     private  Intent intent;
     private List<String> typeList;
-    private List<String> partList;
     private double lat,lng;
     private int partscity = 0;
     @Override
@@ -158,7 +166,7 @@ public class StoreCertifyActivity extends BaseActivity {
                 showTypeDialog();
                 break;
             case R.id.tv_part://归属地
-                showPartDialog();
+                getQpList();
                 break;
             case R.id.et_context://主营业务
                startAcy(WorkTypeActivity.class);
@@ -235,98 +243,62 @@ public class StoreCertifyActivity extends BaseActivity {
         }
     }
     //归属地
-    private void showPartDialog() {
-        partList = new ArrayList<>();
-        partList.add("欢乐港汽配城");
-        partList.add("海纳汽配城");
-        partList.add("玉林汽配城");
-        partList.add("其他汽配城");
+    private void showPartDialog(List<QPType.DataBean> data) {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
-        window.setGravity(Gravity.BOTTOM);
+        window.setGravity(Gravity.CENTER);
         dialog.show();
-        dialog.setContentView(R.layout.dialog_list);
+        dialog.setContentView(R.layout.dialog_qptype_list);
         dialog.setCanceledOnTouchOutside(true);
         RecyclerView recyclerView = dialog.findViewById(R.id.rv);
-        ListAdapter adapter = new ListAdapter(this,partList);
+        ImageView img = dialog.findViewById(R.id.img_close);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        QpTypeAdapter adapter = new QpTypeAdapter(this,data);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                switch (position){
-                    case 0:
-                        partscity = 1;
-                        dialog.dismiss();
-                        break;
-                    case 1:
-                        partscity = 2;
-                        dialog.dismiss();
-                        break;
-                    case 2:
-                        partscity = 3;
-                        dialog.dismiss();
-                        break;
-                    case 3:
-                        partscity = 0;
-                        dialog.dismiss();
-                        break;
-                }
-                tvPart.setText(partList.get(position));
+                partscity = data.get(position).getId();
+                tvPart.setText(data.get(position).getNickname());
+                dialog.dismiss();
             }
         });
     }
-
     /**
-     * 车型选择弹框
+     * 获取汽配城归属
      * */
-  /*  private void showCarType() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
-        Window window = dialog.getWindow();
-        WindowManager m = getWindowManager();
-        Display defaultDisplay = m.getDefaultDisplay();
-        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
-        window.setGravity(Gravity.CENTER);
-        dialog.show();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (defaultDisplay.getWidth()*0.7);
-        window.setAttributes(params);
-        dialog.setContentView(R.layout.car_type_dialog);
-        dialog.setCanceledOnTouchOutside(true);
-        TextView tvSmall = dialog.findViewById(R.id.tv_small_car);
-        TextView tvBig = dialog.findViewById(R.id.tv_big_car);
-        tvSmall.setOnClickListener(new View.OnClickListener() {
+    private void getQpList() {
+        Call<QPType> call = HttpUtil.getInstance().getApi(token).getQpList();
+        call.enqueue(new Callback<QPType>() {
             @Override
-            public void onClick(View v) {
-                if (carType.equals("大型汽车")){
-                    list.clear();
+            public void onResponse(Call<QPType> call, Response<QPType> response) {
+                try {
+                    if (response.code() == 200){
+                        showPartDialog(response.body().getData());
+                    }else{
+                        String s = response.errorBody().string();
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(),object.getString("msg"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                carType = "小型汽车";
-                dialog.dismiss();
-                intent = new Intent();
-                intent.setClass(StoreCertifyActivity.this,CarTypeActivity.class);
-                intent.putExtra("list", (Serializable) list);
-                intent.putExtra("type",carType);
-                startActivity(intent);
+
+            }
+
+            @Override
+            public void onFailure(Call<QPType> call, Throwable t) {
+                MyToast.show(getApplicationContext(),"网络连接失败");
             }
         });
-        tvBig.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (carType.equals("小型汽车")){
-                    list.clear();
-                }
-                carType = "大型汽车";
-                dialog.dismiss();
-                intent = new Intent();
-                intent.setClass(StoreCertifyActivity.this,CarTypeActivity.class);
-                intent.putExtra("list", (Serializable) list);
-                intent.putExtra("type",carType);
-                startActivity(intent);
-            }
-        });
-    }*/
+    }
 
     /**
      * 门店类型

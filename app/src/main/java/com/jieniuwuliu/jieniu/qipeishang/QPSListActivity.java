@@ -1,6 +1,7 @@
 package com.jieniuwuliu.jieniu.qipeishang;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,7 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,10 +25,12 @@ import com.jieniuwuliu.jieniu.MoreCarActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.QPType;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
 import com.jieniuwuliu.jieniu.messageEvent.CarTypeEvent;
 import com.jieniuwuliu.jieniu.messageEvent.LuntanEvent;
+import com.jieniuwuliu.jieniu.mine.adapter.QpTypeAdapter;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.QiPeiShangListAdapter;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.TypeQPSAdater;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
@@ -52,6 +57,7 @@ import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class QPSListActivity extends BaseActivity implements OnRefreshListener, OnLoadMoreListener, QiPeiShangListAdapter.CallBack, OnItemClickListener {
@@ -72,10 +78,7 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
     TextView tvEmpty;
     private int page = 1,num = 10;
     private Intent intent;
-    private boolean isShow = false;
-    private List<String> types;
     private List<StoreBean.DataBean> list;
-    private TypeQPSAdater typeQPSAdater;
     private int partsType = 2,type;
     private String car = "",token;
     private QiPeiShangListAdapter adapter;
@@ -99,41 +102,6 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
         loading = new MyLoading(this,R.style.CustomDialog);
         refreshlayout.setOnRefreshListener(this);
         refreshlayout.setOnLoadMoreListener(this);
-        types = new ArrayList<>();
-        types.add("欢乐港汽配城");
-        types.add("海纳汽配城");
-        types.add("玉林汽配城");
-        types.add("其他汽配城");
-        LinearLayoutManager typeManager = new LinearLayoutManager(this);
-        rvType.setLayoutManager(typeManager);
-        typeQPSAdater = new TypeQPSAdater(this,types);
-        rvType.setAdapter(typeQPSAdater);
-        typeQPSAdater.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                title.setText(types.get(position));
-                switch (types.get(position)){
-                    case "欢乐港汽配城":
-                        partsType = 1;
-                        break;
-                    case "海纳汽配城":
-                        partsType = 2;
-                        break;
-                    case "玉林汽配城":
-                        partsType = 3;
-                        break;
-                    case "其他汽配城":
-                        partsType = 0;
-                        break;
-                }
-                img.setImageResource(R.mipmap.qps_down);
-                rvType.setVisibility(View.GONE);
-                isShow = false;
-                page = 1;
-                list.clear();
-                getData();
-            }
-        });
         list = new ArrayList<>();
         LinearLayoutManager listManager = new LinearLayoutManager(this);
         rv.setLayoutManager(listManager);
@@ -179,8 +147,8 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
                         MyToast.show(getApplicationContext(),"未获取到内容");
                     }else{
                         tvEmpty.setVisibility(View.GONE);
-                        adapter.notifyDataSetChanged();
                     }
+                    adapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -221,7 +189,68 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
         list.clear();
         getData();
     }
+    /**
+     * 获取汽配城归属
+     * */
+    private void getQpList() {
+        Call<QPType> call = HttpUtil.getInstance().getApi(token).getQpList();
+        call.enqueue(new Callback<QPType>() {
+            @Override
+            public void onResponse(Call<QPType> call, Response<QPType> response) {
+                try {
+                    if (response.code() == 200){
+                        showPartDialog(response.body().getData());
+                    }else{
+                        String s = response.errorBody().string();
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(),object.getString("msg"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
+            }
+
+            @Override
+            public void onFailure(Call<QPType> call, Throwable t) {
+                MyToast.show(getApplicationContext(),"网络连接失败");
+            }
+        });
+    }
+    //归属地
+    private void showPartDialog(List<QPType.DataBean> data) {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        dialog.setContentView(R.layout.dialog_qptype_list);
+        dialog.setCanceledOnTouchOutside(true);
+        RecyclerView recyclerView = dialog.findViewById(R.id.rv);
+        ImageView img = dialog.findViewById(R.id.img_close);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                img.setImageResource(R.mipmap.qps_up);
+                dialog.dismiss();
+            }
+        });
+        QpTypeAdapter adapter = new QpTypeAdapter(this,data);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                img.setImageResource(R.mipmap.qps_up);
+                dialog.dismiss();
+                title.setText(data.get(position).getNickname());
+                partsType = data.get(position).getId();
+                page = 1;
+                list.clear();
+                getData();
+            }
+        });
+    }
     @OnClick({R.id.back, R.id.layout_title, R.id.right})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -229,15 +258,8 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
                 finish();
                 break;
             case R.id.layout_title:
-                if(isShow){
-                    img.setImageResource(R.mipmap.qps_down);
-                    rvType.setVisibility(View.GONE);
-                    isShow = false;
-                }else{
-                    img.setImageResource(R.mipmap.qps_up);
-                    rvType.setVisibility(View.VISIBLE);
-                    isShow = true;
-                }
+                img.setImageResource(R.mipmap.qps_down);
+                getQpList();
                 break;
             case R.id.right:
                 intent = new Intent();

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.CarTypeActivity;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.bean.QPType;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
@@ -45,6 +46,7 @@ import butterknife.OnClick;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -212,20 +214,7 @@ public class StoreInfoActivity extends BaseActivity {
                       layoutPart.setVisibility(View.GONE);
                     }else{
                        layoutPart.setVisibility(View.VISIBLE);
-                       switch (storeBean.getPartscity()){
-                           case 0:
-                               tvPart.setText("其他汽配城");
-                               break;
-                           case 1:
-                               tvPart.setText("欢乐港汽配城");
-                               break;
-                           case 2:
-                               tvPart.setText("海纳汽配城");
-                               break;
-                           case 3:
-                               tvPart.setText("玉林汽配城");
-                               break;
-                       }
+                       getQpList(storeBean);
                     }
                     etStoreName.setText(storeBean.getNickname());
                     etContact.setText(storeBean.getAddress().getName());
@@ -305,7 +294,39 @@ public class StoreInfoActivity extends BaseActivity {
             }
         });
     }
+    /**
+     * 获取汽配城归属
+     *
+     * @param storeBean*/
+    private void getQpList(StoreInfoBean storeBean) {
+        Call<QPType> call = HttpUtil.getInstance().getApi(token).getQpList();
+        call.enqueue(new Callback<QPType>() {
+            @Override
+            public void onResponse(Call<QPType> call, Response<QPType> response) {
+                try {
+                    if (response.code() == 200){
+                        for (QPType.DataBean dataBean:response.body().getData()){
+                            if (storeBean.getPartscity() == dataBean.getId()){
+                                tvPart.setText(dataBean.getNickname());
+                            }
+                        }
+                    }else{
+                        String s = response.errorBody().string();
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(),object.getString("msg"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
+            }
+
+            @Override
+            public void onFailure(Call<QPType> call, Throwable t) {
+                MyToast.show(getApplicationContext(),"网络连接失败");
+            }
+        });
+    }
     @OnClick({R.id.back, R.id.tv_certify, R.id.et_store_name,R.id.tv_type,R.id.et_context,
             R.id.tv_car_type, R.id.et_address, R.id.et_contact, R.id.et_phone,
             R.id.et_telephone,R.id.layout_content,R.id.layout_add_pic})

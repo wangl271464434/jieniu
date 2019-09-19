@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.bean.QPType;
 import com.jieniuwuliu.jieniu.messageEvent.CarTypeEvent;
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
@@ -102,7 +103,6 @@ public class MainActivity extends BaseActivity{
         getFragment(homeFragment);
         checkVerSion();
     }
-
     private void checkVerSion() {
         Call<Version> call = HttpUtil.getInstance().getApi(token).checkVersion();
         call.enqueue(new Callback<Version>() {

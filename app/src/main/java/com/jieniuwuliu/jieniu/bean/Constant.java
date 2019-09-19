@@ -1,6 +1,9 @@
 package com.jieniuwuliu.jieniu.bean;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constant {
     public static String PHONE = "phone";//手机号
     public static String PWD = "pwd";//手机号

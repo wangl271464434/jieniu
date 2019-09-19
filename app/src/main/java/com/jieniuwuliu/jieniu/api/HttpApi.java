@@ -10,6 +10,7 @@ import com.jieniuwuliu.jieniu.bean.ImgBanner;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.AliPayResult;
 import com.jieniuwuliu.jieniu.bean.Notice;
+import com.jieniuwuliu.jieniu.bean.QPType;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.bean.Version;
@@ -340,4 +341,9 @@ public interface HttpApi {
      * */
     @PUT("users/offerstate")
     Call<ResponseBody> cancelBJOrder(@Query("Bid")int bid);
+    /**
+     * 获取汽配城列表
+     * */
+    @GET("/users/getqpclist")
+    Call<QPType> getQpList();
 }
