@@ -13,9 +13,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,8 +74,6 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
     RecyclerView rv;
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshlayout;
-    @BindView(R.id.rv_type)
-    RecyclerView rvType;
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
     private int page = 1,num = 10;
@@ -124,7 +124,6 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
             object.put("page",page);
             object.put("number",num);
             object.put("nickname","");
-//            MyToast.show(getApplicationContext(),object.toString());
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             Call<StoreBean> call = HttpUtil.getInstance().getApi(token).getQXORQBList(body);
             call.enqueue(new SimpleCallBack<StoreBean>(QPSListActivity.this) {
@@ -141,7 +140,6 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
                         refreshlayout.setNoMoreData(false);
                     }
                     list.addAll(response.body().getData());
-//                    MyToast.show(getApplicationContext(),"获取到的数据数："+list.size());
                     if (list.size()==0){
                         tvEmpty.setVisibility(View.VISIBLE);
                         MyToast.show(getApplicationContext(),"未获取到内容");
@@ -221,8 +219,13 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
     private void showPartDialog(List<QPType.DataBean> data) {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
         window.setGravity(Gravity.CENTER);
         dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
         dialog.setContentView(R.layout.dialog_qptype_list);
         dialog.setCanceledOnTouchOutside(true);
         RecyclerView recyclerView = dialog.findViewById(R.id.rv);
@@ -287,7 +290,7 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
     protected void onDestroy() {
         super.onDestroy();
     }
-
+    //打电话
     @Override
     public void callPhone(int positon) {
         if (Build.VERSION.SDK_INT >= 23) {

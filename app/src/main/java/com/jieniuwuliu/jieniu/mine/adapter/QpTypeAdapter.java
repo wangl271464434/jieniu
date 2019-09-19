@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
  * 按字母排序的适配器
  * */
 public class QpTypeAdapter extends RecyclerView.Adapter<QpTypeAdapter.ViewHolder> implements View.OnClickListener {
-    private LayoutInflater mInflater;
     private List<QPType.DataBean> mData;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
@@ -30,13 +29,12 @@ public class QpTypeAdapter extends RecyclerView.Adapter<QpTypeAdapter.ViewHolder
     }
 
     public QpTypeAdapter(Context context, List<QPType.DataBean> data) {
-        mInflater = LayoutInflater.from(context);
         mData = data;
         this.mContext = context;
     }
     @Override
     public QpTypeAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.string_item, parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.string_item, parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(this);
         return viewHolder;

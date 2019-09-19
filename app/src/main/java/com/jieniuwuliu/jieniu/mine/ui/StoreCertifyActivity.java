@@ -246,8 +246,13 @@ public class StoreCertifyActivity extends BaseActivity {
     private void showPartDialog(List<QPType.DataBean> data) {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
         window.setGravity(Gravity.CENTER);
         dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
         dialog.setContentView(R.layout.dialog_qptype_list);
         dialog.setCanceledOnTouchOutside(true);
         RecyclerView recyclerView = dialog.findViewById(R.id.rv);
