@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu.qipeishang.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.home.adapter.StoreServiceAdapter;
 import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
@@ -47,49 +49,61 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
         return viewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
         StoreBean.DataBean item = list.get(i);
         viewHolder.tvName.setText(item.getNickname());
-        viewHolder.tvAddress.setText("地址："+item.getAddress().getAddress());
+        viewHolder.tvAddress.setText("地址："+item.getAddress().getAddress().replace("陕西省",""));
         GlideUtil.setImgUrl(context,item.getShopPhoto(),viewHolder.img);
         String s = "";
-        if (item.getFuwuCar().size()>0){
-            viewHolder.rv.setVisibility(View.VISIBLE);
-            viewHolder.tvCars.setVisibility(View.GONE);
-            LinearLayoutManager manager = new LinearLayoutManager(context);
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            viewHolder.rv.setLayoutManager(manager);
-            CartypeAdapter adapter = new CartypeAdapter(context,item.getFuwuCar());
-            viewHolder.rv.setAdapter(adapter);
+        if (item.getPersonType()==1||item.getPersonType()==8){
+            if (item.getFuwuCar().size()>0){
+                viewHolder.tvCars.setText("经营车型：");
+                viewHolder.rv.setVisibility(View.VISIBLE);
+                LinearLayoutManager manager = new LinearLayoutManager(context);
+                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                viewHolder.rv.setLayoutManager(manager);
+                CartypeAdapter adapter = new CartypeAdapter(context,item.getFuwuCar());
+                viewHolder.rv.setAdapter(adapter);
+            }else{
+                viewHolder.tvCars.setText("经营车型：暂无车型");
+                viewHolder.rv.setVisibility(View.GONE);
+            }
+        }else{
+            viewHolder.rv.setVisibility(View.GONE);
+            viewHolder.tvCars.setText("主营业务："+item.getYewu());
+        }
+       /* if (item.getFuwuCar().size()>0){
+
         }else{
             if (item.getPersonType() == 1){
-                viewHolder.rv.setVisibility(View.VISIBLE);
-                viewHolder.tvCars.setVisibility(View.GONE);
-            }else{
-                viewHolder.rv.setVisibility(View.GONE);
-                viewHolder.tvCars.setVisibility(View.VISIBLE);
-                viewHolder.tvCars.setText("经营范围："+item.getYewu());
-            }
-        }
 
+            }else{
+
+            }
+        }*/
+        if ("".equals(item.getLabel())){
+            viewHolder.rvType.setVisibility(View.GONE);
+        }else{
+            viewHolder.rvType.setVisibility(View.VISIBLE);
+            String[] array = item.getLabel().split(",");
+            LinearLayoutManager manager = new LinearLayoutManager(context);
+            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            viewHolder.rvType.setLayoutManager(manager);
+            StoreServiceAdapter adapter = new StoreServiceAdapter(context,array);
+            viewHolder.rvType.setAdapter(adapter);
+        }
         viewHolder.tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callBack.callPhone(i);
             }
         });
-      /*  viewHolder.tvWechat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callBack.callWeChat(i);
-            }
-        });*/
     }
     public interface CallBack{
         void callPhone(int positon);
-//        void callWeChat(int positon);
     }
     @Override
     public int getItemCount() {
@@ -116,8 +130,8 @@ public class QiPeiShangListAdapter extends RecyclerView.Adapter<QiPeiShangListAd
         RecyclerView rv;
         @BindView(R.id.tv_phone)
         TextView tvPhone;
-      /*  @BindView(R.id.tv_wechat)
-        TextView tvWechat;*/
+        @BindView(R.id.rv_type)
+        RecyclerView rvType;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

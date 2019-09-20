@@ -43,60 +43,68 @@
                 android:text="联系他"
                 />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/size_18sp"
-            android:textStyle="bold"
-            android:text="A汽修商"
-            android:layout_toRightOf="@id/layout_img"
-            android:layout_marginLeft="@dimen/size_10dp"
-            />
-        <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/light_black"
-            android:textSize="@dimen/size_12sp"
-            android:layout_toRightOf="@id/layout_img"
-            android:layout_marginLeft="@dimen/size_10dp"
-            android:layout_below="@id/tv_name"
-            android:layout_marginTop="@dimen/size_10dp"
-            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_toRightOf="@id/layout_img"
             android:layout_marginLeft="@dimen/size_10dp"
-            android:layout_marginTop="@dimen/size_5dp"
-            android:gravity="center_vertical"
-            android:layout_below="@id/tv_address"
             >
-        <TextView
-            android:id="@+id/tv_cars"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="经营车型："
-            android:textSize="@dimen/size_12sp"
-            android:textColor="@color/light_black"
-            android:singleLine="true"
-            android:ellipsize="end"
-            />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv"
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_14sp"
+                android:text="A汽修商"
+                android:textStyle="bold"
+                />
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_5dp"
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:id="@+id/tv_cars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="经营车型："
+                    android:textSize="@dimen/size_12sp"
+                    android:textColor="@color/light_black"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/size_12sp"
+                android:layout_marginTop="@dimen/size_5dp"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_5dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_1dp"
+                android:background="@color/line_gray"
+                android:layout_marginTop="@dimen/size_10dp"
+                />
         </LinearLayout>
     </RelativeLayout>
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_1dp"
-        android:background="@color/line_gray"/>
+
  <!--   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_40dp"

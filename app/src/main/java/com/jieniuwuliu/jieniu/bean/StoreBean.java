@@ -66,6 +66,7 @@ public class StoreBean {
         private int partscity;
         private int personType;
         private String nickname;
+        private String label;
         private AddressBean address;
         private String shopPhoto;
         private String zizhiPhoto;
@@ -74,6 +75,14 @@ public class StoreBean {
         private String wechat;
         private List<Car> fuwuCar;
         private double distance;
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
 
         public int getPartscity() {
             return partscity;
