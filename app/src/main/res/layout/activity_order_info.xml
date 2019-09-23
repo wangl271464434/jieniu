@@ -92,4 +92,18 @@
         />
         </RelativeLayout>
     </ScrollView>
+    <LinearLayout
+        android:id="@+id/layout_gif"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gifView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            />
+    </LinearLayout>
+
 </RelativeLayout>
