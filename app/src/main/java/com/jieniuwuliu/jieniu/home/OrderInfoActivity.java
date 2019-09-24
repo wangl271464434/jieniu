@@ -14,8 +14,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +66,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.ResponseBody;
+import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -78,6 +81,10 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     TextView tvTime;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
+    @BindView(R.id.gifView)
+    GifImageView gifView;
+    @BindView(R.id.layout_gif)
+    LinearLayout layoutGif;
     private boolean isShow = false;
     private AMap aMap;
     protected Unbinder unbinder;
@@ -366,10 +373,19 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         if (i == 1000){
             if (localWeatherLiveResult!=null){
               LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
-              MyToast.show(getApplicationContext(),"当前城市天气为:"+weatherLive.getWeather());
+        /*      if (weatherLive.getWeather().equals("雨夹雪")){
+                  layoutGif.setVisibility(View.VISIBLE);
+              }else if (weatherLive.getWeather().contains("雨")){
+                  layoutGif.setVisibility(View.VISIBLE);
+                  gifView.setImageResource(R.drawable.yu);
+              }else if (weatherLive.getWeather().contains("雪")){
+                  layoutGif.setVisibility(View.VISIBLE);
+                  gifView.setImageResource(R.drawable.xue);
+              }*/
+                layoutGif.setVisibility(View.VISIBLE);
+                gifView.setImageResource(R.drawable.yu);
             }else{
-                MyToast.show(getApplicationContext(),"未查询到当前城市天气");
-
+                Log.i("weather","未查询到当前城市天气");
             }
         }
     }
