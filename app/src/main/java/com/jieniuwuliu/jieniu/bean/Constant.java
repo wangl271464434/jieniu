@@ -9,6 +9,7 @@ public class Constant {
     public static String PWD = "pwd";//手机号
     public static String TOKEN = "token";//令牌
     public static String GUIDE = "guide";//引导页
+    public static String LOGINTYPE = "login_type";//登录方式 1是账号 2是微信
     public static String UNREAD = "unRead";//未读消息
     public static String ISCERTIFY = "iscertify";//是否认证
     public static String BIND = "bind_wechat";//是否绑定微信

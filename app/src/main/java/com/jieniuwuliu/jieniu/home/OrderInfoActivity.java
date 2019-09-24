@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,8 +71,8 @@ import okhttp3.ResponseBody;
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Response;
-
-public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener {
+@RequiresApi(api = Build.VERSION_CODES.M)
+public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener, View.OnScrollChangeListener {
     @BindView(R.id.map)
     MapView map;
     @BindView(R.id.rv)
@@ -132,17 +134,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
         }
         getWeather();
-        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
-            @Override
-            public void onTouch(MotionEvent motionEvent) {
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    scrollView.requestDisallowInterceptTouchEvent(false);
-                }else{
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-
-                }
-            }
-        });
+        scrollView.setOnScrollChangeListener(this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         rv.setLayoutManager(manager);
         adapter = new OrderWuLiuAdapter(this, list);
@@ -373,8 +365,9 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         if (i == 1000){
             if (localWeatherLiveResult!=null){
               LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
-        /*      if (weatherLive.getWeather().equals("雨夹雪")){
+         /*     if (weatherLive.getWeather().equals("雨夹雪")){
                   layoutGif.setVisibility(View.VISIBLE);
+                  gifView.setImageResource(R.drawable.xue);
               }else if (weatherLive.getWeather().contains("雨")){
                   layoutGif.setVisibility(View.VISIBLE);
                   gifView.setImageResource(R.drawable.yu);
@@ -383,7 +376,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                   gifView.setImageResource(R.drawable.xue);
               }*/
                 layoutGif.setVisibility(View.VISIBLE);
-                gifView.setImageResource(R.drawable.yu);
+                gifView.setImageResource(R.drawable.xue);
             }else{
                 Log.i("weather","未查询到当前城市天气");
             }
@@ -393,5 +386,21 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     @Override
     public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
 
+    }
+
+    @Override
+    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+        Log.i("asdsad",i1+"---"+i3);
+    /*    if(i1>i3){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            scrollView.setLayoutParams(params);
+            scrollView.setOnScrollChangeListener(OrderInfoActivity.this);
+        }else if(i1<i3){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,180);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            scrollView.setLayoutParams(params);
+            scrollView.setOnScrollChangeListener(OrderInfoActivity.this);
+        }*/
     }
 }

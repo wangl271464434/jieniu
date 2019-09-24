@@ -73,7 +73,7 @@
             android:drawablePadding="@dimen/size_10dp"
             android:drawableLeft="@mipmap/ic_setting_user"
             android:layout_marginTop="@dimen/size_50dp"
-            android:maxLength="11"
+            android:maxLength="12"
             />
         <include
             android:layout_width="match_parent"
@@ -137,10 +137,10 @@
         android:layout_marginLeft="@dimen/size_30dp"
         android:layout_marginRight="@dimen/size_30dp"
         android:layout_marginBottom="@dimen/size_20dp"
-        android:layout_above="@id/layout_agreement"
+        android:layout_above="@id/tv_other_login"
         android:textColor="@color/white"
         android:text="@string/login" />
- <!--   <TextView
+    <TextView
         android:id="@+id/tv_other_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,9 +148,18 @@
         android:textSize="@dimen/size_14sp"
         android:textColor="@color/light_black"
         android:layout_centerHorizontal="true"
+        android:layout_above="@id/img_weChat"
+        android:layout_marginBottom="@dimen/size_10dp"
+        />
+    <ImageView
+        android:id="@+id/img_weChat"
+        android:layout_width="@dimen/size_40dp"
+        android:layout_height="@dimen/size_40dp"
+        android:layout_centerHorizontal="true"
         android:layout_above="@id/layout_agreement"
-        android:layout_marginBottom="@dimen/size_30dp"
-        />-->
+        android:src="@mipmap/wechat"
+        android:layout_marginBottom="@dimen/size_10dp"
+        />
     <LinearLayout
         android:id="@+id/layout_agreement"
         android:layout_width="match_parent"

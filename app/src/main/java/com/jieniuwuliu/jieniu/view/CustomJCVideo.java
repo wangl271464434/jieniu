@@ -3,14 +3,8 @@ package com.jieniuwuliu.jieniu.view;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.BatteryManager;
-import android.os.CountDownTimer;
-import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -28,18 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jieniuwuliu.jieniu.R;
-import com.xiao.nicevideoplayer.ChangeClarityDialog;
-import com.xiao.nicevideoplayer.Clarity;
-import com.xiao.nicevideoplayer.INiceVideoPlayer;
-import com.xiao.nicevideoplayer.NiceUtil;
-import com.xiao.nicevideoplayer.NiceVideoPlayer;
-import com.xiao.nicevideoplayer.NiceVideoPlayerController;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 

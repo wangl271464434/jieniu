@@ -105,16 +105,14 @@ dependencies {
     implementation 'com.zhihu.android:matisse:0.5.2-beta3'
     //上拉加载下拉刷新
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
+//    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
     //没有使用特殊Header，可以不加这行
     //轮播图
     implementation 'com.youth.banner:banner:1.4.10'
     //播放器
-    implementation 'com.github.xiaoyanger0825:NiceVieoPlayer:v2.2'
     implementation 'fm.jiecao:jiecaovideoplayer:5.5.2'
     //腾讯bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     //微信登录支付
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     //支付宝支付

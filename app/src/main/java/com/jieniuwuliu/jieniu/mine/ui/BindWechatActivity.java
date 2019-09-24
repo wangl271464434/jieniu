@@ -219,16 +219,6 @@ public class BindWechatActivity extends BaseActivity {
                 }
                 break;
             case R.id.img:
-            /*    IWXAPI mWxApi = WXAPIFactory.createWXAPI(this, Constant.WXAPPID);
-                mWxApi.registerApp(Constant.WXAPPID);
-                if(!mWxApi.isWXAppInstalled()){
-                    MyToast.show(getApplicationContext(),"请您先安装微信客户端！");
-                    return;
-                }
-                JumpToBizProfile.Req req =new JumpToBizProfile.Req();
-                req.toUserName = "gh_526efe5c38e3";
-                req.profileType = JumpToBizProfile.JUMP_TO_NORMAL_BIZ_PROFILE;
-                mWxApi.sendReq(req);*/
                 show();
                 break;
         }

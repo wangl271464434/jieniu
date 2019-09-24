@@ -47,7 +47,7 @@
 
     <!--设置-->
     <string name="setting">设置</string>
-    <string name="setting_tab1">门店认证</string>
+    <string name="setting_tab1">设置登录账号</string>
     <string name="setting_tab2">更改用户名</string>
     <string name="setting_tab3">修改密码</string>
     <string name="setting_tab4">通用设置</string>

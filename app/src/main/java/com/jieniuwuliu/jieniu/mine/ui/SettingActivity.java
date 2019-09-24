@@ -80,8 +80,8 @@ public class SettingActivity extends BaseActivity {
             case R.id.back://返回
                 finish();
                 break;
-            case R.id.layout_tab1://门店认证
-                startAcy(StoreCertifyActivity.class);
+            case R.id.layout_tab1://设置登录账号
+//                startAcy(StoreCertifyActivity.class);
                 break;
             case R.id.layout_tab3://修改密码
                 startAcy(ModifyPwdActivity.class);
