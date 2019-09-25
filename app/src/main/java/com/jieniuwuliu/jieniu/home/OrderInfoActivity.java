@@ -13,14 +13,10 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +26,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
@@ -46,6 +43,7 @@ import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.util.AMapUtil;
+import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
@@ -57,6 +55,8 @@ import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.home.adapter.OrderWuLiuAdapter;
 import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 import com.jieniuwuliu.jieniu.view.MyLoading;
+import com.yinglan.scrolllayout.ScrollLayout;
+import com.yinglan.scrolllayout.content.ContentListView;
 
 import org.json.JSONObject;
 
@@ -72,21 +72,21 @@ import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Response;
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener, View.OnScrollChangeListener {
+public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener, AMap.InfoWindowAdapter, ScrollLayout.OnScrollChangedListener {
     @BindView(R.id.map)
     MapView map;
     @BindView(R.id.rv)
-    RecyclerView rv;
+    ContentListView rv;
     @BindView(R.id.tv_state)
     TextView tvState;
     @BindView(R.id.tv_time)
     TextView tvTime;
-    @BindView(R.id.scrollView)
-    ScrollView scrollView;
     @BindView(R.id.gifView)
     GifImageView gifView;
     @BindView(R.id.layout_gif)
     LinearLayout layoutGif;
+    @BindView(R.id.scrollLayout)
+    ScrollLayout scrollLayout;
     private boolean isShow = false;
     private AMap aMap;
     protected Unbinder unbinder;
@@ -99,6 +99,8 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private List<OrderInfo.OrderListBean> list;
     private RouteSearch.DriveRouteQuery query;
     private Intent intent;
+    private Marker startMarker;
+    private UiSettings settings;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,35 +115,52 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
      * 设置起点和终点的显示
      */
     private void setfromandtoMarker() {
-        aMap.addMarker(new MarkerOptions()
+       startMarker =  aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(start))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_niu)));
+       startMarker.showInfoWindow();
         aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(end))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.end)));
     }
 
     protected void init() {
+        hideBottomUIMenu();
         list = new ArrayList<>();
         loading = new MyLoading(this, R.style.CustomDialog);
         checkSDK();
         if (aMap == null) {
             aMap = map.getMap();
-            UiSettings settings = aMap.getUiSettings();
+            settings = aMap.getUiSettings();
             settings.setLogoBottomMargin(-50);
             settings.setZoomControlsEnabled(false);
             //设置缩放级别
             aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+            aMap.setInfoWindowAdapter(this);
         }
         getWeather();
-        scrollView.setOnScrollChangeListener(this);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        rv.setLayoutManager(manager);
+        scrollLayout.setOnScrollChangedListener(this);
         adapter = new OrderWuLiuAdapter(this, list);
         rv.setAdapter(adapter);
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         orderNo = getIntent().getStringExtra("orderNo");
         getOrderInfo();
+    }
+    /**
+     * 隐藏虚拟按键，并且全屏
+     */
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
     /**
      * 获取天气信息
@@ -365,7 +384,10 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         if (i == 1000){
             if (localWeatherLiveResult!=null){
               LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
-         /*     if (weatherLive.getWeather().equals("雨夹雪")){
+              if (weatherLive.getWeather().equals("冰雹")){
+                  layoutGif.setVisibility(View.VISIBLE);
+                  gifView.setImageResource(R.drawable.xue);
+              }else if (weatherLive.getWeather().equals("雨夹雪")){
                   layoutGif.setVisibility(View.VISIBLE);
                   gifView.setImageResource(R.drawable.xue);
               }else if (weatherLive.getWeather().contains("雨")){
@@ -374,11 +396,10 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
               }else if (weatherLive.getWeather().contains("雪")){
                   layoutGif.setVisibility(View.VISIBLE);
                   gifView.setImageResource(R.drawable.xue);
-              }*/
-                layoutGif.setVisibility(View.VISIBLE);
-                gifView.setImageResource(R.drawable.xue);
+              }
             }else{
                 Log.i("weather","未查询到当前城市天气");
+                layoutGif.setVisibility(View.GONE);
             }
         }
     }
@@ -389,18 +410,41 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     }
 
     @Override
-    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-        Log.i("asdsad",i1+"---"+i3);
-    /*    if(i1>i3){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            scrollView.setLayoutParams(params);
-            scrollView.setOnScrollChangeListener(OrderInfoActivity.this);
-        }else if(i1<i3){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,180);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            scrollView.setLayoutParams(params);
-            scrollView.setOnScrollChangeListener(OrderInfoActivity.this);
+    public View getInfoWindow(Marker marker) {
+        View infoWindow = getLayoutInflater().inflate(R.layout.info_window,null);
+        ImageView img = infoWindow.findViewById(R.id.img);
+        TextView tvName = infoWindow.findViewById(R.id.tv_name);
+        if (orderWuliuInfo.getOrderList().size()>0){
+            tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(0).getName());
+            GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),img);
+        }else{
+            tvName.setText("暂无配送员");
+        }
+        return infoWindow;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public void onScrollProgressChanged(float currentProgress) {
+        if (currentProgress>0){
+            settings.setAllGesturesEnabled(false);
+        }
+    }
+
+    @Override
+    public void onScrollFinished(ScrollLayout.Status currentStatus) {
+        Log.i("state",currentStatus.name());
+        settings.setAllGesturesEnabled(true);
+        /*if (currentStatus.equals(ScrollLayout.Status.OPENED)){
         }*/
+    }
+
+    @Override
+    public void onChildScroll(int top) {
+
     }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,90 +19,85 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.ViewHolder> implements View.OnClickListener {
+public class OrderWuLiuAdapter extends BaseAdapter{
     private Context context;
-    private OnItemClickListener listener;
     private List<OrderInfo.OrderListBean> list;
+
     public OrderWuLiuAdapter(Context context, List<OrderInfo.OrderListBean> list) {
         this.list = list;
         this.context = context;
     }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.listener = onItemClickListener;
-    }
-
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.wuliu_item, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        view.setOnClickListener(this);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.itemView.setTag(i);
-        if (list.size()!=0){
-            OrderInfo.OrderListBean item = list.get(i);
-            if (i==0){
-                if (list.size()>1){
-                    viewHolder.tvUpLine.setVisibility(View.INVISIBLE);
-                    viewHolder.tvDownLine.setVisibility(View.VISIBLE);
-                }else{
-                    viewHolder.tvUpLine.setVisibility(View.INVISIBLE);
-                    viewHolder.tvDownLine.setVisibility(View.INVISIBLE);
-                }
-
-            }else {
-                if (i == list.size()-1){
-                    viewHolder.tvUpLine.setVisibility(View.VISIBLE);
-                    viewHolder.tvDownLine.setVisibility(View.INVISIBLE);
-                }else{
-                    viewHolder.tvUpLine.setVisibility(View.VISIBLE);
-                    viewHolder.tvDownLine.setVisibility(View.VISIBLE);
-                }
-
-            }
-            viewHolder.tvState.setText(list.get(i).getMsg());
-            viewHolder.tvInfo.setText(list.get(i).getName()+list.get(i).getMsg());
-            switch (list.get(i).getMsg()){
-                case "已发货":
-                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_fahuo);
-                    break;
-                case "分拣中":
-                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_zhongzhuan);
-                    break;
-                case "配送中":
-                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
-                    break;
-                case "已签收":
-                    viewHolder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
-                    break;
-            }
-            viewHolder.tvTime.setText(item.getCreatedAt());
-
-        }
-
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return list.size();
     }
 
     @Override
-    public void onClick(View view) {
-        if (listener != null) {
-            listener.onItemClick(view, (Integer) view.getTag());
-        }
+    public Object getItem(int i) {
+        return list.get(i);
     }
 
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        ViewHolder holder ;
+        if (view == null){
+            view = LayoutInflater.from(context).inflate(R.layout.wuliu_item, viewGroup, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
+        }else{
+            holder = (ViewHolder) view.getTag();
+        }
+        if (list.size() != 0) {
+            OrderInfo.OrderListBean item = list.get(i);
+            if (i == 0) {
+                if (list.size() > 1) {
+                    holder.tvUpLine.setVisibility(View.INVISIBLE);
+                    holder.tvDownLine.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tvUpLine.setVisibility(View.INVISIBLE);
+                    holder.tvDownLine.setVisibility(View.INVISIBLE);
+                }
+
+            } else {
+                if (i == list.size() - 1) {
+                    holder.tvUpLine.setVisibility(View.VISIBLE);
+                    holder.tvDownLine.setVisibility(View.INVISIBLE);
+                } else {
+                    holder.tvUpLine.setVisibility(View.VISIBLE);
+                    holder.tvDownLine.setVisibility(View.VISIBLE);
+                }
+
+            }
+            holder.tvState.setText(list.get(i).getMsg());
+            holder.tvInfo.setText(list.get(i).getName() + list.get(i).getMsg());
+            switch (list.get(i).getMsg()) {
+                case "已发货":
+                    holder.imgIcon.setImageResource(R.mipmap.ic_order_fahuo);
+                    break;
+                case "分拣中":
+                    holder.imgIcon.setImageResource(R.mipmap.ic_order_zhongzhuan);
+                    break;
+                case "配送中":
+                    holder.imgIcon.setImageResource(R.mipmap.ic_order_yunshu);
+                    break;
+                case "已签收":
+                    holder.imgIcon.setImageResource(R.mipmap.ic_order_wancheng);
+                    break;
+            }
+            holder.tvTime.setText(item.getCreatedAt());
+        }
+        return view;
+    }
+    class ViewHolder {
         @BindView(R.id.tv_up_line)
         TextView tvUpLine;
+        @BindView(R.id.img_icon)
+        ImageView imgIcon;
         @BindView(R.id.tv_down_line)
         TextView tvDownLine;
         @BindView(R.id.tv_state)
@@ -110,10 +106,8 @@ public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.Vi
         TextView tvTime;
         @BindView(R.id.tv_info)
         TextView tvInfo;
-        @BindView(R.id.img_icon)
-        ImageView imgIcon;
+
         ViewHolder(View view) {
-            super(view);
             ButterKnife.bind(this, view);
         }
     }

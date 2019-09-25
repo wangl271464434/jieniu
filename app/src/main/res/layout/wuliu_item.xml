@@ -20,8 +20,8 @@
                 />
             <ImageView
                 android:id="@+id/img_icon"
-                android:layout_width="@dimen/size_30dp"
-                android:layout_height="@dimen/size_30dp"
+                android:layout_width="@dimen/size_25dp"
+                android:layout_height="@dimen/size_25dp"
                 android:src="@mipmap/ic_order_wancheng"
                 />
             <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/size_10dp"
             android:background="@drawable/bg_white_shape"
-            android:padding="@dimen/size_15dp"
+            android:padding="@dimen/size_10dp"
             >
             <TextView
                 android:id="@+id/tv_state"

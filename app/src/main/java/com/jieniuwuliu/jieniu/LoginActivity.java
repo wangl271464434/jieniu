@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.method.HideReturnsTransformationMethod;
@@ -13,19 +14,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.api.HttpApi;
+import com.jieniuwuliu.jieniu.base.BaseActivity;
+import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.WeChatInfo;
 import com.jieniuwuliu.jieniu.bean.WeChatToken;
 import com.jieniuwuliu.jieniu.messageEvent.WeChatEvent;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.RegularUtil;
 import com.jieniuwuliu.jieniu.util.SPUtil;
-import com.jieniuwuliu.jieniu.api.HttpApi;
-import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.bean.LoginBean;
+import com.jieniuwuliu.jieniu.util.TimeCountUtil;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -41,6 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -65,11 +70,24 @@ public class LoginActivity extends BaseActivity {
     ImageView imgEye;
     @BindView(R.id.tv_phone)
     TextView tvPhone;
+    @BindView(R.id.tv_code)
+    TextView tvCode;
+    @BindView(R.id.et_code)
+    EditText etCode;
+    @BindView(R.id.tv_login_type)
+    TextView tvLoginType;
+    @BindView(R.id.layout_pwd)
+    RelativeLayout layoutPwd;
+    @BindView(R.id.layout_code)
+    RelativeLayout layoutCode;
     private boolean flag = false;
+    private boolean isCode = true;
     private MyLoading loading;
     private boolean isRestart;
-    private String phone,pwd;
+    private String phone, pwd, code;
     private IWXAPI api;
+    private int loginType = 2;//1是账号登录 2是验证码登录 3是微信登录
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -78,59 +96,60 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void init() {
         EventBus.getDefault().register(this);
-        isRestart = getIntent().getBooleanExtra("restart",false);
-        loading = new MyLoading(this,R.style.CustomDialog);
-        phone = (String) SPUtil.get(this,Constant.PHONE,Constant.PHONE,"");
-        pwd = (String) SPUtil.get(this,Constant.PWD,Constant.PWD,"");
-        if (!"".equals(phone)){
+        isRestart = getIntent().getBooleanExtra("restart", false);
+        loading = new MyLoading(this, R.style.CustomDialog);
+        phone = (String) SPUtil.get(this, Constant.PHONE, Constant.PHONE, "");
+        pwd = (String) SPUtil.get(this, Constant.PWD, Constant.PWD, "");
+        if (!"".equals(phone)) {
             etPhone.setText(phone);
             etPhone.setSelection(phone.length());
             etPwd.setText(pwd);
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(WeChatEvent event) {
-        Log.i("wechat",event.toString());
-        if (!event.getCode().equals("")){
+        Log.i("wechat", event.toString());
+        if (!event.getCode().equals("")) {
             loading.show();
             getAccessToken(event.getCode());
         }
     }
 
     private void getAccessToken(String code) {
-        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+Constant.WXAPPID+"&secret="+Constant.WXSERCET+"&code="+code+"&grant_type=authorization_code";
+        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + Constant.WXAPPID + "&secret=" + Constant.WXSERCET + "&code=" + code + "&grant_type=authorization_code";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-                MyToast.show(getApplicationContext(),"获取accesstoken失败");
+                MyToast.show(getApplicationContext(), "获取accesstoken失败");
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String s = response.body().string();
-                WeChatToken weChatToken = (WeChatToken) GsonUtil.praseJsonToModel(s,WeChatToken.class);
-                getWeChatInfo(weChatToken.getAccess_token(),weChatToken.getOpenid());
+                WeChatToken weChatToken = (WeChatToken) GsonUtil.praseJsonToModel(s, WeChatToken.class);
+                getWeChatInfo(weChatToken.getAccess_token(), weChatToken.getOpenid());
             }
         });
     }
 
     private void getWeChatInfo(String access_token, String openid) {
-        String url = "https://api.weixin.qq.com/sns/userinfo?access_token="+access_token+"&openid="+openid;
+        String url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-                MyToast.show(getApplicationContext(),"获取个人信息失败");
+                MyToast.show(getApplicationContext(), "获取个人信息失败");
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String s = response.body().string();
-                WeChatInfo info = (WeChatInfo) GsonUtil.praseJsonToModel(s,WeChatInfo.class);
-                Log.i("wechatinfo",info.toString());
+                WeChatInfo info = (WeChatInfo) GsonUtil.praseJsonToModel(s, WeChatInfo.class);
+                Log.i("wechatinfo", info.toString());
                /* wxName = info.getNickname();
                 unionid = info.getUnionid();
                 bindInfo();*/
@@ -138,7 +157,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.back, R.id.tv_register,R.id.img_eye, R.id.tv_forget, R.id.login,R.id.img_weChat,R.id.tv_phone, R.id.tv_agreement})
+    @OnClick({R.id.back, R.id.tv_register, R.id.img_eye, R.id.tv_code, R.id.tv_login_type, R.id.tv_forget, R.id.login, R.id.img_weChat, R.id.tv_phone, R.id.tv_agreement})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -157,25 +176,64 @@ public class LoginActivity extends BaseActivity {
                     MyToast.show(this, "手机号或密码不能为空");
                     return;
                 }
-                if (phone.length()>11){
+                if (phone.length() > 11) {
                     MyToast.show(this, "请输入正确的手机格式");
                     return;
                 }
-                login();
+                switch (loginType){
+                    case 1:
+                        login();
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
+                break;
+            case R.id.tv_code://获取验证码
+                phone = etPhone.getText().toString();
+                if (phone.isEmpty()) {
+                    MyToast.show(this, R.string.phone_empty_notice);
+                    return;
+                }
+                if (!RegularUtil.isMobileNO(phone)) {
+                    MyToast.show(this, R.string.phone_error_notice);
+                    return;
+                }
+                TimeCountUtil.countDown(this, tvCode, 60 * 1000, 1000, "重新获取");
+                getPhoneCode(phone);
+                break;
+            case R.id.tv_login_type://验证码和账号切换
+                if (isCode){
+                    loginType = 1;
+                    isCode = false;
+                    tvLoginType.setText("验证码登录");
+                    layoutCode.setVisibility(View.GONE);
+                    layoutPwd.setVisibility(View.VISIBLE);
+                    tvForget.setVisibility(View.VISIBLE);
+                }else{
+                    loginType = 2;
+                    isCode = true;
+                    tvLoginType.setText("账号登录");
+                    layoutPwd.setVisibility(View.GONE);
+                    layoutCode.setVisibility(View.VISIBLE);
+                    tvForget.setVisibility(View.GONE);
+                }
                 break;
             case R.id.img_weChat:
+                loginType = 3;
                 loginWeChat();
                 break;
             case R.id.tv_agreement://协议
                 startAcy(YinSIActivity.class);
                 break;
             case R.id.img_eye:
-                if (flag){//密码可见
+                if (flag) {//密码可见
                     etPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     imgEye.setImageResource(R.mipmap.ic_setting_invisible);
                     etPwd.setSelection(etPwd.getText().length());
                     flag = false;
-                }else{//密码不可见
+                } else {//密码不可见
                     etPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     imgEye.setImageResource(R.mipmap.ic_setting_visible);
                     etPwd.setSelection(etPwd.getText().length());
@@ -186,7 +244,7 @@ public class LoginActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= 23) {
                     int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
                     if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 100);
                         return;
                     }
                 }
@@ -197,14 +255,18 @@ public class LoginActivity extends BaseActivity {
                 break;
         }
     }
+    //验证码登录
+    private void getPhoneCode(String phone) {
+    }
+
     /**
      * 微信登录
-     * */
+     */
     private void loginWeChat() {
-        if (api == null){
+        if (api == null) {
             api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
         }
-        if (!api.isWXAppInstalled()){
+        if (!api.isWXAppInstalled()) {
             MyToast.show(this, "请您安装微信客户端！");
             return;
         }
@@ -213,6 +275,7 @@ public class LoginActivity extends BaseActivity {
         req.state = "wx_login_duzun";
         api.sendReq(req);
     }
+
     /**
      * 登录方法
      */
@@ -244,12 +307,12 @@ public class LoginActivity extends BaseActivity {
                                 SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
                                 //登录方式
                                 SPUtil.put(getApplicationContext(), Constant.LOGINTYPE, Constant.LOGINTYPE, 1);
-                                if (response.body().getData().getPersonType() == 5 ||response.body().getData().getPersonType() == 6) {
+                                if (response.body().getData().getPersonType() == 5 || response.body().getData().getPersonType() == 6) {
                                     MyToast.show(LoginActivity.this, "用户名或者密码错误");
                                 } else {
-                                    if (isRestart){
+                                    if (isRestart) {
                                         finish();
-                                    }else{
+                                    } else {
                                         startAcy(MainActivity.class);
                                         finish();
                                     }
@@ -264,13 +327,14 @@ public class LoginActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    MyToast.show(getApplicationContext(),e.toString());
+                    MyToast.show(getApplicationContext(), e.toString());
                 }
             }
+
             @Override
             public void onFailure(Call<LoginBean> call, Throwable t) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(),"网络连接失败，请重试");
+                MyToast.show(getApplicationContext(), "网络连接失败，请重试");
             }
         });
     }
@@ -278,8 +342,15 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
