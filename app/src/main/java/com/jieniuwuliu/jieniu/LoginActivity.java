@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
+import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.WeChatInfo;
@@ -51,6 +52,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,7 +86,7 @@ public class LoginActivity extends BaseActivity {
     private boolean isCode = true;
     private MyLoading loading;
     private boolean isRestart;
-    private String phone, pwd, code;
+    private String phone, pwd, code,openid,unionid;
     private IWXAPI api;
     private int loginType = 2;//1是账号登录 2是验证码登录 3是微信登录
 
@@ -130,12 +132,13 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String s = response.body().string();
                 WeChatToken weChatToken = (WeChatToken) GsonUtil.praseJsonToModel(s, WeChatToken.class);
-                getWeChatInfo(weChatToken.getAccess_token(), weChatToken.getOpenid());
+                openid =  weChatToken.getOpenid();
+                getWeChatInfo(weChatToken.getAccess_token());
             }
         });
     }
 
-    private void getWeChatInfo(String access_token, String openid) {
+    private void getWeChatInfo(String access_token) {
         String url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -149,10 +152,29 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String s = response.body().string();
                 WeChatInfo info = (WeChatInfo) GsonUtil.praseJsonToModel(s, WeChatInfo.class);
+                unionid = info.getUnionid();
+                weChatLogin();
                 Log.i("wechatinfo", info.toString());
                /* wxName = info.getNickname();
                 unionid = info.getUnionid();
                 bindInfo();*/
+            }
+        });
+    }
+    /**
+     * 上传微信信息
+     * */
+    private void weChatLogin() {
+        Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatLogin(openid,unionid);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
     }
@@ -201,7 +223,7 @@ public class LoginActivity extends BaseActivity {
                     return;
                 }
                 TimeCountUtil.countDown(this, tvCode, 60 * 1000, 1000, "重新获取");
-                getPhoneCode(phone);
+                getPhoneCode();
                 break;
             case R.id.tv_login_type://验证码和账号切换
                 if (isCode){
@@ -256,7 +278,33 @@ public class LoginActivity extends BaseActivity {
         }
     }
     //验证码登录
-    private void getPhoneCode(String phone) {
+    private void getPhoneCode() {
+        loading.show();
+        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"3");
+        observable.enqueue(new Callback<CodeBean>() {
+            @Override
+            public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {
+                loading.dismiss();
+                switch (response.code()){
+                    case 200:
+                        MyToast.show(LoginActivity.this, "验证码已发送，请注意查收");
+                        break;
+                    case 400:
+                        try{
+                            String json = response.errorBody().string();
+                            MyToast.show(getApplicationContext(),new JSONObject(json).getString("data"));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CodeBean> call, Throwable t) {
+                loading.dismiss();
+            }
+        });
     }
 
     /**

@@ -51,6 +51,9 @@ public interface HttpApi {
     /**忘记密码*/
     @PUT("password")
     Call<ResponseBody> forgetPwd(@Body RequestBody body);
+    /**微信登录*/
+    @GET("usets/checkwx")
+    Call<ResponseBody> weChatLogin(@Query("openid")String openid,@Query("unionid")String unionid);
     /**获取用户信息*/
     @GET("users")
     Call<UserBean> getUserInfo();

@@ -44,8 +44,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".qipeishang.QPSListActivity"
-            android:launchMode="singleTask"/>
+        <activity android:name=".BindPhoneActivity"></activity>
+        <activity
+            android:name=".qipeishang.QPSListActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".mine.ui.EditExpActivity" />
         <activity android:name=".home.MsgActivity" />
         <activity
