@@ -1,7 +1,7 @@
 package com.jieniuwuliu.jieniu;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.LocalFileUtil;

@@ -6,23 +6,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jieniuwuliu.jieniu.CarTypeActivity;
 import com.jieniuwuliu.jieniu.MoreCarActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
@@ -30,11 +28,8 @@ import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.QPType;
 import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
-import com.jieniuwuliu.jieniu.messageEvent.CarTypeEvent;
-import com.jieniuwuliu.jieniu.messageEvent.LuntanEvent;
 import com.jieniuwuliu.jieniu.mine.adapter.QpTypeAdapter;
 import com.jieniuwuliu.jieniu.qipeishang.adapter.QiPeiShangListAdapter;
-import com.jieniuwuliu.jieniu.qipeishang.adapter.TypeQPSAdater;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
@@ -45,16 +40,12 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;

@@ -8,7 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -23,8 +23,6 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jieniuwuliu.jieniu.bean.QPType;
-import com.jieniuwuliu.jieniu.messageEvent.CarTypeEvent;
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.AppUtil;
@@ -41,11 +39,8 @@ import com.jieniuwuliu.jieniu.bean.Version;
 import com.jieniuwuliu.jieniu.fragment.HomeFragment;
 import com.jieniuwuliu.jieniu.fragment.LunTanFragment;
 import com.jieniuwuliu.jieniu.fragment.MineFragment;
-import com.jieniuwuliu.jieniu.fragment.QiPeiShangFragment;
 import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.service.SocketService;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;

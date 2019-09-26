@@ -2,9 +2,9 @@ package com.jieniuwuliu.jieniu.mine.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;

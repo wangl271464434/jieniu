@@ -6,12 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-
-import java.security.MessageDigest;
 
 public class GlideCircleTransform extends BitmapTransformation{
     private Paint mBorderPaint;

@@ -1,8 +1,7 @@
 package com.jieniuwuliu.jieniu.home;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MsgActivity extends BaseActivity implements OnLoadMoreListener, OnRefreshListener {

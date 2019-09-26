@@ -16,10 +16,6 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:isSupportExit="true"
-        app:maxOffset="@dimen/size_70dp"
-        app:minOffset="@dimen/size_100dp"
-        app:mode="open"
         >
         <RelativeLayout
             android:layout_width="match_parent"

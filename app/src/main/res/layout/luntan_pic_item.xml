@@ -39,7 +39,7 @@
                 android:layout_marginLeft="@dimen/size_5dp"
                 android:layout_marginTop="@dimen/size_10dp"
                 />
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
                 android:textColor="@color/luntan_name"
                 />
         </LinearLayout>
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

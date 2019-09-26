@@ -1,8 +1,8 @@
 package com.jieniuwuliu.jieniu.mine.ui;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.jieniuwuliu.jieniu.R;

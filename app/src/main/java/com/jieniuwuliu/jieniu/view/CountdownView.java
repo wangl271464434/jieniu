@@ -1,25 +1,19 @@
 package com.jieniuwuliu.jieniu.view;
 
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.ColorInt;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
 

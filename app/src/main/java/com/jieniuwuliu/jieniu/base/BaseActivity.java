@@ -2,10 +2,8 @@ package com.jieniuwuliu.jieniu.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-
-import org.greenrobot.eventbus.EventBus;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

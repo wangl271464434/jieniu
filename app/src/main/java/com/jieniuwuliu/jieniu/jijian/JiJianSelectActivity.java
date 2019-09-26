@@ -2,10 +2,10 @@ package com.jieniuwuliu.jieniu.jijian;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;

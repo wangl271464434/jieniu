@@ -1,8 +1,8 @@
 package com.jieniuwuliu.jieniu;
 
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
@@ -13,10 +13,7 @@ import com.jieniuwuliu.jieniu.adapter.MoreCarSortAdapter;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.SortModel;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
-import com.jieniuwuliu.jieniu.messageEvent.CarTypeEvent;
 import com.jieniuwuliu.jieniu.view.SideBar;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;

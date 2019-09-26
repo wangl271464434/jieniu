@@ -2,7 +2,7 @@ package com.jieniuwuliu.jieniu.mine.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;

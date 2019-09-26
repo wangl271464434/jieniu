@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,6 +48,7 @@ import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
+import com.jieniuwuliu.jieniu.util.ScreenUtil;
 import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.util.TimeUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -125,7 +126,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     }
 
     protected void init() {
-        hideBottomUIMenu();
         list = new ArrayList<>();
         loading = new MyLoading(this, R.style.CustomDialog);
         checkSDK();
@@ -139,28 +139,21 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             aMap.setInfoWindowAdapter(this);
         }
         getWeather();
+        /**设置 setting*/
+        scrollLayout.setMinOffset(0);
+        scrollLayout.setMaxOffset((int) (ScreenUtil.getScreenHeight(this) * 0.5));
+        scrollLayout.setExitOffset(ScreenUtil.dip2px(this, 90));
+        scrollLayout.setIsSupportExit(true);
+        scrollLayout.setAllowHorizontalScroll(true);
         scrollLayout.setOnScrollChangedListener(this);
+//        scrollLayout.setOnScrollChangedListener(mOnScrollChangedListener);
+        scrollLayout.setToExit();
+        
         adapter = new OrderWuLiuAdapter(this, list);
         rv.setAdapter(adapter);
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
         orderNo = getIntent().getStringExtra("orderNo");
         getOrderInfo();
-    }
-    /**
-     * 隐藏虚拟按键，并且全屏
-     */
-    protected void hideBottomUIMenu() {
-        //隐藏虚拟按键，并且全屏
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
     }
     /**
      * 获取天气信息
@@ -431,16 +424,13 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     @Override
     public void onScrollProgressChanged(float currentProgress) {
         if (currentProgress>0){
-            settings.setAllGesturesEnabled(false);
+            settings.setScrollGesturesEnabled(false);
         }
     }
 
     @Override
     public void onScrollFinished(ScrollLayout.Status currentStatus) {
-        Log.i("state",currentStatus.name());
-        settings.setAllGesturesEnabled(true);
-        /*if (currentStatus.equals(ScrollLayout.Status.OPENED)){
-        }*/
+        settings.setScrollGesturesEnabled(true);
     }
 
     @Override

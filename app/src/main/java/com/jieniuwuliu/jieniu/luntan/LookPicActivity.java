@@ -1,7 +1,6 @@
 package com.jieniuwuliu.jieniu.luntan;
 
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.widget.ImageView;
 
 import com.jieniuwuliu.jieniu.R;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
