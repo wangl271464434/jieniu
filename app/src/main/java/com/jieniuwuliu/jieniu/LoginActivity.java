@@ -116,6 +116,10 @@ public class LoginActivity extends BaseActivity {
             loading.show();
             getAccessToken(event.getCode());
         }
+        if (event.isLogin()){
+            startAcy(MainActivity.class);
+            finish();
+        }
     }
 
     private void getAccessToken(String code) {
@@ -152,29 +156,12 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String s = response.body().string();
                 WeChatInfo info = (WeChatInfo) GsonUtil.praseJsonToModel(s, WeChatInfo.class);
-                unionid = info.getUnionid();
-                weChatLogin();
                 Log.i("wechatinfo", info.toString());
-               /* wxName = info.getNickname();
                 unionid = info.getUnionid();
-                bindInfo();*/
-            }
-        });
-    }
-    /**
-     * 上传微信信息
-     * */
-    private void weChatLogin() {
-        Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatLogin(openid,unionid);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Intent intent = new Intent(LoginActivity.this,BindPhoneActivity.class);
+                intent.putExtra("openid",openid);
+                intent.putExtra("unionid",unionid);
+                startActivity(intent);
             }
         });
     }
@@ -207,8 +194,7 @@ public class LoginActivity extends BaseActivity {
                         login();
                         break;
                     case 2:
-                        break;
-                    case 3:
+                        codeLogin();
                         break;
                 }
                 break;
@@ -277,7 +263,48 @@ public class LoginActivity extends BaseActivity {
                 break;
         }
     }
-    //验证码登录
+    /**
+     * 验证码登录
+     * */
+    private void codeLogin() {
+        loading.show();
+        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatLogin("","",phone,code);
+        call.enqueue(new Callback<LoginBean>() {
+            @Override
+            public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
+                loading.dismiss();
+                try{
+                    if (response.code()==200){
+                        //账号
+                        SPUtil.put(getApplicationContext(), Constant.PHONE, Constant.PHONE, phone);
+                        //token
+                        SPUtil.put(getApplicationContext(), Constant.TOKEN, Constant.TOKEN, response.body().getToken());
+                        //是否认证
+                        SPUtil.put(getApplicationContext(), Constant.ISCERTIFY, Constant.ISCERTIFY, response.body().getData().getAuth());
+                        //用户类型
+                        SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
+                        SPUtil.put(getApplicationContext(), Constant.LOGINTYPE, Constant.LOGINTYPE, 2);
+                        startAcy(MainActivity.class);
+                        finish();
+                    }else{
+                        String s = response.errorBody().string();
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(), object.getString("msg"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginBean> call, Throwable t) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
+            }
+        });
+    }
+
+    //验证码登录获取验证码
     private void getPhoneCode() {
         loading.show();
         Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"3");
@@ -303,6 +330,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Call<CodeBean> call, Throwable t) {
                 loading.dismiss();
+                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
     }
@@ -382,7 +410,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Call<LoginBean> call, Throwable t) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(), "网络连接失败，请重试");
+                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
     }
@@ -393,12 +421,5 @@ public class LoginActivity extends BaseActivity {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

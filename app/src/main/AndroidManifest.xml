@@ -44,7 +44,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".BindPhoneActivity"></activity>
+        <activity android:name=".mine.ui.SetPwdActivity"></activity>
+        <activity android:name=".BindPhoneActivity" />
         <activity
             android:name=".qipeishang.QPSListActivity"
             android:launchMode="singleTask" />

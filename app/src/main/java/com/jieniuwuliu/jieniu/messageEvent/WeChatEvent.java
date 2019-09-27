@@ -2,7 +2,7 @@ package com.jieniuwuliu.jieniu.messageEvent;
 
 public class WeChatEvent {
     private String code;
-
+    private boolean isLogin;
     public String getCode() {
         return code;
     }
@@ -11,10 +11,19 @@ public class WeChatEvent {
         this.code = code;
     }
 
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
+
     @Override
     public String toString() {
         return "WeChatEvent{" +
                 "code='" + code + '\'' +
+                ", isLogin=" + isLogin +
                 '}';
     }
 }

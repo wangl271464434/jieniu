@@ -2,26 +2,30 @@ package com.jieniuwuliu.jieniu.mine.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.LoginActivity;
 import com.jieniuwuliu.jieniu.MainActivity;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.base.BaseActivity;
+import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.Version;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.util.UpdateManager;
-import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.bean.Version;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,9 +40,14 @@ public class SettingActivity extends BaseActivity {
     TextView title;
     @BindView(R.id.point)
     TextView point;
+    @BindView(R.id.layout_tab1)
+    RelativeLayout layoutTab1;
+    @BindView(R.id.layout_tab3)
+    RelativeLayout layoutTab3;
     private String token;
     private String localVersion = "";
     private Version version;
+    private int loginType;
 
     @Override
     protected int getLayoutId() {
@@ -50,6 +59,14 @@ public class SettingActivity extends BaseActivity {
         title.setText(R.string.setting);
         localVersion = APKVersionCodeUtils.getVersionName(this);
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
+        loginType = (int) SPUtil.get(this, Constant.LOGINTYPE, Constant.LOGINTYPE, 0);
+        if (loginType == 1){
+            layoutTab1.setVisibility(View.GONE);
+            layoutTab3.setVisibility(View.VISIBLE);
+        }else{
+            layoutTab1.setVisibility(View.VISIBLE);
+            layoutTab3.setVisibility(View.GONE);
+        }
         checkVerSion();
     }
 
@@ -68,7 +85,7 @@ public class SettingActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<Version> call, Throwable t) {
-
+                Log.i("error","失败信息："+t.toString());
             }
         });
     }
@@ -81,7 +98,7 @@ public class SettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.layout_tab1://设置登录账号
-//                startAcy(StoreCertifyActivity.class);
+                startAcy(SetPwdActivity.class);
                 break;
             case R.id.layout_tab3://修改密码
                 startAcy(ModifyPwdActivity.class);
@@ -90,10 +107,10 @@ public class SettingActivity extends BaseActivity {
                 startAcy(AboutActivity.class);
                 break;
             case R.id.layout_tab7://检测新版本
-                if (!version.getData().getVersion().equals(localVersion)){
+                if (!version.getData().getVersion().equals(localVersion)) {
                     showCheck(version.getData());
-                }else{
-                    MyToast.show(this,"已是最新版本");
+                } else {
+                    MyToast.show(this, "已是最新版本");
                 }
                 break;
             case R.id.exit_btn://退出
@@ -101,9 +118,10 @@ public class SettingActivity extends BaseActivity {
                 break;
         }
     }
+
     /**
      * 版本更新提示
-     * */
+     */
     @SuppressLint("SetTextI18n")
     private void showCheck(Version.Data data) {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
@@ -114,7 +132,7 @@ public class SettingActivity extends BaseActivity {
         window.setGravity(Gravity.CENTER);
         dialog.show();
         WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        params.width = (int) (defaultDisplay.getWidth() * 0.8);
         window.setAttributes(params);
         dialog.setContentView(R.layout.check_update_dialog);
         dialog.setCanceledOnTouchOutside(false);
@@ -122,8 +140,8 @@ public class SettingActivity extends BaseActivity {
         TextView tvSize = dialog.findViewById(R.id.tv_size);
         TextView tvInfo = dialog.findViewById(R.id.tv_info);
         TextView tvSure = dialog.findViewById(R.id.tv_sure);
-        tvVersion.setText("最新版本："+data.getVersion());
-        tvSize.setText("新版本大小："+data.getTotal());
+        tvVersion.setText("最新版本：" + data.getVersion());
+        tvSize.setText("新版本大小：" + data.getTotal());
         tvInfo.setText(data.getInfom());
         tvSure.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +152,7 @@ public class SettingActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * 退出登录
      */
