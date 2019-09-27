@@ -15,7 +15,6 @@ import com.jieniuwuliu.jieniu.util.RegularUtil;
 import com.jieniuwuliu.jieniu.util.TimeCountUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONException;
@@ -70,10 +69,10 @@ public class RegisterActivity extends BaseActivity {
      */
     private void getPhoneCode(String phone) {
         loading.show();
-        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"1");
-        observable.enqueue(new Callback<CodeBean>() {
+        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"1");
+        observable.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
                 switch (response.code()){
                     case 200:
@@ -91,7 +90,7 @@ public class RegisterActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<CodeBean> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
             }
         });

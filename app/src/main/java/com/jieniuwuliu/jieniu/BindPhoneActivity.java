@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.messageEvent.WeChatEvent;
@@ -82,10 +81,10 @@ public class BindPhoneActivity extends BaseActivity {
      */
     private void getPhoneCode() {
         loading.show();
-        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"4");
-        observable.enqueue(new Callback<CodeBean>() {
+        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"4");
+        observable.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
                 switch (response.code()){
                     case 200:
@@ -103,7 +102,7 @@ public class BindPhoneActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<CodeBean> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
             }
         });
@@ -113,12 +112,13 @@ public class BindPhoneActivity extends BaseActivity {
      * */
     private void weChatLogin() {
         loading.show();
-        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatLogin(openid,unionid,phone,code);
+        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatBindPhone(openid,unionid,phone,code);
         call.enqueue(new Callback<LoginBean>() {
             @Override
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
                 loading.dismiss();
                 try{
+                    MyToast.show(getApplicationContext(),response.body().toString());
                     if (response.code()==200){
                         //账号
                         SPUtil.put(getApplicationContext(), Constant.PHONE, Constant.PHONE, phone);

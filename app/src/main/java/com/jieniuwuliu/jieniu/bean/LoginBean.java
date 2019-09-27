@@ -6,9 +6,9 @@ public class LoginBean {
 
     /**
      * status : 0
-     * msg : 登录成功
-     * token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6MSwicGhvbmUiOiIxODY5MTQ4NzIzMCIsInVpZCI6Mn0.QMieUs3S6s6mGfJapYXzIWZ3FrfeUZw8t4BN7RCo7mU
-     * data : {"id":2,"CreatedAt":"2019-04-20T03:50:10Z","UpdatedAt":"2019-04-22T11:47:52Z","phone":"18691487230","password":"123456","auth":4,"code":"","personType":1,"avatar":"","nickname":"哦哟是我人做","address":{"id":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","address":"","default":false,"uid":0,"name":"","phone":"","lng":0,"lat":0},"vip":false,"vipTime":"","point":0,"couponNum":0,"shopPhoto":"http://jieniu-1254151230.cos.ap-beijing.myqcloud.com/img/IMG_20190422_194742.png","zizhiPhoto":"http://jieniu-1254151230.cos.ap-beijing.myqcloud.com/img/IMG_20190422_194753.png","fuwuCars":"[阿斯顿·马丁]","fuwuCar":null,"yewu":"Bbnb","wechat":"用肉在真谦虚"}
+     * msg : 成功
+     * token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNTY5NjU0NzIyLCJsZXZlbCI6IiIsIm5hbWUiOiIiLCJwaG9uZSI6IjE1NjE5MzcwMjY3IiwidHlwZSI6MCwidWlkIjozNjE2fQ.9zGf0N1822DoyFADkrSrgjtDqVHQtXUsV2L1MsSfYWk
+     * data : {"id":3616,"CreatedAt":"2019-09-27 14:44:05","UpdatedAt":"2019-09-27 14:47:20","phone":"15619370267","auth":0,"code":"","personType":0,"nickname":"","address":{"id":0,"CreatedAt":"1970-01-01 08:00:00","UpdatedAt":"1970-01-01 08:00:00","address":"","default":false,"uid":0,"name":"","phone":"","lng":0,"lat":0},"vip":false,"vipTime":"1970-01-01 08:00:00","point":0,"couponNum":0,"shopPhoto":"","wechat":"","todayCount":0,"totalCount":0,"addr":"","unionid":"oGtAC1CmLO1msstcMHAqhME9_KUk","wxName":"","original":"","display":0,"sort":0,"pushq":0,"landline":"","storeinform":"","label":"","partscity":0,"openid":"oC9zb1WFI-YbhojYklUoRT48mRKY"}
      */
 
     private int status;
@@ -50,38 +50,44 @@ public class LoginBean {
 
     public static class DataBean {
         /**
-         * id : 2
-         * CreatedAt : 2019-04-20T03:50:10Z
-         * UpdatedAt : 2019-04-22T11:47:52Z
-         * phone : 18691487230
-         * password : 123456
-         * auth : 4
+         * id : 3616
+         * CreatedAt : 2019-09-27 14:44:05
+         * UpdatedAt : 2019-09-27 14:47:20
+         * phone : 15619370267
+         * auth : 0
          * code :
-         * personType : 1
-         * avatar :
-         * nickname : 哦哟是我人做
-         * address : {"id":0,"CreatedAt":"0001-01-01T00:00:00Z","UpdatedAt":"0001-01-01T00:00:00Z","address":"","default":false,"uid":0,"name":"","phone":"","lng":0,"lat":0}
+         * personType : 0
+         * nickname :
+         * address : {"id":0,"CreatedAt":"1970-01-01 08:00:00","UpdatedAt":"1970-01-01 08:00:00","address":"","default":false,"uid":0,"name":"","phone":"","lng":0,"lat":0}
          * vip : false
-         * vipTime :
+         * vipTime : 1970-01-01 08:00:00
          * point : 0
          * couponNum : 0
-         * shopPhoto : http://jieniu-1254151230.cos.ap-beijing.myqcloud.com/img/IMG_20190422_194742.png
-         * zizhiPhoto : http://jieniu-1254151230.cos.ap-beijing.myqcloud.com/img/IMG_20190422_194753.png
-         * fuwuCars : [阿斯顿·马丁]
-         * fuwuCar : null
-         * yewu : Bbnb
-         * wechat : 用肉在真谦虚
+         * shopPhoto :
+         * wechat :
+         * todayCount : 0
+         * totalCount : 0
+         * addr :
+         * unionid : oGtAC1CmLO1msstcMHAqhME9_KUk
+         * wxName :
+         * original :
+         * display : 0
+         * sort : 0
+         * pushq : 0
+         * landline :
+         * storeinform :
+         * label :
+         * partscity : 0
+         * openid : oC9zb1WFI-YbhojYklUoRT48mRKY
          */
 
         private int id;
         private String CreatedAt;
         private String UpdatedAt;
         private String phone;
-        private String password;
         private int auth;
         private String code;
         private int personType;
-        private String avatar;
         private String nickname;
         private AddressBean address;
         private boolean vip;
@@ -89,11 +95,21 @@ public class LoginBean {
         private int point;
         private int couponNum;
         private String shopPhoto;
-        private String zizhiPhoto;
-        private String fuwuCars;
-        private Object fuwuCar;
-        private String yewu;
         private String wechat;
+        private int todayCount;
+        private int totalCount;
+        private String addr;
+        private String unionid;
+        private String wxName;
+        private String original;
+        private int display;
+        private int sort;
+        private int pushq;
+        private String landline;
+        private String storeinform;
+        private String label;
+        private int partscity;
+        private String openid;
 
         public int getId() {
             return id;
@@ -127,14 +143,6 @@ public class LoginBean {
             this.phone = phone;
         }
 
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
         public int getAuth() {
             return auth;
         }
@@ -157,14 +165,6 @@ public class LoginBean {
 
         public void setPersonType(int personType) {
             this.personType = personType;
-        }
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
         }
 
         public String getNickname() {
@@ -223,38 +223,6 @@ public class LoginBean {
             this.shopPhoto = shopPhoto;
         }
 
-        public String getZizhiPhoto() {
-            return zizhiPhoto;
-        }
-
-        public void setZizhiPhoto(String zizhiPhoto) {
-            this.zizhiPhoto = zizhiPhoto;
-        }
-
-        public String getFuwuCars() {
-            return fuwuCars;
-        }
-
-        public void setFuwuCars(String fuwuCars) {
-            this.fuwuCars = fuwuCars;
-        }
-
-        public Object getFuwuCar() {
-            return fuwuCar;
-        }
-
-        public void setFuwuCar(Object fuwuCar) {
-            this.fuwuCar = fuwuCar;
-        }
-
-        public String getYewu() {
-            return yewu;
-        }
-
-        public void setYewu(String yewu) {
-            this.yewu = yewu;
-        }
-
         public String getWechat() {
             return wechat;
         }
@@ -263,11 +231,123 @@ public class LoginBean {
             this.wechat = wechat;
         }
 
+        public int getTodayCount() {
+            return todayCount;
+        }
+
+        public void setTodayCount(int todayCount) {
+            this.todayCount = todayCount;
+        }
+
+        public int getTotalCount() {
+            return totalCount;
+        }
+
+        public void setTotalCount(int totalCount) {
+            this.totalCount = totalCount;
+        }
+
+        public String getAddr() {
+            return addr;
+        }
+
+        public void setAddr(String addr) {
+            this.addr = addr;
+        }
+
+        public String getUnionid() {
+            return unionid;
+        }
+
+        public void setUnionid(String unionid) {
+            this.unionid = unionid;
+        }
+
+        public String getWxName() {
+            return wxName;
+        }
+
+        public void setWxName(String wxName) {
+            this.wxName = wxName;
+        }
+
+        public String getOriginal() {
+            return original;
+        }
+
+        public void setOriginal(String original) {
+            this.original = original;
+        }
+
+        public int getDisplay() {
+            return display;
+        }
+
+        public void setDisplay(int display) {
+            this.display = display;
+        }
+
+        public int getSort() {
+            return sort;
+        }
+
+        public void setSort(int sort) {
+            this.sort = sort;
+        }
+
+        public int getPushq() {
+            return pushq;
+        }
+
+        public void setPushq(int pushq) {
+            this.pushq = pushq;
+        }
+
+        public String getLandline() {
+            return landline;
+        }
+
+        public void setLandline(String landline) {
+            this.landline = landline;
+        }
+
+        public String getStoreinform() {
+            return storeinform;
+        }
+
+        public void setStoreinform(String storeinform) {
+            this.storeinform = storeinform;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public int getPartscity() {
+            return partscity;
+        }
+
+        public void setPartscity(int partscity) {
+            this.partscity = partscity;
+        }
+
+        public String getOpenid() {
+            return openid;
+        }
+
+        public void setOpenid(String openid) {
+            this.openid = openid;
+        }
+
         public static class AddressBean {
             /**
              * id : 0
-             * CreatedAt : 0001-01-01T00:00:00Z
-             * UpdatedAt : 0001-01-01T00:00:00Z
+             * CreatedAt : 1970-01-01 08:00:00
+             * UpdatedAt : 1970-01-01 08:00:00
              * address :
              * default : false
              * uid : 0
@@ -364,10 +444,70 @@ public class LoginBean {
             public int getLat() {
                 return lat;
             }
-
             public void setLat(int lat) {
                 this.lat = lat;
             }
+
+            @Override
+            public String toString() {
+                return "AddressBean{" +
+                        "id=" + id +
+                        ", CreatedAt='" + CreatedAt + '\'' +
+                        ", UpdatedAt='" + UpdatedAt + '\'' +
+                        ", address='" + address + '\'' +
+                        ", defaultX=" + defaultX +
+                        ", uid=" + uid +
+                        ", name='" + name + '\'' +
+                        ", phone='" + phone + '\'' +
+                        ", lng=" + lng +
+                        ", lat=" + lat +
+                        '}';
+            }
         }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "id=" + id +
+                    ", CreatedAt='" + CreatedAt + '\'' +
+                    ", UpdatedAt='" + UpdatedAt + '\'' +
+                    ", phone='" + phone + '\'' +
+                    ", auth=" + auth +
+                    ", code='" + code + '\'' +
+                    ", personType=" + personType +
+                    ", nickname='" + nickname + '\'' +
+                    ", address=" + address +
+                    ", vip=" + vip +
+                    ", vipTime='" + vipTime + '\'' +
+                    ", point=" + point +
+                    ", couponNum=" + couponNum +
+                    ", shopPhoto='" + shopPhoto + '\'' +
+                    ", wechat='" + wechat + '\'' +
+                    ", todayCount=" + todayCount +
+                    ", totalCount=" + totalCount +
+                    ", addr='" + addr + '\'' +
+                    ", unionid='" + unionid + '\'' +
+                    ", wxName='" + wxName + '\'' +
+                    ", original='" + original + '\'' +
+                    ", display=" + display +
+                    ", sort=" + sort +
+                    ", pushq=" + pushq +
+                    ", landline='" + landline + '\'' +
+                    ", storeinform='" + storeinform + '\'' +
+                    ", label='" + label + '\'' +
+                    ", partscity=" + partscity +
+                    ", openid='" + openid + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "LoginBean{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                ", token='" + token + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

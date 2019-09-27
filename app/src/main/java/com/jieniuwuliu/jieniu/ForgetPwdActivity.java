@@ -15,7 +15,6 @@ import com.jieniuwuliu.jieniu.util.RegularUtil;
 import com.jieniuwuliu.jieniu.util.TimeCountUtil;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
 import org.json.JSONException;
@@ -174,18 +173,24 @@ public class ForgetPwdActivity extends BaseActivity {
     //获取验证码
     private void getPhoneCode(String phone) {
         loading.show();
-        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"2");
-        observable.enqueue(new Callback<CodeBean>() {
+        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"2");
+        observable.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
-                int status = response.body().getStatus();
-                if (status == 0){
+                if (response.code() == 200){
                     MyToast.show(ForgetPwdActivity.this,"验证码已发送，请注意查收");
+                }else{
+                    try{
+                        String json = response.errorBody().string();
+                        MyToast.show(getApplicationContext(),new JSONObject(json).getString("data"));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
             @Override
-            public void onFailure(Call<CodeBean> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
             }
         });

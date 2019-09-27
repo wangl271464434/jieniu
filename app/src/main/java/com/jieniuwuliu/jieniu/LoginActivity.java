@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
-import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
 import com.jieniuwuliu.jieniu.bean.WeChatInfo;
@@ -149,19 +148,59 @@ public class LoginActivity extends BaseActivity {
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-                MyToast.show(getApplicationContext(), "获取个人信息失败");
+                Log.i("wechatInfo","wechatInfo:获取个人信息失败");
             }
-
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String s = response.body().string();
                 WeChatInfo info = (WeChatInfo) GsonUtil.praseJsonToModel(s, WeChatInfo.class);
                 Log.i("wechatinfo", info.toString());
                 unionid = info.getUnionid();
-                Intent intent = new Intent(LoginActivity.this,BindPhoneActivity.class);
-                intent.putExtra("openid",openid);
-                intent.putExtra("unionid",unionid);
-                startActivity(intent);
+                checkWeChat();
+            }
+        });
+    }
+    /**
+     * 检测是否需要绑定手机
+     * */
+    private void checkWeChat() {
+        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatLogin(openid,unionid);
+        call.enqueue(new Callback<LoginBean>() {
+            @Override
+            public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
+                loading.dismiss();
+                try{
+                    if (response.code()==200){
+                        //账号
+                        SPUtil.put(getApplicationContext(), Constant.PHONE, Constant.PHONE, response.body().getData().getPhone());
+                        //token
+                        SPUtil.put(getApplicationContext(), Constant.TOKEN, Constant.TOKEN, response.body().getToken());
+                        //是否认证
+                        SPUtil.put(getApplicationContext(), Constant.ISCERTIFY, Constant.ISCERTIFY, response.body().getData().getAuth());
+                        //用户类型
+                        SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
+                        SPUtil.put(getApplicationContext(), Constant.LOGINTYPE, Constant.LOGINTYPE, 3);
+                        startAcy(MainActivity.class);
+                        finish();
+                    }else if (response.code() == 404){
+                        Intent intent = new Intent(LoginActivity.this,BindPhoneActivity.class);
+                        intent.putExtra("openid",openid);
+                        intent.putExtra("unionid",unionid);
+                        startActivity(intent);
+                    }else{
+                        String s = response.errorBody().string();
+                        JSONObject object = new JSONObject(s);
+                        MyToast.show(getApplicationContext(), object.getString("msg"));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginBean> call, Throwable t) {
+                loading.dismiss();
+                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
     }
@@ -181,19 +220,28 @@ public class LoginActivity extends BaseActivity {
             case R.id.login://登录
                 phone = etPhone.getText().toString();
                 pwd = etPwd.getText().toString();
-                if (phone.isEmpty() || pwd.isEmpty()) {
-                    MyToast.show(this, "手机号或密码不能为空");
-                    return;
-                }
-                if (phone.length() > 11) {
-                    MyToast.show(this, "请输入正确的手机格式");
-                    return;
-                }
+                code = etCode.getText().toString();
                 switch (loginType){
                     case 1:
+                        if (phone.isEmpty() || pwd.isEmpty()) {
+                            MyToast.show(this, "手机号或密码不能为空");
+                            return;
+                        }
+                        if (phone.length() > 11) {
+                            MyToast.show(this, "请输入正确的手机格式");
+                            return;
+                        }
                         login();
                         break;
                     case 2:
+                        if (phone.isEmpty() || code.isEmpty()) {
+                            MyToast.show(this, "手机号或验证码码不能为空");
+                            return;
+                        }
+                        if (phone.length() > 11) {
+                            MyToast.show(this, "请输入正确的手机格式");
+                            return;
+                        }
                         codeLogin();
                         break;
                 }
@@ -268,7 +316,7 @@ public class LoginActivity extends BaseActivity {
      * */
     private void codeLogin() {
         loading.show();
-        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatLogin("","",phone,code);
+        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatBindPhone("","",phone,code);
         call.enqueue(new Callback<LoginBean>() {
             @Override
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
@@ -307,10 +355,10 @@ public class LoginActivity extends BaseActivity {
     //验证码登录获取验证码
     private void getPhoneCode() {
         loading.show();
-        Call<CodeBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"3");
-        observable.enqueue(new Callback<CodeBean>() {
+        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"3");
+        observable.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<CodeBean> call, Response<CodeBean> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
                 switch (response.code()){
                     case 200:
@@ -328,9 +376,9 @@ public class LoginActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<CodeBean> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
+//                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
     }
@@ -339,11 +387,13 @@ public class LoginActivity extends BaseActivity {
      * 微信登录
      */
     private void loginWeChat() {
+        loading.show();
         if (api == null) {
             api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
         }
         if (!api.isWXAppInstalled()) {
             MyToast.show(this, "请您安装微信客户端！");
+            loading.dismiss();
             return;
         }
         SendAuth.Req req = new SendAuth.Req();

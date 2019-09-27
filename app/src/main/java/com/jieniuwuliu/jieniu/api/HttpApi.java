@@ -4,7 +4,6 @@ package com.jieniuwuliu.jieniu.api;
 import com.jieniuwuliu.jieniu.bean.AddAdr;
 import com.jieniuwuliu.jieniu.bean.AddressList;
 import com.jieniuwuliu.jieniu.bean.BJOrder;
-import com.jieniuwuliu.jieniu.bean.CodeBean;
 import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.bean.ImgBanner;
 import com.jieniuwuliu.jieniu.bean.LoginBean;
@@ -47,13 +46,16 @@ public interface HttpApi {
     Call<ResponseBody> register(@Body RequestBody body);
     /**获取验证码*/
     @POST("sms/{phone}")
-    Call<CodeBean> code(@Path("phone") String phone,@Query("st")String type);
+    Call<ResponseBody> code(@Path("phone") String phone,@Query("st")String type);
     /**忘记密码*/
     @PUT("password")
     Call<ResponseBody> forgetPwd(@Body RequestBody body);
     /**微信登录*/
-    @GET("usets/checkwx")
-    Call<LoginBean> weChatLogin(@Query("openid")String openid,@Query("unionid")String unionid,@Query("phone")String phone,@Query("code")String code);
+    @GET("checkwx")
+    Call<LoginBean> weChatLogin(@Query("openid")String openid,@Query("unionid")String unionid);
+    /**微信登录*/
+    @GET("checkphone")
+    Call<LoginBean> weChatBindPhone(@Query("openid")String openid,@Query("unionid")String unionid,@Query("phone")String phone,@Query("code")String code);
     /**获取用户信息*/
     @GET("users")
     Call<UserBean> getUserInfo();
