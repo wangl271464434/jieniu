@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.AppUtil;
@@ -99,7 +100,7 @@ public class MainActivity extends BaseActivity{
         checkVerSion();
     }
     private void checkVerSion() {
-        Call<Version> call = HttpUtil.getInstance().getApi(token).checkVersion();
+        Call<Version> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).checkVersion();
         call.enqueue(new Callback<Version>() {
             @Override
             public void onResponse(Call<Version> call, Response<Version> response) {
@@ -109,7 +110,6 @@ public class MainActivity extends BaseActivity{
                     getNotice();
                 }
             }
-
             @Override
             public void onFailure(Call<Version> call, Throwable t) {
 

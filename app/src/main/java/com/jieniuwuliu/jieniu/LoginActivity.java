@@ -222,7 +222,7 @@ public class LoginActivity extends BaseActivity {
                 pwd = etPwd.getText().toString();
                 code = etCode.getText().toString();
                 switch (loginType){
-                    case 1:
+                    case 1://密码登录
                         if (phone.isEmpty() || pwd.isEmpty()) {
                             MyToast.show(this, "手机号或密码不能为空");
                             return;
@@ -233,9 +233,9 @@ public class LoginActivity extends BaseActivity {
                         }
                         login();
                         break;
-                    case 2:
+                    case 2://验证码登录
                         if (phone.isEmpty() || code.isEmpty()) {
-                            MyToast.show(this, "手机号或验证码码不能为空");
+                            MyToast.show(this, "手机号或验证码不能为空");
                             return;
                         }
                         if (phone.length() > 11) {

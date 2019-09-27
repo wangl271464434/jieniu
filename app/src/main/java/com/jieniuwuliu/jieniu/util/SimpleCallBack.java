@@ -28,6 +28,7 @@ public abstract class SimpleCallBack<T> implements Callback<T> {
                 onFail(400,response);
                 break;
             case 401:
+                Log.i("error",response.toString());
                 intent = new Intent();
                 intent.setClass(activity,LoginActivity.class);
                 intent.putExtra("restart",true);
