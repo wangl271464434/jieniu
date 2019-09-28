@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.method.HideReturnsTransformationMethod;
@@ -96,7 +98,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        addActivity(this);
         EventBus.getDefault().register(this);
         isRestart = getIntent().getBooleanExtra("restart", false);
         loading = new MyLoading(this, R.style.CustomDialog);
@@ -193,7 +194,7 @@ public class LoginActivity extends BaseActivity {
                         Intent intent = new Intent(LoginActivity.this,BindPhoneActivity.class);
                         intent.putExtra("openid",openid);
                         intent.putExtra("unionid",unionid);
-                        startActivity(intent);
+                        startActivityForResult(intent,1000);
                     }else{
                         String s = response.errorBody().string();
                         JSONObject object = new JSONObject(s);
@@ -473,6 +474,18 @@ public class LoginActivity extends BaseActivity {
                 MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000){//微信绑定手机的返回
+            boolean code = data.getBooleanExtra("weChatBind",false);
+            if (code){
+                startAcy(MainActivity.class);
+                finish();
+            }
+        }
     }
 
     @Override

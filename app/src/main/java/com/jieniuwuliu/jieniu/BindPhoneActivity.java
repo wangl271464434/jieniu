@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
@@ -130,10 +131,9 @@ public class BindPhoneActivity extends BaseActivity {
                         //用户类型
                         SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
                         SPUtil.put(getApplicationContext(), Constant.LOGINTYPE, Constant.LOGINTYPE, 3);
-                        IntentFilter intentFilter = new IntentFilter();
-                        intentFilter.addAction(LOGIN);
-                        registerReceiver(mRecevier, intentFilter);
-                        startAcy(MainActivity.class);
+                        Intent intent = new Intent();
+                        intent.putExtra("weChatBind",true);
+                        setResult(RESULT_OK,intent);
                         finish();
                     }else{
                         String s = response.errorBody().string();
