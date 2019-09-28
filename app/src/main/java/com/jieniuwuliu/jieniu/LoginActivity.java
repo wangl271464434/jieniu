@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity {
     private boolean isRestart;
     private String phone, pwd, code,openid,unionid;
     private IWXAPI api;
-    private int loginType = 2;//1是账号登录 2是验证码登录 3是微信登录
+    private int loginType;//1是账号登录 2是验证码登录 3是微信登录
 
     @Override
     protected int getLayoutId() {
@@ -99,6 +99,16 @@ public class LoginActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         isRestart = getIntent().getBooleanExtra("restart", false);
         loading = new MyLoading(this, R.style.CustomDialog);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loginType = 2;
+        tvLoginType.setText("账号登录");
+        layoutPwd.setVisibility(View.GONE);
+        layoutCode.setVisibility(View.VISIBLE);
+        tvForget.setVisibility(View.GONE);
         phone = (String) SPUtil.get(this, Constant.PHONE, Constant.PHONE, "");
         pwd = (String) SPUtil.get(this, Constant.PWD, Constant.PWD, "");
         if (!"".equals(phone)) {
@@ -378,7 +388,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
-//                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
+                MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
     }

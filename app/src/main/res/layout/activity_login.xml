@@ -68,12 +68,11 @@
             android:textColor="@color/edit_text"
             android:singleLine="true"
             android:padding="@dimen/size_5dp"
-            android:inputType="number"
+            android:inputType="phone"
             android:textSize="@dimen/size_14sp"
             android:drawablePadding="@dimen/size_10dp"
             android:drawableLeft="@mipmap/ic_setting_user"
             android:layout_marginTop="@dimen/size_50dp"
-            android:maxLength="12"
             />
         <include
             android:layout_width="match_parent"
