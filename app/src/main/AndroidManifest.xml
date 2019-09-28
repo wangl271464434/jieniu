@@ -79,7 +79,8 @@
         <activity
             android:name=".LoginActivity"
             android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait">

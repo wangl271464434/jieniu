@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.util.TimeCountUtil;
 import com.jieniuwuliu.jieniu.view.MyLoading;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import butterknife.BindView;
@@ -81,7 +83,7 @@ public class BindPhoneActivity extends BaseActivity {
      */
     private void getPhoneCode() {
         loading.show();
-        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"4");
+        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"3");
         observable.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -118,7 +120,6 @@ public class BindPhoneActivity extends BaseActivity {
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
                 loading.dismiss();
                 try{
-                    MyToast.show(getApplicationContext(),response.body().toString());
                     if (response.code()==200){
                         //账号
                         SPUtil.put(getApplicationContext(), Constant.PHONE, Constant.PHONE, phone);
@@ -129,8 +130,10 @@ public class BindPhoneActivity extends BaseActivity {
                         //用户类型
                         SPUtil.put(getApplicationContext(), Constant.USERTYPE, Constant.USERTYPE, response.body().getData().getPersonType());
                         SPUtil.put(getApplicationContext(), Constant.LOGINTYPE, Constant.LOGINTYPE, 3);
-                        WeChatEvent event = new WeChatEvent();
-                        event.setLogin(true);
+                        IntentFilter intentFilter = new IntentFilter();
+                        intentFilter.addAction(LOGIN);
+                        registerReceiver(mRecevier, intentFilter);
+                        startAcy(MainActivity.class);
                         finish();
                     }else{
                         String s = response.errorBody().string();

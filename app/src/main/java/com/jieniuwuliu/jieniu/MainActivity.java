@@ -258,6 +258,7 @@ public class MainActivity extends BaseActivity{
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finishAllActivity();
                 finish();
             }
         });

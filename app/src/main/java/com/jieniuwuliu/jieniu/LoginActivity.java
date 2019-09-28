@@ -96,6 +96,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        addActivity(this);
         EventBus.getDefault().register(this);
         isRestart = getIntent().getBooleanExtra("restart", false);
         loading = new MyLoading(this, R.style.CustomDialog);
@@ -124,10 +125,6 @@ public class LoginActivity extends BaseActivity {
         if (!event.getCode().equals("")) {
             loading.show();
             getAccessToken(event.getCode());
-        }
-        if (event.isLogin()){
-            startAcy(MainActivity.class);
-            finish();
         }
     }
 
@@ -353,41 +350,44 @@ public class LoginActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<LoginBean> call, Throwable t) {
                 loading.dismiss();
                 MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
+
+
         });
     }
 
     //验证码登录获取验证码
     private void getPhoneCode() {
         loading.show();
-        Call<ResponseBody> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"3");
-        observable.enqueue(new Callback<ResponseBody>() {
+        Call<ResponseBody> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).code(phone,"4");
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loading.dismiss();
-                switch (response.code()){
-                    case 200:
-                        MyToast.show(LoginActivity.this, "验证码已发送，请注意查收");
-                        break;
-                    case 400:
-                        try{
+                try{
+                    switch (response.code()){
+                        case 200:
+                            Log.i("codeLogin",response.body().string());
+                            MyToast.show(LoginActivity.this, "验证码已发送，请注意查收");
+                            break;
+                        case 400:
                             String json = response.errorBody().string();
+                            Log.i("codeLogin",json);
                             MyToast.show(getApplicationContext(),new JSONObject(json).getString("data"));
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        break;
+                            break;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loading.dismiss();
+                Log.i("codeLogin",t.toString());
                 MyToast.show(getApplicationContext(), getResources().getString(R.string.net_fail));
             }
         });
