@@ -9,7 +9,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword '123456'
-            storeFile file('F:\\AndroidProject\\jieniu\\jieniu.jks')
+            storeFile file('C:/Users/wl/Desktop/jieniu/jieniu.jks')
             storePassword '123456'
         }
     }
@@ -52,7 +52,7 @@ android {
     //配置app打包后的名字
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "jieniu_${releaseTime()}_${variant.versionName}.${variant.versionCode}.apk"
+            outputFileName = "jieniu_${releaseTime()}_${variant.versionName}.apk"
         }
     }
     dexOptions {
