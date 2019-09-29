@@ -2,6 +2,7 @@ package com.jieniuwuliu.jieniu.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,7 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -64,6 +69,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -148,8 +155,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             aMap.setInfoWindowAdapter(this);
         }
     getWeather();
-    adapter = new OrderWuLiuAdapter(this, list);
-//        rv.setAdapter(adapter);
     token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
     orderNo = getIntent().getStringExtra("orderNo");
 }
@@ -206,9 +211,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                             }
                         }
                     }
-
-                    list.addAll(orderWuliuInfo.getOrderList());
-                    adapter.notifyDataSetChanged();
                     setLine();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -432,10 +434,42 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         tvWuLiu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyToast.show(OrderInfoActivity.this,"查看物流轨迹");
+                if (orderWuliuInfo.getOrderList().size()>0){
+                    showWuLiu();
+                }else{
+                    MyToast.show(getApplicationContext(),"暂无物流轨迹");
+                }
             }
         });
         return infoWindow;
+    }
+    /**显示物流*/
+    private void showWuLiu() {
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
+        window.setBackgroundDrawableResource(R.drawable.bg_white_shape);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
+        dialog.setContentView(R.layout.dialog_wuliu);
+        dialog.setCanceledOnTouchOutside(true);
+        LinearLayout close = dialog.findViewById(R.id.layout_close);
+        RecyclerView recyclerView = dialog.findViewById(R.id.recyclerView);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        list.addAll(orderWuliuInfo.getOrderList());
+        adapter = new OrderWuLiuAdapter(this,list);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

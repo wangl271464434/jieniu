@@ -13,10 +13,12 @@ import com.jieniuwuliu.jieniu.bean.OrderInfo;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OrderWuLiuAdapter extends BaseAdapter{
+public class OrderWuLiuAdapter extends RecyclerView.Adapter<OrderWuLiuAdapter.ViewHolder> {
     private Context context;
     private List<OrderInfo.OrderListBean> list;
 
@@ -24,31 +26,18 @@ public class OrderWuLiuAdapter extends BaseAdapter{
         this.list = list;
         this.context = context;
     }
+
+    @NonNull
     @Override
-    public int getCount() {
-        return list.size();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.wuliu_item, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
     }
 
     @Override
-    public Object getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder ;
-        if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.wuliu_item, viewGroup, false);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
-        }else{
-            holder = (ViewHolder) view.getTag();
-        }
+    public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
+        holder.itemView.setTag(i);
         if (list.size() != 0) {
             OrderInfo.OrderListBean item = list.get(i);
             if (i == 0) {
@@ -88,9 +77,14 @@ public class OrderWuLiuAdapter extends BaseAdapter{
             }
             holder.tvTime.setText(item.getCreatedAt());
         }
-        return view;
     }
-    class ViewHolder {
+
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+    class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.tv_up_line)
         TextView tvUpLine;
         @BindView(R.id.img_icon)
@@ -105,6 +99,7 @@ public class OrderWuLiuAdapter extends BaseAdapter{
         TextView tvInfo;
 
         ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }
