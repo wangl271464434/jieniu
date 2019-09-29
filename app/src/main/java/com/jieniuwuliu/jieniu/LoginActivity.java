@@ -481,11 +481,13 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000){//微信绑定手机的返回
-            boolean code = data.getBooleanExtra("weChatBind",false);
-            if (code){
-                startAcy(MainActivity.class);
-                finish();
+        if (data != null){
+            if (requestCode == 1000){//微信绑定手机的返回
+                boolean code = data.getBooleanExtra("weChatBind",false);
+                if (code){
+                    startAcy(MainActivity.class);
+                    finish();
+                }
             }
         }
     }

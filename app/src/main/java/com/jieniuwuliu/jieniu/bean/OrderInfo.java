@@ -325,6 +325,7 @@ public class OrderInfo implements Serializable{
         private String UpdatedAt;
         private String OrderNumber;
         private int Uid;
+        private String Info = "暂无个性签名";
         private String Name;
         private boolean Status;
         private String Phone;
@@ -334,6 +335,14 @@ public class OrderInfo implements Serializable{
         private String Region;
         private String msg;
         private String Level;
+
+        public String getInfo() {
+            return Info;
+        }
+
+        public void setInfo(String info) {
+            Info = info;
+        }
 
         public String getMsg() {
             return msg;

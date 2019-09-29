@@ -35,16 +35,16 @@
             android:textColor="@color/white"
             android:textSize="@dimen/size_18sp"
             />
+
         <TextView
             android:id="@+id/tv_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="11dp"
             android:text="分享"
             android:textColor="@color/white"
-            android:textSize="@dimen/size_18sp"
-            />
+            android:textSize="@dimen/size_18sp" />
     </RelativeLayout>
     <com.amap.api.maps.MapView
         android:id="@+id/map"
@@ -135,22 +135,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_circle_refresh"
-            android:text="点击刷新"
-            android:paddingTop="@dimen/size_5dp"
-            android:paddingBottom="@dimen/size_5dp"
-            android:paddingLeft="@dimen/size_10dp"
-            android:paddingRight="@dimen/size_15dp"
+            android:text="自动刷新"
+            android:paddingTop="@dimen/size_3dp"
+            android:paddingBottom="@dimen/size_3dp"
+            android:paddingLeft="@dimen/size_8dp"
+            android:paddingRight="@dimen/size_14dp"
             android:layout_marginLeft="-5dp"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:background="@drawable/refresh_text_shape"
             android:textColor="@color/black"
-            android:textSize="@dimen/size_15sp"
+            android:textSize="@dimen/size_12sp"
             />
         <TextView
             android:id="@+id/tv_circle_refresh"
-            android:layout_width="@dimen/size_40dp"
-            android:layout_height="@dimen/size_40dp"
+            android:layout_width="@dimen/size_30dp"
+            android:layout_height="@dimen/size_30dp"
             android:text="10"
             android:gravity="center"
             android:background="@drawable/refresh_shape"

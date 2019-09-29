@@ -331,10 +331,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
 
     @Override
     public void onItemClick(View view, int position) {
-        intent = new Intent();
-        intent.setClass(getActivity(),OrderInfoActivity.class);
-        intent.putExtra("orderNo",list.get(position).getOrderNumber());
-        getActivity().startActivity(intent);
+        if (list.size()>0){
+            intent = new Intent();
+            intent.setClass(getActivity(),OrderInfoActivity.class);
+            intent.putExtra("orderNo",list.get(position).getOrderNumber());
+            getActivity().startActivity(intent);
+        }
     }
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {

@@ -32,15 +32,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="配送员：张三"
-            android:textSize="@dimen/size_14sp"
+            android:textSize="@dimen/size_12sp"
             android:textColor="@color/white"
             />
         <TextView
             android:id="@+id/tv_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="个性签名"
-            android:textSize="@dimen/size_14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="@dimen/size_12sp"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/size_5dp"
             />
@@ -49,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="配送状态"
-            android:textSize="@dimen/size_14sp"
+            android:textSize="@dimen/size_12sp"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/size_5dp"
             />
@@ -58,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="预计到达时间"
-            android:textSize="@dimen/size_14sp"
+            android:textSize="@dimen/size_12sp"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/size_5dp"
             />
@@ -95,7 +96,7 @@
             android:id="@+id/tv_wuliu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="物流信息"
+            android:text="物流轨迹"
             android:textSize="@dimen/size_15sp"
             android:textColor="@color/white"
             android:padding="@dimen/size_5dp"

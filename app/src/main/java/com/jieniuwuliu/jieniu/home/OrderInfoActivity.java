@@ -97,6 +97,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private Intent intent;
     private Marker startMarker;
     private UiSettings settings;
+    private CountDownTimer timer;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,24 +120,21 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 .position(AMapUtil.convertToLatLng(end))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.end)));
     }
-
+    @SuppressLint("SetTextI18n")
     protected void init() {
-        layoutRefresh.setEnabled(false);
-        tvCircleRefresh.setText("10");
-        CountDownTimer timer = new CountDownTimer(11*1000,1000) {
+        tvCircleRefresh.setText("15");
+        timer = new CountDownTimer(15*1000,1000) {
             @Override
             public void onTick(long l) {
                 tvCircleRefresh.setText(""+(l/1000));
-                layoutRefresh.setEnabled(false);
             }
-
             @Override
             public void onFinish() {
-                tvCircleRefresh.setText("0");
-                layoutRefresh.setEnabled(true);
-            }
+                timer.cancel();
+                tvCircleRefresh.setText("15");
+                getOrderInfo();
+        }
         };
-        timer.start();
         list = new ArrayList<>();
         loading = new MyLoading(this, R.style.CustomDialog);
         checkSDK();
@@ -154,7 +152,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 //        rv.setAdapter(adapter);
     token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
     orderNo = getIntent().getStringExtra("orderNo");
-    getOrderInfo();
 }
     /**
      * 获取天气信息
@@ -172,12 +169,15 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
      */
     private void getOrderInfo() {
         loading.show();
+        aMap.clear();
+        list.clear();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getOrderInfo(orderNo);
         call.enqueue(new SimpleCallBack<ResponseBody>(OrderInfoActivity.this) {
             @SuppressLint("SetTextI18n")
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
+                timer.start();
                 try {
                     String json = new JSONObject(response.body().string()).getString("data");
                     orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
@@ -273,12 +273,14 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     protected void onResume() {
         super.onResume();
         map.onResume();
+        getOrderInfo();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         map.onPause();
+        timer.cancel();
     }
 
     @Override
@@ -317,8 +319,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 MyToast.show(this,"该功能正在开发");
                 break;
             case R.id.layout_refresh://刷新
-                aMap.clear();
-                list.clear();
                 getOrderInfo();
                 break;
         }
@@ -413,6 +413,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         tvState.setText(state);
         if (orderWuliuInfo.getOrderList().size()>0){
             tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(0).getName());
+            tvInfo.setText(orderWuliuInfo.getOrderList().get(0).getInfo());
             GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),img);
         }else{
             tvName.setText("暂无配送员");
@@ -431,7 +432,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         tvWuLiu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                MyToast.show(OrderInfoActivity.this,"查看物流轨迹");
             }
         });
         return infoWindow;
