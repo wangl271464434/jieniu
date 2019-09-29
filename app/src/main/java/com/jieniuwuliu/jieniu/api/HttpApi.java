@@ -55,7 +55,7 @@ public interface HttpApi {
     Call<LoginBean> weChatLogin(@Query("openid")String openid,@Query("unionid")String unionid);
     /**微信登录*/
     @GET("checkphone")
-    Call<LoginBean> weChatBindPhone(@Query("openid")String openid,@Query("unionid")String unionid,@Query("phone")String phone,@Query("code")String code);
+    Call<LoginBean> weChatBindPhone(@Query("openid")String openid,@Query("unionid")String unionid,@Query("phone")String phone,@Query("code")String code,@Query("name")String name);
     /**获取用户信息*/
     @GET("users")
     Call<UserBean> getUserInfo();

@@ -13,10 +13,13 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +51,6 @@ import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
-import com.jieniuwuliu.jieniu.util.ScreenUtil;
 import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.util.TimeUtil;
 import com.jieniuwuliu.jieniu.bean.Constant;
@@ -56,8 +58,6 @@ import com.jieniuwuliu.jieniu.bean.OrderInfo;
 import com.jieniuwuliu.jieniu.home.adapter.OrderWuLiuAdapter;
 import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 import com.jieniuwuliu.jieniu.view.MyLoading;
-import com.yinglan.scrolllayout.ScrollLayout;
-import com.yinglan.scrolllayout.content.ContentListView;
 
 import org.json.JSONObject;
 
@@ -73,26 +73,21 @@ import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Response;
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener, AMap.InfoWindowAdapter, ScrollLayout.OnScrollChangedListener {
+public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener, AMap.InfoWindowAdapter {
     @BindView(R.id.map)
     MapView map;
-    @BindView(R.id.rv)
-    ContentListView rv;
-    @BindView(R.id.tv_state)
-    TextView tvState;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
     @BindView(R.id.gifView)
     GifImageView gifView;
     @BindView(R.id.layout_gif)
     LinearLayout layoutGif;
-    @BindView(R.id.scrollLayout)
-    ScrollLayout scrollLayout;
-    private boolean isShow = false;
+    @BindView(R.id.tv_circle_refresh)
+    TextView tvCircleRefresh;
+    @BindView(R.id.layout_refresh)
+    RelativeLayout layoutRefresh;
     private AMap aMap;
     protected Unbinder unbinder;
     private OrderWuLiuAdapter adapter;
-    private String token, orderNo;
+    private String token, orderNo,timeStr,state;
     private MyLoading loading;
     private OrderInfo orderWuliuInfo;
     private LatLonPoint start, end;
@@ -118,7 +113,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private void setfromandtoMarker() {
        startMarker =  aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(start))
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_niu)));
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_order_car)));
        startMarker.showInfoWindow();
         aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(end))
@@ -126,6 +121,22 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     }
 
     protected void init() {
+        layoutRefresh.setEnabled(false);
+        tvCircleRefresh.setText("10");
+        CountDownTimer timer = new CountDownTimer(11*1000,1000) {
+            @Override
+            public void onTick(long l) {
+                tvCircleRefresh.setText(""+(l/1000));
+                layoutRefresh.setEnabled(false);
+            }
+
+            @Override
+            public void onFinish() {
+                tvCircleRefresh.setText("0");
+                layoutRefresh.setEnabled(true);
+            }
+        };
+        timer.start();
         list = new ArrayList<>();
         loading = new MyLoading(this, R.style.CustomDialog);
         checkSDK();
@@ -133,28 +144,18 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             aMap = map.getMap();
             settings = aMap.getUiSettings();
             settings.setLogoBottomMargin(-50);
-            settings.setZoomControlsEnabled(false);
             //设置缩放级别
             aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+            aMap.showIndoorMap(true);//开启室内地图
             aMap.setInfoWindowAdapter(this);
         }
-        getWeather();
-        /**设置 setting*/
-        scrollLayout.setMinOffset(0);
-        scrollLayout.setMaxOffset((int) (ScreenUtil.getScreenHeight(this) * 0.5));
-        scrollLayout.setExitOffset(ScreenUtil.dip2px(this, 90));
-        scrollLayout.setIsSupportExit(true);
-        scrollLayout.setAllowHorizontalScroll(true);
-        scrollLayout.setOnScrollChangedListener(this);
-//        scrollLayout.setOnScrollChangedListener(mOnScrollChangedListener);
-        scrollLayout.setToExit();
-        
-        adapter = new OrderWuLiuAdapter(this, list);
-        rv.setAdapter(adapter);
-        token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
-        orderNo = getIntent().getStringExtra("orderNo");
-        getOrderInfo();
-    }
+    getWeather();
+    adapter = new OrderWuLiuAdapter(this, list);
+//        rv.setAdapter(adapter);
+    token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
+    orderNo = getIntent().getStringExtra("orderNo");
+    getOrderInfo();
+}
     /**
      * 获取天气信息
      * */
@@ -182,25 +183,24 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                     orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
                     if (orderWuliuInfo.getPtime() != null){
                         if (Constant.DEFAULTTIME.equals(orderWuliuInfo.getPtime())){
-                            tvState.setText("正在发货中");
-                            tvTime.setText("等待配送员配送");
+                            state = "正在发货中";
+                            timeStr = "等待配送员配送";
                         }else{
                             long  a = TimeUtil.getMiliSecond(orderWuliuInfo.getPtime());
                             for (int i = 0;i<orderWuliuInfo.getOrderList().size();i++){
                                 if ("已签收".equals(orderWuliuInfo.getOrderList().get(i).getMsg())){
                                     long time = TimeUtil.getMiliSecond(orderWuliuInfo.getOrderList().get(i).getCreatedAt()) - a;
                                     String s = TimeUtil.formatDateTime(time/1000) ;
-                                    tvState.setText("已完成");
-                                    tvTime.setText("共耗时"+s+"完成");
+                                    state = "已完成";
+                                    timeStr = "共耗时"+s+"完成";
                                     break;
                                 }else{
+                                    state = "正在配送中";
                                     long b = a - System.currentTimeMillis();
                                     if (b>0){
-                                        tvState.setText("正在配送中");
-                                        tvTime.setText("预计"+TimeUtil.formatDateTime(b/1000)+"后到达");
+                                        timeStr = "预计"+TimeUtil.formatDateTime(b/1000)+"后到达";
                                     }else{
-                                        tvState.setText("正在配送中");
-                                        tvTime.setText("已超时"+TimeUtil.formatDateTime(Math.abs(b/1000)));
+                                        timeStr = "已超时"+TimeUtil.formatDateTime(Math.abs(b/1000));
                                     }
                                 }
                             }
@@ -307,22 +307,19 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         }
     }
 
-    @OnClick({R.id.back,R.id.refresh, R.id.btn_info})
+    @OnClick({R.id.layout_back,R.id.tv_share,R.id.layout_refresh})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.back:
+            case R.id.layout_back:
                 finish();
                 break;
-            case R.id.refresh://刷新
+            case R.id.tv_share:
+                MyToast.show(this,"该功能正在开发");
+                break;
+            case R.id.layout_refresh://刷新
                 aMap.clear();
                 list.clear();
                 getOrderInfo();
-                break;
-            case R.id.btn_info://查看详情
-                intent = new Intent();
-                intent.setClass(this,OrderDescActivity.class);
-                intent.putExtra("order",orderWuliuInfo);
-                startActivity(intent);
                 break;
         }
     }
@@ -407,34 +404,41 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         View infoWindow = getLayoutInflater().inflate(R.layout.info_window,null);
         ImageView img = infoWindow.findViewById(R.id.img);
         TextView tvName = infoWindow.findViewById(R.id.tv_name);
+        TextView tvInfo = infoWindow.findViewById(R.id.tv_info);
+        TextView tvState = infoWindow.findViewById(R.id.tv_state);
+        TextView tvTime = infoWindow.findViewById(R.id.tv_time);
+        TextView tvOrderInfo = infoWindow.findViewById(R.id.tv_order_info);
+        TextView tvWuLiu = infoWindow.findViewById(R.id.tv_wuliu);
+        tvTime.setText(timeStr);
+        tvState.setText(state);
         if (orderWuliuInfo.getOrderList().size()>0){
             tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(0).getName());
             GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),img);
         }else{
             tvName.setText("暂无配送员");
         }
+        //跳转到详情
+        tvOrderInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent();
+                intent.setClass(OrderInfoActivity.this,OrderDescActivity.class);
+                intent.putExtra("order",orderWuliuInfo);
+                startActivity(intent);
+            }
+        });
+        //查看物流信息
+        tvWuLiu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         return infoWindow;
     }
 
     @Override
     public View getInfoContents(Marker marker) {
         return null;
-    }
-
-    @Override
-    public void onScrollProgressChanged(float currentProgress) {
-        if (currentProgress>0){
-            settings.setScrollGesturesEnabled(false);
-        }
-    }
-
-    @Override
-    public void onScrollFinished(ScrollLayout.Status currentStatus) {
-        settings.setScrollGesturesEnabled(true);
-    }
-
-    @Override
-    public void onChildScroll(int top) {
-
     }
 }

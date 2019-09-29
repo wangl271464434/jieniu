@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity {
     private boolean isCode = true;
     private MyLoading loading;
     private boolean isRestart;
-    private String phone, pwd, code,openid,unionid;
+    private String phone, pwd, code,openid,unionid,name;
     private IWXAPI api;
     private int loginType;//1是账号登录 2是验证码登录 3是微信登录
 
@@ -164,6 +164,7 @@ public class LoginActivity extends BaseActivity {
                 WeChatInfo info = (WeChatInfo) GsonUtil.praseJsonToModel(s, WeChatInfo.class);
                 Log.i("wechatinfo", info.toString());
                 unionid = info.getUnionid();
+                name = info.getNickname();
                 checkWeChat();
             }
         });
@@ -194,6 +195,7 @@ public class LoginActivity extends BaseActivity {
                         Intent intent = new Intent(LoginActivity.this,BindPhoneActivity.class);
                         intent.putExtra("openid",openid);
                         intent.putExtra("unionid",unionid);
+                        intent.putExtra("name",name);
                         startActivityForResult(intent,1000);
                     }else{
                         String s = response.errorBody().string();
@@ -324,7 +326,7 @@ public class LoginActivity extends BaseActivity {
      * */
     private void codeLogin() {
         loading.show();
-        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatBindPhone("","",phone,code);
+        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatBindPhone("","",phone,code,"");
         call.enqueue(new Callback<LoginBean>() {
             @Override
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {

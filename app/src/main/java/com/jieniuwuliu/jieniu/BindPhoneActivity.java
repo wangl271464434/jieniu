@@ -37,7 +37,7 @@ public class BindPhoneActivity extends BaseActivity {
     EditText etCode;
     @BindView(R.id.tv_code)
     TextView tvCode;
-    private String phone,code,openid,unionid;
+    private String phone,code,openid,unionid,name;
     private MyLoading loading;
     @Override
     protected int getLayoutId() {
@@ -49,6 +49,7 @@ public class BindPhoneActivity extends BaseActivity {
         loading = new MyLoading(this,R.style.CustomDialog);
         openid = getIntent().getStringExtra("openid");
         unionid = getIntent().getStringExtra("unionid");
+        name = getIntent().getStringExtra("name");
     }
     @OnClick({R.id.layout_back, R.id.tv_code, R.id.tv_bind})
     public void onViewClicked(View view) {
@@ -115,7 +116,7 @@ public class BindPhoneActivity extends BaseActivity {
      * */
     private void weChatLogin() {
         loading.show();
-        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatBindPhone(openid,unionid,phone,code);
+        Call<LoginBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).weChatBindPhone(openid,unionid,phone,code,name);
         call.enqueue(new Callback<LoginBean>() {
             @Override
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
