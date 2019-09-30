@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/size_18sp"
                 android:textColor="@color/white"
-                android:text="海纳汽配城"
+                android:text="全部汽配城"
                 />
             <ImageView
                 android:id="@+id/img"

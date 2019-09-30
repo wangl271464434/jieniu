@@ -50,17 +50,4 @@
             android:layout_marginTop="@dimen/size_5dp"
             />
     </LinearLayout>
-        <TextView
-            android:id="@+id/tv_call"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="联系店家"
-            android:gravity="center"
-            android:textSize="@dimen/size_16sp"
-            android:textColor="@color/orange"
-            android:background="@drawable/btn_white_shape"
-            android:padding="@dimen/size_8dp"
-            android:layout_below="@id/img"
-            android:layout_marginTop="@dimen/size_10dp"
-            />
 </RelativeLayout>

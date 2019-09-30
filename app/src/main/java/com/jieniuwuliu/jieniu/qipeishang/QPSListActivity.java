@@ -70,7 +70,7 @@ public class QPSListActivity extends BaseActivity implements OnRefreshListener, 
     private int page = 1,num = 10;
     private Intent intent;
     private List<StoreBean.DataBean> list;
-    private int partsType = 2,type;
+    private int partsType = 1000,type;
     private String car = "",token;
     private QiPeiShangListAdapter adapter;
     private MyLoading loading;

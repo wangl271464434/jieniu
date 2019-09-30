@@ -77,7 +77,14 @@ public class EditShouAdrActivity extends BaseActivity {
             etCompany.setSelection(etCompany.getText().length());
             etName.setText(item.getAddress().getName());
             etName.setSelection(etName.getText().length());
-            etPhone.setText(item.getAddress().getPhone());
+            String phone = item.getAddress().getPhone();
+            String str = "";
+            if (phone.length()>8){
+                str = phone.substring(0,3)+"*****"+phone.substring(8,11);
+            }else {
+                str = phone;
+            }
+            etPhone.setText(str);
             etPhone.setSelection(etPhone.getText().length());
             tvCity.setText(item.getAddress().getAddress().replace("陕西省",""));
             lat = item.getAddress().getLat();

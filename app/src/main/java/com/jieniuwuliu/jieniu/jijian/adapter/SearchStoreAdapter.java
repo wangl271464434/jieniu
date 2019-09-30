@@ -54,25 +54,16 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
         viewHolder.name.setText(list.get(i).getNickname());
-        viewHolder.phone.setText("联系电话："+list.get(i).getAddress().getPhone());
+        String phone = list.get(i).getAddress().getPhone();
+        String str = "";
+        if (phone.length()>8){
+            str = phone.substring(0,3)+"*****"+phone.substring(8,11);
+        }else{
+            str = phone;
+        }
+        viewHolder.phone.setText("联系电话："+str);
         GlideUtil.setImgUrl(context,list.get(i).getShopPhoto(),viewHolder.img);
         viewHolder.address.setText("地址："+list.get(i).getAddress().getAddress().replace("陕西省",""));
-        viewHolder.tvCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= 23){
-                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(context,permissions,100);
-                        return;
-                    }
-                }
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                Uri data = Uri.parse("tel:" + list.get(i).getAddress().getPhone());
-                intent.setData(data);
-                context.startActivity(intent);
-//                MyToast.show(context,"拨打电话");
-            }
-        });
     }
 
     @Override
@@ -95,8 +86,6 @@ public class SearchStoreAdapter extends RecyclerView.Adapter<SearchStoreAdapter.
         TextView phone;
         @BindView(R.id.address)
         TextView address;
-        @BindView(R.id.tv_call)
-        TextView tvCall;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

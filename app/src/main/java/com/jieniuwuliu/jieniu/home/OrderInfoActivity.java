@@ -374,6 +374,8 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     @Override
     public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {
         if (i == 1000){
+            layoutGif.setVisibility(View.VISIBLE);
+            gifView.setImageResource(R.drawable.yu);
             if (localWeatherLiveResult!=null){
               LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
               if (weatherLive.getWeather().equals("冰雹")){
