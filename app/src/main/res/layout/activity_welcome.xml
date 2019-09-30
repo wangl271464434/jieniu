@@ -7,10 +7,19 @@
     android:background="@color/white"
     tools:context=".WelcomeActivity">
     <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/welcome"
         android:scaleType="fitXY"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="gone"
         />
     <RelativeLayout
         android:layout_width="wrap_content"

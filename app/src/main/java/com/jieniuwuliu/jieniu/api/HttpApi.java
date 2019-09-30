@@ -14,6 +14,7 @@ import com.jieniuwuliu.jieniu.bean.StoreBean;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.bean.Version;
 import com.jieniuwuliu.jieniu.bean.VinCar;
+import com.jieniuwuliu.jieniu.bean.WelComeBean;
 import com.jieniuwuliu.jieniu.bean.XJCarType;
 import com.jieniuwuliu.jieniu.bean.XJOrder;
 import com.jieniuwuliu.jieniu.bean.XjInfo;
@@ -33,8 +34,8 @@ import retrofit2.http.Query;
 
 public interface HttpApi {
     /**启动页接口*/
-    @GET("getimggif")
-    Call<ResponseBody> getImg();
+    @GET("users/getimggif")
+    Call<WelComeBean> getImg();
     /**获取通告*/
     @GET("users/notices")
     Call<Notice> getNotice();

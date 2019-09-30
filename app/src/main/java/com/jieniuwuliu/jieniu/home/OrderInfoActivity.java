@@ -6,15 +6,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Display;
@@ -50,6 +45,9 @@ import com.amap.api.services.weather.LocalWeatherLiveResult;
 import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.bean.Constant;
+import com.jieniuwuliu.jieniu.bean.OrderInfo;
+import com.jieniuwuliu.jieniu.home.adapter.OrderWuLiuAdapter;
 import com.jieniuwuliu.jieniu.util.AMapUtil;
 import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
@@ -58,17 +56,30 @@ import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.util.TimeUtil;
-import com.jieniuwuliu.jieniu.bean.Constant;
-import com.jieniuwuliu.jieniu.bean.OrderInfo;
-import com.jieniuwuliu.jieniu.home.adapter.OrderWuLiuAdapter;
+import com.jieniuwuliu.jieniu.util.Util;
 import com.jieniuwuliu.jieniu.view.DrivingRouteOverlay;
 import com.jieniuwuliu.jieniu.view.MyLoading;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -79,7 +90,9 @@ import okhttp3.ResponseBody;
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Response;
+
 @RequiresApi(api = Build.VERSION_CODES.M)
+
 public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.OnRouteSearchListener, WeatherSearch.OnWeatherSearchListener, AMap.InfoWindowAdapter {
     @BindView(R.id.map)
     MapView map;
@@ -91,10 +104,13 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     TextView tvCircleRefresh;
     @BindView(R.id.layout_refresh)
     RelativeLayout layoutRefresh;
+    @BindView(R.id.layout_bottom)
+    LinearLayout layoutBottom;
+
     private AMap aMap;
     protected Unbinder unbinder;
     private OrderWuLiuAdapter adapter;
-    private String token, orderNo,timeStr,state;
+    private String token, orderNo, timeStr, state;
     private MyLoading loading;
     private OrderInfo orderWuliuInfo;
     private LatLonPoint start, end;
@@ -105,6 +121,8 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private Marker startMarker;
     private UiSettings settings;
     private CountDownTimer timer;
+    private IWXAPI api;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,33 +132,36 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         map.onCreate(savedInstanceState);
         init();
     }
-
     /**
      * 设置起点和终点的显示
      */
     private void setfromandtoMarker() {
-       startMarker =  aMap.addMarker(new MarkerOptions()
+        startMarker = aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(start))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_order_car)));
-       startMarker.showInfoWindow();
+        startMarker.showInfoWindow();
         aMap.addMarker(new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(end))
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.end)));
     }
+
     @SuppressLint("SetTextI18n")
     protected void init() {
+        api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
+
         tvCircleRefresh.setText("15");
-        timer = new CountDownTimer(15*1000,1000) {
+        timer = new CountDownTimer(15 * 1000, 1000) {
             @Override
             public void onTick(long l) {
-                tvCircleRefresh.setText(""+(l/1000));
+                tvCircleRefresh.setText("" + (l / 1000));
             }
+
             @Override
             public void onFinish() {
                 timer.cancel();
                 tvCircleRefresh.setText("15");
                 getOrderInfo();
-        }
+            }
         };
         list = new ArrayList<>();
         loading = new MyLoading(this, R.style.CustomDialog);
@@ -154,13 +175,14 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             aMap.showIndoorMap(true);//开启室内地图
             aMap.setInfoWindowAdapter(this);
         }
-    getWeather();
-    token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
-    orderNo = getIntent().getStringExtra("orderNo");
-}
+        getWeather();
+        token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
+        orderNo = getIntent().getStringExtra("orderNo");
+    }
+
     /**
      * 获取天气信息
-     * */
+     */
     private void getWeather() {
         WeatherSearchQuery query = new WeatherSearchQuery(Constant.CITY, WeatherSearchQuery.WEATHER_TYPE_LIVE);
         WeatherSearch search = new WeatherSearch(this);
@@ -185,35 +207,35 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 try {
                     String json = new JSONObject(response.body().string()).getString("data");
                     orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
-                    if (orderWuliuInfo.getPtime() != null){
-                        if (Constant.DEFAULTTIME.equals(orderWuliuInfo.getPtime())){
+                    if (orderWuliuInfo.getPtime() != null) {
+                        if (Constant.DEFAULTTIME.equals(orderWuliuInfo.getPtime())) {
                             state = "正在发货中";
                             timeStr = "等待配送员配送";
-                        }else{
-                            long  a = TimeUtil.getMiliSecond(orderWuliuInfo.getPtime());
-                            for (int i = 0;i<orderWuliuInfo.getOrderList().size();i++){
-                                if ("已签收".equals(orderWuliuInfo.getOrderList().get(i).getMsg())){
+                        } else {
+                            long a = TimeUtil.getMiliSecond(orderWuliuInfo.getPtime());
+                            for (int i = 0; i < orderWuliuInfo.getOrderList().size(); i++) {
+                                if ("已签收".equals(orderWuliuInfo.getOrderList().get(i).getMsg())) {
                                     long time = TimeUtil.getMiliSecond(orderWuliuInfo.getOrderList().get(i).getCreatedAt()) - a;
-                                    String s = TimeUtil.formatDateTime(time/1000) ;
+                                    String s = TimeUtil.formatDateTime(time / 1000);
                                     state = "已签收";
-                                    timeStr = "共耗时"+s+"完成";
+                                    timeStr = "共耗时" + s + "完成";
                                     break;
-                                }else{
+                                } else {
                                     state = "正在配送中";
                                     long b = a - System.currentTimeMillis();
-                                    if (b>0){
-                                        timeStr = "预计"+TimeUtil.formatDateTime(b/1000)+"后到达";
-                                    }else{
-                                        timeStr = "已超时"+TimeUtil.formatDateTime(Math.abs(b/1000));
+                                    if (b > 0) {
+                                        timeStr = "预计" + TimeUtil.formatDateTime(b / 1000) + "后到达";
+                                    } else {
+                                        timeStr = "已超时" + TimeUtil.formatDateTime(Math.abs(b / 1000));
                                     }
                                 }
                             }
                         }
                     }
-                    if ("已签收".equals(state)){
+                    if ("已签收".equals(state)) {
                         layoutRefresh.setVisibility(View.GONE);
                         timer.cancel();
-                    }else{
+                    } else {
                         layoutRefresh.setVisibility(View.VISIBLE);
                         timer.start();
                     }
@@ -238,7 +260,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             @Override
             public void onNetError(String s) {
                 loading.dismiss();
-                MyToast.show(getApplicationContext(),s);
+                MyToast.show(getApplicationContext(), s);
             }
         });
     }
@@ -249,9 +271,9 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private void setLine() {
         RouteSearch routeSearch = new RouteSearch(this);
         routeSearch.setRouteSearchListener(this);
-        if (orderWuliuInfo.getOrderList()!=null){
+        if (orderWuliuInfo.getOrderList() != null) {
             start = new LatLonPoint(orderWuliuInfo.getOrderList().get(0).getLat(), orderWuliuInfo.getOrderList().get(0).getLng());
-        }else {
+        } else {
             start = new LatLonPoint(orderWuliuInfo.getFromLat(), orderWuliuInfo.getFromLng());
         }
         end = new LatLonPoint(orderWuliuInfo.getToLat(), orderWuliuInfo.getToLng());
@@ -317,21 +339,62 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         }
     }
 
-    @OnClick({R.id.layout_back,R.id.tv_share,R.id.layout_refresh})
+    @OnClick({R.id.layout_back, R.id.layout_share, R.id.layout_refresh,R.id.layout_close, R.id.weChat, R.id.wx_circle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.layout_back:
                 finish();
                 break;
-            case R.id.tv_share:
-                MyToast.show(this,"该功能正在开发");
+            case R.id.layout_share:
+                layoutBottom.setVisibility(View.VISIBLE);
                 break;
             case R.id.layout_refresh://刷新
                 getOrderInfo();
                 break;
+            case R.id.layout_close:
+                layoutBottom.setVisibility(View.GONE);
+                break;
+            case R.id.weChat:
+                shareWeChat(Constant.WXFRIEND);
+                break;
+            case R.id.wx_circle:
+                shareWeChat(Constant.WXCIRCLE);
+                break;
         }
     }
-
+    /**分享功能*/
+    private void shareWeChat(int type) {
+        if (!api.isWXAppInstalled()) {
+            MyToast.show(this, "请您安装微信客户端！");
+            loading.dismiss();
+            return;
+        }
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = "http://www.qq.com";
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = "title";
+        msg.description = "Description";
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.logo);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+        bmp.recycle();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("webpage");
+        req.message = msg;
+        switch (type){
+            case Constant.WXFRIEND:
+                req.scene = SendMessageToWX.Req.WXSceneSession;
+                break;
+            case Constant.WXCIRCLE:
+                req.scene = SendMessageToWX.Req.WXSceneTimeline;
+                break;
+        }
+        api.sendReq(req);
+        layoutBottom.setVisibility(View.GONE);
+    }
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+    }
     @Override
     public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
 
@@ -379,26 +442,26 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 
     @Override
     public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {
-        if (i == 1000){
+        if (i == 1000) {
          /*   layoutGif.setVisibility(View.VISIBLE);
             gifView.setImageResource(R.drawable.yu);*/
-            if (localWeatherLiveResult!=null){
-              LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
-              if (weatherLive.getWeather().equals("冰雹")){
-                  layoutGif.setVisibility(View.VISIBLE);
-                  gifView.setImageResource(R.drawable.xue);
-              }else if (weatherLive.getWeather().equals("雨夹雪")){
-                  layoutGif.setVisibility(View.VISIBLE);
-                  gifView.setImageResource(R.drawable.xue);
-              }else if (weatherLive.getWeather().contains("雨")){
-                  layoutGif.setVisibility(View.VISIBLE);
-                  gifView.setImageResource(R.drawable.yu);
-              }else if (weatherLive.getWeather().contains("雪")){
-                  layoutGif.setVisibility(View.VISIBLE);
-                  gifView.setImageResource(R.drawable.xue);
-              }
-            }else{
-                Log.i("weather","未查询到当前城市天气");
+            if (localWeatherLiveResult != null) {
+                LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
+                if (weatherLive.getWeather().equals("冰雹")) {
+                    layoutGif.setVisibility(View.VISIBLE);
+                    gifView.setImageResource(R.drawable.xue);
+                } else if (weatherLive.getWeather().equals("雨夹雪")) {
+                    layoutGif.setVisibility(View.VISIBLE);
+                    gifView.setImageResource(R.drawable.xue);
+                } else if (weatherLive.getWeather().contains("雨")) {
+                    layoutGif.setVisibility(View.VISIBLE);
+                    gifView.setImageResource(R.drawable.yu);
+                } else if (weatherLive.getWeather().contains("雪")) {
+                    layoutGif.setVisibility(View.VISIBLE);
+                    gifView.setImageResource(R.drawable.xue);
+                }
+            } else {
+                Log.i("weather", "未查询到当前城市天气");
                 layoutGif.setVisibility(View.GONE);
             }
         }
@@ -412,7 +475,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     @SuppressLint("SetTextI18n")
     @Override
     public View getInfoWindow(Marker marker) {
-        View infoWindow = getLayoutInflater().inflate(R.layout.info_window,null);
+        View infoWindow = getLayoutInflater().inflate(R.layout.info_window, null);
         ImageView img = infoWindow.findViewById(R.id.img);
         TextView tvName = infoWindow.findViewById(R.id.tv_name);
         TextView tvInfo = infoWindow.findViewById(R.id.tv_info);
@@ -422,18 +485,18 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         TextView tvWuLiu = infoWindow.findViewById(R.id.tv_wuliu);
         tvTime.setText(timeStr);
         tvState.setText(state);
-        if (orderWuliuInfo.getOrderList().size()>0){
+        if (orderWuliuInfo.getOrderList().size() > 0) {
             if (!orderWuliuInfo.getOrderList().get(0).getMsg().equals("已发货")) {
                 if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")) {
                     GlideUtil.setUserImgUrl(OrderInfoActivity.this, orderWuliuInfo.getOrderList().get(1).getPhoto(), img);
-                    tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(1).getName());
+                    tvName.setText("配送员：" + orderWuliuInfo.getOrderList().get(1).getName());
                 } else {
                     GlideUtil.setUserImgUrl(OrderInfoActivity.this, orderWuliuInfo.getOrderList().get(0).getPhoto(), img);
-                    tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(0).getName());
+                    tvName.setText("配送员：" + orderWuliuInfo.getOrderList().get(0).getName());
                 }
                 tvInfo.setText(orderWuliuInfo.getOrderList().get(0).getInfo());
             }
-        }else{
+        } else {
             tvName.setText("暂无配送员");
         }
         //跳转到详情
@@ -441,8 +504,8 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             @Override
             public void onClick(View view) {
                 intent = new Intent();
-                intent.setClass(OrderInfoActivity.this,OrderDescActivity.class);
-                intent.putExtra("order",orderWuliuInfo);
+                intent.setClass(OrderInfoActivity.this, OrderDescActivity.class);
+                intent.putExtra("order", orderWuliuInfo);
                 startActivity(intent);
             }
         });
@@ -450,16 +513,19 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         tvWuLiu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (orderWuliuInfo.getOrderList().size()>0){
+                if (orderWuliuInfo.getOrderList().size() > 0) {
                     showWuLiu();
-                }else{
-                    MyToast.show(getApplicationContext(),"暂无物流轨迹");
+                } else {
+                    MyToast.show(getApplicationContext(), "暂无物流轨迹");
                 }
             }
         });
         return infoWindow;
     }
-    /**显示物流*/
+
+    /**
+     * 显示物流
+     */
     private void showWuLiu() {
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
@@ -469,7 +535,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         window.setGravity(Gravity.CENTER);
         dialog.show();
         WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        params.width = (int) (defaultDisplay.getWidth() * 0.8);
         window.setAttributes(params);
         dialog.setContentView(R.layout.dialog_wuliu);
         dialog.setCanceledOnTouchOutside(true);
@@ -484,7 +550,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         list.addAll(orderWuliuInfo.getOrderList());
-        adapter = new OrderWuLiuAdapter(this,list);
+        adapter = new OrderWuLiuAdapter(this, list);
         recyclerView.setAdapter(adapter);
     }
 
