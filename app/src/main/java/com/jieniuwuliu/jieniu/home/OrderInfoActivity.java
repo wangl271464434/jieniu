@@ -182,7 +182,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 loading.dismiss();
-                timer.start();
                 try {
                     String json = new JSONObject(response.body().string()).getString("data");
                     orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
@@ -196,7 +195,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                                 if ("已签收".equals(orderWuliuInfo.getOrderList().get(i).getMsg())){
                                     long time = TimeUtil.getMiliSecond(orderWuliuInfo.getOrderList().get(i).getCreatedAt()) - a;
                                     String s = TimeUtil.formatDateTime(time/1000) ;
-                                    state = "已完成";
+                                    state = "已签收";
                                     timeStr = "共耗时"+s+"完成";
                                     break;
                                 }else{
@@ -210,6 +209,13 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                                 }
                             }
                         }
+                    }
+                    if ("已签收".equals(state)){
+                        layoutRefresh.setVisibility(View.GONE);
+                        timer.cancel();
+                    }else{
+                        layoutRefresh.setVisibility(View.VISIBLE);
+                        timer.start();
                     }
                     setLine();
                 } catch (Exception e) {
@@ -403,6 +409,7 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getInfoWindow(Marker marker) {
         View infoWindow = getLayoutInflater().inflate(R.layout.info_window,null);
@@ -416,9 +423,16 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         tvTime.setText(timeStr);
         tvState.setText(state);
         if (orderWuliuInfo.getOrderList().size()>0){
-            tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(0).getName());
-            tvInfo.setText(orderWuliuInfo.getOrderList().get(0).getInfo());
-            GlideUtil.setUserImgUrl(OrderInfoActivity.this,orderWuliuInfo.getOrderList().get(0).getPhoto(),img);
+            if (!orderWuliuInfo.getOrderList().get(0).getMsg().equals("已发货")) {
+                if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")) {
+                    GlideUtil.setUserImgUrl(OrderInfoActivity.this, orderWuliuInfo.getOrderList().get(1).getPhoto(), img);
+                    tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(1).getName());
+                } else {
+                    GlideUtil.setUserImgUrl(OrderInfoActivity.this, orderWuliuInfo.getOrderList().get(0).getPhoto(), img);
+                    tvName.setText("配送员："+orderWuliuInfo.getOrderList().get(0).getName());
+                }
+                tvInfo.setText(orderWuliuInfo.getOrderList().get(0).getInfo());
+            }
         }else{
             tvName.setText("暂无配送员");
         }

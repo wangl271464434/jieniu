@@ -32,6 +32,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface HttpApi {
+    /**启动页接口*/
+    @GET("getimggif")
+    Call<ResponseBody> getImg();
     /**获取通告*/
     @GET("users/notices")
     Call<Notice> getNotice();

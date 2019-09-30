@@ -269,6 +269,29 @@ public class StoreInfoActivity extends BaseActivity {
                             tvYeWu.setText("经营范围：");
                             etContext.setText(storeBean.getYewu());
                             break;
+                        case 8:
+                            tvType.setText("货车轻卡");
+                            layout1.setVisibility(View.GONE);
+                            layout2.setVisibility(View.VISIBLE);
+                            String s1 = "";
+                            if (storeBean.getFuwuCar()!=null){
+                                for (int i =0;i<storeBean.getFuwuCar().size();i++){
+                                    if (i==0){
+                                        s1 += storeBean.getFuwuCar().get(i).getName();
+                                    }else{
+                                        s1 += ","+storeBean.getFuwuCar().get(i).getName();
+                                    }
+                                }
+                            }
+                            tvCarType.setText(s1);
+                            break;
+                        case 9:
+                            tvType.setText("单项易损");
+                            layout1.setVisibility(View.VISIBLE);
+                            layout2.setVisibility(View.GONE);
+                            tvYeWu.setText("经营范围：");
+                            etContext.setText(storeBean.getYewu());
+                            break;
                     }
                 }catch (Exception e){
                     e.printStackTrace();

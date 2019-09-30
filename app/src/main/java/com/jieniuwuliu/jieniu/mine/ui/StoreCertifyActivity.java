@@ -263,6 +263,11 @@ public class StoreCertifyActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
+        for (QPType.DataBean dataBean:data){//移除全部汽配城
+            if ("全部汽配城".equals(dataBean.getNickname())){
+                data.remove(dataBean);
+            }
+        }
         QpTypeAdapter adapter = new QpTypeAdapter(this,data);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
