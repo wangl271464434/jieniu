@@ -35,7 +35,19 @@ public class GlideUtil {
                 .fitCenter()
                 .into(imageView);
     }
-
+    /**
+     * @date: 2018/6/25
+     * @author: wangleiA
+     * @params: context, path, imageView
+     * 不会缓存
+     */
+    public static void setGifImgUrl(Context context,String url, ImageView imageView) {
+        Glide.with(context)
+                .load(url)
+                .asGif()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageView);
+    }
     /**
      * @author YangJing
      * @date 2018/7/11

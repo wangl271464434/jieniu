@@ -111,7 +111,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     protected Unbinder unbinder;
     private OrderWuLiuAdapter adapter;
     private String token, orderNo, timeStr, state;
-    private MyLoading loading;
     private OrderInfo orderWuliuInfo;
     private LatLonPoint start, end;
     private Context mContext;
@@ -148,7 +147,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     @SuppressLint("SetTextI18n")
     protected void init() {
         api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
-
         tvCircleRefresh.setText("15");
         timer = new CountDownTimer(15 * 1000, 1000) {
             @Override
@@ -164,7 +162,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             }
         };
         list = new ArrayList<>();
-        loading = new MyLoading(this, R.style.CustomDialog);
         checkSDK();
         if (aMap == null) {
             aMap = map.getMap();
@@ -195,7 +192,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
      * 获取订单详情
      */
     private void getOrderInfo() {
-        loading.show();
         aMap.clear();
         list.clear();
         Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).getOrderInfo(orderNo);
@@ -203,7 +199,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
             @SuppressLint("SetTextI18n")
             @Override
             public void onSuccess(Response<ResponseBody> response) {
-                loading.dismiss();
                 try {
                     String json = new JSONObject(response.body().string()).getString("data");
                     orderWuliuInfo = (OrderInfo) GsonUtil.praseJsonToModel(json, OrderInfo.class);
@@ -247,7 +242,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 
             @Override
             public void onFail(int errorCode, Response<ResponseBody> response) {
-                loading.dismiss();
                 try {
                     String s = response.errorBody().string();
                     JSONObject object = new JSONObject(s);
@@ -259,7 +253,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
 
             @Override
             public void onNetError(String s) {
-                loading.dismiss();
                 MyToast.show(getApplicationContext(), s);
             }
         });
@@ -366,7 +359,6 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
     private void shareWeChat(int type) {
         if (!api.isWXAppInstalled()) {
             MyToast.show(this, "请您安装微信客户端！");
-            loading.dismiss();
             return;
         }
         WXWebpageObject webpage = new WXWebpageObject();
@@ -490,11 +482,12 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 if (orderWuliuInfo.getOrderList().get(0).getMsg().equals("已签收")) {
                     GlideUtil.setUserImgUrl(OrderInfoActivity.this, orderWuliuInfo.getOrderList().get(1).getPhoto(), img);
                     tvName.setText("配送员：" + orderWuliuInfo.getOrderList().get(1).getName());
+                    tvInfo.setText(orderWuliuInfo.getOrderList().get(1).getInfo());
                 } else {
                     GlideUtil.setUserImgUrl(OrderInfoActivity.this, orderWuliuInfo.getOrderList().get(0).getPhoto(), img);
                     tvName.setText("配送员：" + orderWuliuInfo.getOrderList().get(0).getName());
+                    tvInfo.setText(orderWuliuInfo.getOrderList().get(0).getInfo());
                 }
-                tvInfo.setText(orderWuliuInfo.getOrderList().get(0).getInfo());
             }
         } else {
             tvName.setText("暂无配送员");
@@ -549,6 +542,9 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
         });
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
+        if (list.size()>0){
+            list.clear();
+        }
         list.addAll(orderWuliuInfo.getOrderList());
         adapter = new OrderWuLiuAdapter(this, list);
         recyclerView.setAdapter(adapter);

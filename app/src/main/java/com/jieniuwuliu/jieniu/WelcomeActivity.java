@@ -1,23 +1,30 @@
 package com.jieniuwuliu.jieniu;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.WelComeBean;
+import com.jieniuwuliu.jieniu.listener.OnDownloadListener;
+import com.jieniuwuliu.jieniu.util.DownloadUtils;
 import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.view.Action;
 import com.jieniuwuliu.jieniu.view.CountdownView;
 
+import java.io.File;
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,15 +37,15 @@ public class WelcomeActivity extends BaseActivity {
 
     @BindView(R.id.tv_enter)
     CountdownView tvEnter;
-    @BindView(R.id.gifView)
-    GifImageView gifView;
     @BindView(R.id.img)
     ImageView img;
+    @BindView(R.id.gifView)
+    GifImageView gifView;
 
-    private String token;
+    private String token, url,welComePath;
     private int userType;
-//    private boolean isGuide;
 
+    //    private boolean isGuide;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_welcome;
@@ -47,16 +54,40 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void init() {
         token = (String) SPUtil.get(this, Constant.TOKEN, Constant.TOKEN, "");
+        welComePath = (String) SPUtil.get(this, Constant.WELCOMEPATH, Constant.WELCOMEPATH, "");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
-//        isGuide = (boolean) SPUtil.get(this, Constant.GUIDE, Constant.GUIDE, false);
-//        tvEnter.start();
+        getImg();
+        CountDownTimer timer = new CountDownTimer(2 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+            @Override
+            public void onFinish() {
+                if (url!=null){
+                    if (url.contains(".gif")) {
+                        img.setVisibility(View.GONE);
+                        gifView.setVisibility(View.VISIBLE);
+                    } else {
+                        gifView.setVisibility(View.GONE);
+                        GlideUtil.setImgUrl(WelcomeActivity.this, url, img);
+                    }
+                }
+                tvEnter.setVisibility(View.VISIBLE);
+                tvEnter.start();
+            }
+        };
+        timer.start();
         tvEnter.setOnFinishAction(new Action() {
             @Override
             public void onAction() {
                 enter();
             }
         });
-        getImg();
+    }
+    private String getAppPath() {
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return storageDir.getPath();
     }
 
     private void getImg() {
@@ -65,23 +96,55 @@ public class WelcomeActivity extends BaseActivity {
             @Override
             public void onResponse(Call<WelComeBean> call, Response<WelComeBean> response) {
                 try {
-                    String url = response.body().getData();
-                    url = url.replace("get imgurlgif: ","");
+                    url = response.body().getData();
+                    url = url.replace("get imgurlgif: ", "");
                     Log.i("welcomeImg", url);
-                    if(url.contains(".gif")){
-                        gifView.setVisibility(View.VISIBLE);
-                    }else{
-                        img.setVisibility(View.VISIBLE);
-                        GlideUtil.setImgUrl(WelcomeActivity.this,url,img);
+                    if (url.contains(".gif")){
+                        if (welComePath.equals(url)){
+                            GifDrawable gifDrawable = new GifDrawable(getAppPath() + "/welcome.gif");
+                            gifView.setBackground(gifDrawable);
+                        }else{
+                            downloadGif();
+                        }
                     }
-                    tvEnter.start();
                 } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<WelComeBean> call, Throwable t) {
+
+            }
+        });
+    }
+    /**下载GIF*/
+    private void downloadGif() {
+        SPUtil.put(this,Constant.WELCOMEPATH,Constant.WELCOMEPATH,url);
+        DownloadUtils downloadUtils = new DownloadUtils();
+        downloadUtils.download(url, getAppPath() + "/welcome.gif");
+        downloadUtils.setOnDownloadListener(new OnDownloadListener() {
+            @Override
+            public void onDownloadConnect(int fileSize) {
+
+            }
+
+            @Override
+            public void onDownloadUpdate(int position) {
+
+            }
+
+            @Override
+            public void onDownloadComplete(String url) {
+                try {
+                    GifDrawable gifDrawable = new GifDrawable(getAppPath() + "/welcome.gif");
+                    gifView.setBackground(gifDrawable);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<WelComeBean> call, Throwable t) {
+            public void onDownloadError(Exception e) {
 
             }
         });
@@ -112,4 +175,5 @@ public class WelcomeActivity extends BaseActivity {
         }*/
         finish();
     }
+
 }
