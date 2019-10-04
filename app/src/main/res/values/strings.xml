@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">捷牛速运</string>
+    <string name="app_name">捷牛汽配网</string>
     <string name="net_fail">网络请求失败，请您检查网络连接</string>
     <string name="home">首页</string>
     <string name="qipeishang">汽配商</string>

@@ -69,7 +69,7 @@ public class BindWechatActivity extends BaseActivity {
     private String token;
     private IWXAPI api;
     private MyLoading loading;
-    private String wxName,unionid;
+    private String wxName,unionid,openid;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bind_wechat;
@@ -80,6 +80,7 @@ public class BindWechatActivity extends BaseActivity {
          title.setText("绑定微信");
          wxName = getIntent().getStringExtra("wxName");
         unionid = getIntent().getStringExtra("unionid");
+        openid = getIntent().getStringExtra("openid");
         if (unionid!=null){
             if (unionid.equals("-1")||unionid.equals("")){
                 tvWechatName.setText("未绑定");
@@ -123,7 +124,8 @@ public class BindWechatActivity extends BaseActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String s = response.body().string();
                 WeChatToken weChatToken = (WeChatToken) GsonUtil.praseJsonToModel(s,WeChatToken.class);
-                getWeChatInfo(weChatToken.getAccess_token(),weChatToken.getOpenid());
+                openid = weChatToken.getOpenid();
+                getWeChatInfo(weChatToken.getAccess_token(),openid);
             }
         });
     }
@@ -159,6 +161,7 @@ public class BindWechatActivity extends BaseActivity {
             JSONObject object = new JSONObject();
             object.put("wxName",wxName);
             object.put("unionid",unionid);
+            object.put("openid",openid);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),object.toString());
             retrofit2.Call<UserBean> observable = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).modifyUserInfo(body);
             observable.enqueue(new SimpleCallBack<UserBean>(BindWechatActivity.this) {
@@ -295,6 +298,7 @@ public class BindWechatActivity extends BaseActivity {
     private void unBindWeChat() {
         wxName = "-1";
         unionid = "-1";
+        openid = "-1";
         bindInfo();
     }
 

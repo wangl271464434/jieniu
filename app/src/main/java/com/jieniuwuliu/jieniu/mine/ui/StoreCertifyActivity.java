@@ -263,9 +263,9 @@ public class StoreCertifyActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
-        for (QPType.DataBean dataBean:data){//移除全部汽配城
-            if ("全部汽配城".equals(dataBean.getNickname())){
-                data.remove(dataBean);
+        for (int i = 0;i<data.size();i++){
+            if (data.get(i).getId()==1000){
+                data.remove(i);
             }
         }
         QpTypeAdapter adapter = new QpTypeAdapter(this,data);

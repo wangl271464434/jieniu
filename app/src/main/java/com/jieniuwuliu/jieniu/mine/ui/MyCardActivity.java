@@ -107,14 +107,7 @@ public class MyCardActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn:
-                Intent intent = new Intent();
-                intent.setClass(this,MonthCardPayActivity.class);
-                if (user.getPersonType()==2){
-                    intent.putExtra("money","300.00");
-                }else{
-                    intent.putExtra("money","700.00");
-                }
-               startActivity(intent);
+                MyToast.show(getApplicationContext(),"请您前往线下办理月卡业务……");
                 break;
         }
     }

@@ -24,9 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.api.HttpApi;
+import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.AppUtil;
+import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
@@ -42,6 +44,11 @@ import com.jieniuwuliu.jieniu.fragment.LunTanFragment;
 import com.jieniuwuliu.jieniu.fragment.MineFragment;
 import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.service.SocketService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -215,12 +222,49 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        getUserInfo();
         if (!AppUtil.isServiceRunning(this,scoketService)){
             Log.i("service","重新启动推送服务");
 //            MyToast.show(getApplicationContext(),"启动接受消息服务");
             Intent intent = new Intent(this, SocketService.class);
             startService(intent);
         }
+    }
+    //获取用户状态
+    private void getUserInfo() {
+        Call<UserBean> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getUserInfo();
+        call.enqueue(new SimpleCallBack<UserBean>(this) {
+            @Override
+            public void onSuccess(Response<UserBean> response) {
+                try{
+                    if (response.body().getStatus() == 0){
+                        //是否认证
+                        SPUtil.put(MainActivity.this,Constant.ISCERTIFY,Constant.ISCERTIFY,response.body().getData().getAuth());
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFail(int errorCode, Response<UserBean> response) {
+                try {
+                    String s = response.errorBody().string();
+                    JSONObject object = new JSONObject(s);
+                    Log.e("getUserInfo",object.getString("msg"));
+//                    MyToast.show(getActivity(), object.getString("msg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNetError(String s) {
+                Log.e("getUserInfo",s);
+            }
+        });
     }
 
     private void getFragment(Fragment fragment) {
@@ -292,6 +336,10 @@ public class MainActivity extends BaseActivity{
                     MyToast.show(MainActivity.this,"请去进行认证");
                     return;
                 }
+                if (status == 3){
+                    MyToast.show(MainActivity.this,"正在认证中");
+                    return;
+                }
                 qpsDialogType();
                /* if (qipeishangFragment == null){
                     qipeishangFragment = new QiPeiShangFragment();
@@ -303,6 +351,10 @@ public class MainActivity extends BaseActivity{
                     MyToast.show(MainActivity.this,"请去进行认证");
                     return;
                 }
+                if (status == 3){
+                    MyToast.show(MainActivity.this,"正在认证中");
+                    return;
+                }
                 setDialog();
                 break;
             case R.id.luntan://论坛
@@ -312,6 +364,10 @@ public class MainActivity extends BaseActivity{
                 mine.setChecked(false);
                 if (status != 1){
                     MyToast.show(MainActivity.this,"请去进行认证");
+                    return;
+                }
+                if (status == 3){
+                    MyToast.show(MainActivity.this,"正在认证中");
                     return;
                 }
                 if (luntanFragment == null){

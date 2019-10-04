@@ -22,6 +22,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.LocationSource;
+import com.jieniuwuliu.jieniu.MainActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
@@ -91,7 +92,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private LocationSource.OnLocationChangedListener mListener = null;
     private MyLoading loading;
     private String token;
-    private int userType;
+    private int userType,isCertify;
     private int page = 1,pageNum=10;
     private List<OrderInfo> list;
     private List<RecomStore.DataBean> recomList;//推荐门店
@@ -223,6 +224,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         checkSDK();
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
+        isCertify = (int) SPUtil.get(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,0);
         getBanner();
         getRecomList();
     }
@@ -299,6 +301,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                 getActivity().startActivity(intent);
                 break;
             case R.id.home_tab_2://询价
+                if (isCertify != 1){
+                    MyToast.show(getActivity(),"请去进行认证");
+                    return;
+                }
+                if (isCertify == 3){
+                    MyToast.show(getActivity(),"正在认证中");
+                    return;
+                }
                 if (userType == 2){
                     intent = new Intent();
                     intent.setClass(getActivity(),XJCarTypeActivity.class);
@@ -308,6 +318,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                 }
                 break;
             case R.id.home_tab_3://询价单
+                if (isCertify != 1){
+                    MyToast.show(getActivity(),"请去进行认证");
+                    return;
+                }
+                if (isCertify == 3){
+                    MyToast.show(getActivity(),"正在认证中");
+                    return;
+                }
                 if (userType == 2){
                     intent = new Intent();
                     intent.setClass(getActivity(),XJListActivity.class);
@@ -317,6 +335,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                 }
                 break;
             case R.id.home_tab_4://我要报价
+                if (isCertify != 1){
+                    MyToast.show(getActivity(),"请去进行认证");
+                    return;
+                }
+                if (isCertify == 3){
+                    MyToast.show(getActivity(),"正在认证中");
+                    return;
+                }
                 if (userType == 1){
                     intent = new Intent();
                     intent.setClass(getActivity(), BJListActivity.class);

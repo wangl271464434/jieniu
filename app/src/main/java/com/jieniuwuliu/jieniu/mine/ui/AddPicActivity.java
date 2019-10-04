@@ -104,6 +104,7 @@ public class AddPicActivity extends BaseActivity implements PicDialog.CallBack {
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 dialog.dismiss();
+                SPUtil.put(AddPicActivity.this,Constant.ISCERTIFY,Constant.ISCERTIFY,3);
                 MyToast.show(AddPicActivity.this,"提交成功");
                 finish();
             }

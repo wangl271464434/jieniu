@@ -8,7 +8,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword '123456'
-            storeFile file('F:\\AndroidProject\\jieniu\\jieniu.jks')
+            storeFile file('C:/Users/wl/Desktop/jieniu/jieniu.jks')
             storePassword '123456'
         }
     }
@@ -18,8 +18,8 @@ android {
         applicationId "com.jieniuwuliu.jieniu"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 15
-        versionName "2.1.3"
+        versionCode 16
+        versionName "2.2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64', 'mips', "mips64"
@@ -74,17 +74,23 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'junit:junit:4.12'
+
     //注解butterknife
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
+
     //3D地图so及jar
     implementation 'com.amap.api:3dmap:6.9.2'
+
     //定位功能
     implementation 'com.amap.api:location:latest.integration'
+
     //搜索功能
     implementation 'com.amap.api:search:6.9.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
     //网络请求
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -92,37 +98,53 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
     //扫描二维码
     implementation 'com.mylhyl:zxingscanner:2.1.6'
     implementation 'com.belerweb:pinyin4j:2.5.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+
     //jwt
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'androidx.multidex:multidex:2.0.1'
+
     //腾讯云对象存储
     implementation 'com.tencent.qcloud:cosxml-lite:5.4.21'
+
     //城市控件
     implementation 'liji.library.dev:citypickerview:1.1.0'
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
+
     //相册选择第三方
     implementation 'com.zhihu.android:matisse:0.5.2-beta3'
+
     //上拉加载下拉刷新
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-//    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
+
+    //    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
+
     //没有使用特殊Header，可以不加这行
+
     //轮播图
     implementation 'com.youth.banner:banner:1.4.10'
+
     //播放器
     implementation 'fm.jiecao:jiecaovideoplayer:5.5.2'
+
     //腾讯bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.2'
+
     //微信登录支付
+
     //noinspection GradleDynamicVersion
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+
     //支付宝支付
     implementation(name: 'alipaySdk-15.6.2-20190416165100-noUtdid', ext: 'aar')
+
     //badgeView消息提示
     implementation 'q.rorbin:badgeview:1.1.3'
+
     //加载gif图片
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.10'
 }

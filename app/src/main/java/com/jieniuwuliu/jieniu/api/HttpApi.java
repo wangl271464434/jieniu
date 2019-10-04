@@ -34,7 +34,7 @@ import retrofit2.http.Query;
 
 public interface HttpApi {
     /**启动页接口*/
-    @GET("users/getimggif")
+    @GET("getimggif")
     Call<WelComeBean> getImg();
     /**获取通告*/
     @GET("users/notices")

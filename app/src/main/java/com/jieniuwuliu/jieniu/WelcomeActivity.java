@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.base.BaseActivity;
 import com.jieniuwuliu.jieniu.bean.Constant;
 import com.jieniuwuliu.jieniu.bean.WelComeBean;
@@ -91,13 +92,13 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void getImg() {
-        Call<WelComeBean> call = HttpUtil.getInstance().getApi(token).getImg();
+        Call<WelComeBean> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).getImg();
         call.enqueue(new Callback<WelComeBean>() {
             @Override
             public void onResponse(Call<WelComeBean> call, Response<WelComeBean> response) {
                 try {
                     url = response.body().getData();
-                    url = url.replace("get imgurlgif: ", "");
+                    url = url.replace(" ", "");
                     Log.i("welcomeImg", url);
                     if (url.contains(".gif")){
                         if (welComePath.equals(url)){
