@@ -331,12 +331,16 @@ public class XjInfoActivity extends BaseActivity implements View.OnClickListener
                     type.setType("纯拆修复");
                     types.add(type);
                 }
-                dialog.dismiss();
-                Machine machine = new Machine();
-                machine.setName(name);
-                machine.setList(types);
-                list.add(machine);
-                adapter.notifyDataSetChanged();
+                if(types.size()>0){
+                    dialog.dismiss();
+                    Machine machine = new Machine();
+                    machine.setName(name);
+                    machine.setList(types);
+                    list.add(machine);
+                    adapter.notifyDataSetChanged();
+                }else{
+                    MyToast.show(getApplicationContext(),"请您至少选择一种询价的类型");
+                }
                 break;
         }
     }
