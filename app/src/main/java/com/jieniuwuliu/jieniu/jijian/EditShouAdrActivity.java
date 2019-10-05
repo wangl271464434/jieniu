@@ -77,7 +77,7 @@ public class EditShouAdrActivity extends BaseActivity {
             etCompany.setSelection(etCompany.getText().length());
             etName.setText(item.getAddress().getName());
             etName.setSelection(etName.getText().length());
-            String phone = item.getAddress().getPhone();
+            phone = item.getAddress().getPhone();
             String str = "";
             if (phone.length()>8){
                 str = phone.substring(0,3)+"*****"+phone.substring(8,11);
@@ -113,7 +113,9 @@ public class EditShouAdrActivity extends BaseActivity {
                 loading.show();
                 company = etCompany.getText().toString();
                 name = etName.getText().toString();
-                phone = etPhone.getText().toString();
+                if ("".equals(phone)){
+                    phone = etPhone.getText().toString();
+                }
                 if (company.isEmpty()||phone.isEmpty()){
                     MyToast.show(getApplicationContext(),"公司名称/联系电话不能为空");
                     return;
