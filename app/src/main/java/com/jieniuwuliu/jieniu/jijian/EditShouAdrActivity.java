@@ -43,7 +43,7 @@ public class EditShouAdrActivity extends BaseActivity {
     TextView tvCity;
     @BindView(R.id.et_address)
     EditText etAddress;
-    private String name,phone,address,company;
+    private String name,phone = "",address,company;
     private MyLoading loading;
     private double lat,lng;
     private boolean isVip;
