@@ -91,7 +91,6 @@ public class MainActivity extends BaseActivity{
         localVersion = APKVersionCodeUtils.getVersionName(this);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
-
         badge = new QBadgeView(this).bindTarget(luntan);
         //启动接收推送服务
         Intent intent = new Intent(this, SocketService.class);

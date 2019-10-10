@@ -27,7 +27,6 @@
                     android:layout_centerVertical="true"
                     android:drawableTop="@mipmap/ic_home_location"
                     android:drawablePadding="@dimen/size_3dp"
-                    android:text="西安"
                     android:textSize="@dimen/size_12sp"
                     android:layout_marginLeft="@dimen/size_10dp"
                     android:layout_marginTop="@dimen/size_5dp"

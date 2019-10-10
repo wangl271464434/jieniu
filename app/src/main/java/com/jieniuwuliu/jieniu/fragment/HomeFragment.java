@@ -67,7 +67,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener, AMapLocationListener, TextView.OnEditorActionListener, OnRefreshListener {
+public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener,  TextView.OnEditorActionListener, OnRefreshListener, AMapLocationListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.banner)
@@ -84,12 +84,10 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     EditText etSearch;
     private HomeAdapter adapter;
     private Intent intent;
-    //声明AMapLocationClient类对象，定位发起端
+   //声明AMapLocationClient类对象，定位发起端
     private AMapLocationClient mLocationClient = null;
     //声明mLocationOption对象，定位参数
     public AMapLocationClientOption mLocationOption = null;
-    //声明mListener对象，定位监听器
-    private LocationSource.OnLocationChangedListener mListener = null;
     private MyLoading loading;
     private String token;
     private int userType,isCertify;
@@ -98,7 +96,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
     private List<ImgBanner.DataBean> imgs;
-    private String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+    private String[] permissions = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.CAMERA,
             Manifest.permission.CALL_PHONE,
             Manifest.permission.PROCESS_OUTGOING_CALLS,
@@ -217,16 +216,16 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     @Override
     public void onResume() {
         super.onResume();
-        token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
-        userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
-        isCertify = (int) SPUtil.get(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,0);
-        list.clear();
         recomList.clear();
         imgs.clear();
         page = 1;
         checkSDK();
+        token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
+        userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
+        isCertify = (int) SPUtil.get(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,0);
         getBanner();
         getRecomList();
+        getData();
     }
     /**
      * 轮播
@@ -383,9 +382,10 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
+                Constant.PROVINCE = aMapLocation.getProvince();
                 Constant.CITY = aMapLocation.getCity();
                tvPosition.setText(Constant.CITY.substring(0,2));
-               getData();
+
             } else {
                 //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Log.e("AmapError", "location Error, ErrCode:"
@@ -411,6 +411,9 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                     if (orderResult.getData().size()!=0){
                         tvEmpty.setVisibility(View.GONE);
                         rv.setVisibility(View.VISIBLE);
+                        if (list.size()>0){
+                            list.clear();
+                        }
                         list.addAll(orderResult.getData());
                         list.add(new OrderInfo());
                         adapter.notifyDataSetChanged();
