@@ -24,6 +24,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.LocationSource;
 import com.jieniuwuliu.jieniu.MainActivity;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.messageEvent.CityEvent;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.KeyboardUtil;
@@ -55,6 +56,9 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -67,7 +71,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener,  TextView.OnEditorActionListener, OnRefreshListener, AMapLocationListener {
+public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener,  TextView.OnEditorActionListener, OnRefreshListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.banner)
@@ -84,10 +88,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     EditText etSearch;
     private HomeAdapter adapter;
     private Intent intent;
-   //声明AMapLocationClient类对象，定位发起端
-    private AMapLocationClient mLocationClient = null;
-    //声明mLocationOption对象，定位参数
-    public AMapLocationClientOption mLocationOption = null;
     private MyLoading loading;
     private String token;
     private int userType,isCertify;
@@ -96,13 +96,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
     private List<ImgBanner.DataBean> imgs;
-    private String[] permissions = new String[]{
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.CAMERA,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.PROCESS_OUTGOING_CALLS,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.home;
@@ -110,6 +103,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
 
     @Override
     protected void init() {
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+        if (!"".equals(Constant.CITY)){
+            tvPosition.setText(Constant.CITY.substring(0,2));
+        }
         imgs = new ArrayList<>();
         rv.setVisibility(View.GONE);
         etSearch.setOnEditorActionListener(this);
@@ -142,6 +141,19 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         adapter.setOnItemClickListener(this);
         refreshLayout.setOnLoadMoreListener(this);
         refreshLayout.setOnRefreshListener(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(CityEvent cityEvent){
+        if (cityEvent!=null){
+            if (!"".equals(cityEvent.getCity())){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvPosition.setText(cityEvent.getCity().substring(0,2));
+                    }
+                });
+            }
+        }
     }
     /**
      * 设置轮播图
@@ -219,7 +231,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         recomList.clear();
         imgs.clear();
         page = 1;
-        checkSDK();
         token = (String) SPUtil.get(getActivity(),Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(getActivity(),Constant.USERTYPE,Constant.USERTYPE,0);
         isCertify = (int) SPUtil.get(getActivity(),Constant.ISCERTIFY,Constant.ISCERTIFY,0);
@@ -246,43 +257,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
 
             }
         });
-    }
-
-    private void checkSDK() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkCallPhonePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), permissions, 200);
-            }else{
-                location();
-            }
-        }else{
-            location();
-        }
-    }
-    private void location() {
-        //初始化定位
-        mLocationClient = new AMapLocationClient(getActivity());
-        //设置定位回调监听
-        mLocationClient.setLocationListener(this);
-        //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为Hight_Accuracy高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置是否返回地址信息（默认返回地址信息）
-        mLocationOption.setNeedAddress(true);
-        //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(true);
-        //设置是否强制刷新WIFI，默认为强制刷新
-        mLocationOption.setWifiActiveScan(true);
-        //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption.setMockEnable(false);
-        //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
-        //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
-        //启动定位
-        mLocationClient.startLocation();
     }
     @OnClick({R.id.tv_position, R.id.tv_msg, R.id.home_tab_1, R.id.home_tab_2, R.id.home_tab_3,R.id.home_tab_4})
     public void onViewClicked(View view) {
@@ -376,24 +350,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         page++;
         getRecomList();
-    }
-
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            if (aMapLocation.getErrorCode() == 0) {
-                Constant.PROVINCE = aMapLocation.getProvince();
-                Constant.CITY = aMapLocation.getCity();
-               tvPosition.setText(Constant.CITY.substring(0,2));
-
-            } else {
-                //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError", "location Error, ErrCode:"
-                        + aMapLocation.getErrorCode() + ", errInfo:"
-                        + aMapLocation.getErrorInfo());
-                Toast.makeText(getActivity(), "定位失败", Toast.LENGTH_LONG).show();
-            }
-        }
     }
     /**
      * 获取个人订单
@@ -497,4 +453,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }

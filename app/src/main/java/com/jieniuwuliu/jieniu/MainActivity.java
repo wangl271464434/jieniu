@@ -1,5 +1,6 @@
 package com.jieniuwuliu.jieniu;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,7 +9,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -22,9 +30,15 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.jieniuwuliu.jieniu.api.HttpApi;
 import com.jieniuwuliu.jieniu.bean.UserBean;
+import com.jieniuwuliu.jieniu.messageEvent.CityEvent;
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.AppUtil;
@@ -45,6 +59,7 @@ import com.jieniuwuliu.jieniu.fragment.MineFragment;
 import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.service.SocketService;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +76,7 @@ import retrofit2.Response;
 /**
  * 首页
  */
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity implements AMapLocationListener {
     @BindView(R.id.home)
     RadioButton home;
     @BindView(R.id.luntan)
@@ -80,6 +95,17 @@ public class MainActivity extends BaseActivity{
     private int userType;
     private String scoketService = "com.jieniuwuliu.jieniu.service.SocketService";
     private String localVersion ="";
+    //声明AMapLocationClient类对象，定位发起端
+    private AMapLocationClient mLocationClient = null;
+    //声明mLocationOption对象，定位参数
+    public AMapLocationClientOption mLocationOption = null;
+    private String[] permissions = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.PROCESS_OUTGOING_CALLS,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -88,6 +114,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void init() {
         activity = this;
+        checkSDK();
         localVersion = APKVersionCodeUtils.getVersionName(this);
         token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
@@ -104,6 +131,42 @@ public class MainActivity extends BaseActivity{
         homeFragment = new HomeFragment();
         getFragment(homeFragment);
         checkVerSion();
+    }
+    private void checkSDK() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, permissions, 200);
+            }else{
+                location();
+            }
+        }else{
+            location();
+        }
+    }
+    private void location() {
+        //初始化定位
+        mLocationClient = new AMapLocationClient(this);
+        //设置定位回调监听
+        mLocationClient.setLocationListener(this);
+        //初始化定位参数
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为Hight_Accuracy高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否只定位一次,默认为false
+        mLocationOption.setOnceLocation(true);
+        //设置是否强制刷新WIFI，默认为强制刷新
+        mLocationOption.setWifiActiveScan(true);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
     }
     private void checkVerSion() {
         Call<Version> call = HttpUtil.getInstance().createRetrofit().create(HttpApi.class).checkVersion();
@@ -506,6 +569,37 @@ public class MainActivity extends BaseActivity{
         dialog.setContentView(viewDialog, layoutParams);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                Constant.PROVINCE = aMapLocation.getProvince();
+                Constant.CITY = aMapLocation.getCity();
+                CityEvent event = new CityEvent();
+                event.setProvince(Constant.PROVINCE);
+                event.setCity(Constant.CITY);
+                EventBus.getDefault().post(event);
+            } else {
+                //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
+                Toast.makeText(this, "定位失败", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int i = 0;i<permissions.length;i++){
+            if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)){//判断是否有定位权限
+                if (grantResults[i]==PackageManager.PERMISSION_GRANTED){
+                    location();
+                }
+            }
+        }
     }
     /**
      * 广播接收器
