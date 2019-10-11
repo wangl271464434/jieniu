@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -79,8 +80,6 @@ public class HomeFragment extends BaseFragment implements OnLoadMoreListener,  T
     RecyclerView recyclerView;
     @BindView(R.id.banner)
     Banner banner;
- /*   @BindView(R.id.rv)
-    RecyclerView rv;*/
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
     @BindView(R.id.tv_position)
@@ -136,9 +135,9 @@ public class HomeFragment extends BaseFragment implements OnLoadMoreListener,  T
                 startActivity(intent);
             }
         });
-
-        orderAdapter = new HomeOrderAdapter(getFragmentManager(),list);
+        orderAdapter = new HomeOrderAdapter(getActivity(),list);
         viewPager.setAdapter(orderAdapter);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
