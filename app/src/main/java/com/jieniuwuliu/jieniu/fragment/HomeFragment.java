@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.LocationSource;
 import com.jieniuwuliu.jieniu.MainActivity;
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.adapter.HomeOrderAdapter;
 import com.jieniuwuliu.jieniu.messageEvent.CityEvent;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
@@ -64,6 +66,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
@@ -71,13 +74,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements OnItemClickListener,OnLoadMoreListener,  TextView.OnEditorActionListener, OnRefreshListener {
+public class HomeFragment extends BaseFragment implements OnLoadMoreListener,  TextView.OnEditorActionListener, OnRefreshListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.banner)
     Banner banner;
-    @BindView(R.id.rv)
-    RecyclerView rv;
+ /*   @BindView(R.id.rv)
+    RecyclerView rv;*/
     @BindView(R.id.tv_empty)
     TextView tvEmpty;
     @BindView(R.id.tv_position)
@@ -86,7 +89,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.et_search)
     EditText etSearch;
-    private HomeAdapter adapter;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.layout_point)
+    LinearLayout layoutPoint;
+    private HomeOrderAdapter orderAdapter;
     private Intent intent;
     private MyLoading loading;
     private String token;
@@ -96,6 +103,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
     private List<RecomStore.DataBean> recomList;//推荐门店
     private RecomStoreAdapter recomStoreAdapter;
     private List<ImgBanner.DataBean> imgs;
+    private int prePos = 0;
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.home;
@@ -110,7 +118,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
             tvPosition.setText(Constant.CITY.substring(0,2));
         }
         imgs = new ArrayList<>();
-        rv.setVisibility(View.GONE);
         etSearch.setOnEditorActionListener(this);
         list = new ArrayList<>();
         recomList = new ArrayList<>();
@@ -130,15 +137,28 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
             }
         });
 
-        //最新物流
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rv.setLayoutManager(manager);
-        adapter = new HomeAdapter(getActivity(),list);
-        rv.setAdapter(adapter);
-      /*  LinearSnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(rv);*/
-        adapter.setOnItemClickListener(this);
+        orderAdapter = new HomeOrderAdapter(getFragmentManager(),list);
+        viewPager.setAdapter(orderAdapter);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+            @Override
+            public void onPageSelected(int position) {
+                if (list.size()>1){
+                    int newPos = position % list.size();
+                    layoutPoint.getChildAt(newPos).setEnabled(true);
+                    layoutPoint.getChildAt(prePos).setEnabled(false);
+                    prePos = newPos;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         refreshLayout.setOnLoadMoreListener(this);
         refreshLayout.setOnRefreshListener(this);
     }
@@ -167,12 +187,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
         banner.setImageLoader(new GlideImageLoader());
         //设置图片集合
         banner.setImages(imgs);
-        //设置banner动画效果
-//        banner.setBannerAnimation(Transformer.DepthPage);
-        //设置标题集合（当banner样式有显示title时）
-//        banner.setBannerTitles(titles);
-        //设置自动轮播，默认为true
-//        banner.isAutoPlay(true);
         //设置轮播时间
         banner.setDelayTime(5000);
         //banner设置方法全部调用完毕时最后调用
@@ -327,16 +341,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                 break;
         }
     }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        if (list.size()>0){
-            intent = new Intent();
-            intent.setClass(getActivity(),OrderInfoActivity.class);
-            intent.putExtra("orderNo",list.get(position).getOrderNumber());
-            getActivity().startActivity(intent);
-        }
-    }
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
@@ -366,15 +370,18 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
                     OrderResult orderResult = (OrderResult) GsonUtil.praseJsonToModel(json,OrderResult.class);
                     if (orderResult.getData().size()!=0){
                         tvEmpty.setVisibility(View.GONE);
-                        rv.setVisibility(View.VISIBLE);
+                        viewPager.setVisibility(View.VISIBLE);
+                        layoutPoint.setVisibility(View.VISIBLE);
                         if (list.size()>0){
                             list.clear();
                         }
                         list.addAll(orderResult.getData());
-                        list.add(new OrderInfo());
-                        adapter.notifyDataSetChanged();
+                        setBannerIndicator(list);
+                        orderAdapter.notifyDataSetChanged();
                     }else{
                         tvEmpty.setVisibility(View.VISIBLE);
+                        viewPager.setVisibility(View.GONE);
+                        layoutPoint.setVisibility(View.GONE);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -398,7 +405,21 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
             }
         });
     }
-
+    private  void setBannerIndicator(List<OrderInfo> list) {
+        layoutPoint.removeAllViews();
+        for (int i = 1; i <= list.size(); i++) {
+            View dot = new View(getActivity());
+            dot.setBackgroundResource(
+                    R.drawable.point_select);
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(20, 20);
+            params.leftMargin = 10;
+            dot.setLayoutParams(params);
+            dot.setEnabled(false);
+            layoutPoint.addView(dot);
+        }
+        layoutPoint.getChildAt(0).setEnabled(true);
+    }
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEND||
@@ -421,15 +442,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener,On
             @Override
             public void onSuccess(Response<ResponseBody> response) {
                 try{
-                    if (refreshLayout!=null){
-                        refreshLayout.finishRefresh();
-                        refreshLayout.finishLoadMore();
-                    }
                     String json = new JSONObject(response.body().string()).getString("data");
                     OrderInfo dataBean = (OrderInfo) GsonUtil.praseJsonToModel(json,OrderInfo.class);
                     list.add(dataBean);
-                    adapter.notifyDataSetChanged();
-                    refreshLayout.setNoMoreData(true);
+                    tvEmpty.setVisibility(View.GONE);
+                    viewPager.setVisibility(View.VISIBLE);
+                    layoutPoint.setVisibility(View.VISIBLE);
+                    setBannerIndicator(list);
+                    orderAdapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
