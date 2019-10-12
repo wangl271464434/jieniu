@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -36,9 +37,12 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.jieniuwuliu.jieniu.adapter.TicketWuliuAdapter;
 import com.jieniuwuliu.jieniu.api.HttpApi;
+import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.bean.UserBean;
 import com.jieniuwuliu.jieniu.messageEvent.CityEvent;
+import com.jieniuwuliu.jieniu.mine.ui.MyTicketActivity;
 import com.jieniuwuliu.jieniu.qipeishang.QPSListActivity;
 import com.jieniuwuliu.jieniu.util.APKVersionCodeUtils;
 import com.jieniuwuliu.jieniu.util.AppUtil;
@@ -64,7 +68,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import q.rorbin.badgeview.Badge;
@@ -176,7 +184,9 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
                 if (!localVersion.equals(response.body().getData().getVersion())){
                     showCheck(response.body().getData());
                 }else{
-                    getNotice();
+                    couponDialog();
+//                    getCoupon();
+//                    getNotice();
                 }
             }
             @Override
@@ -229,9 +239,12 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
             @Override
             public void onSuccess(Response<Notice> response) {
                 try{ String info = response.body().getData().get(0).getInfo();
-                    if (response.body().getData().get(0).isStatus()){//判断是否弹出公告
+                    if (response.body().getData().get(0).isStatus()){ //判断是否弹出公告
                         showNotice(info);
-                    }}catch (Exception e){
+                    }else{
+                        getCoupon();
+                    }
+                }catch (Exception e){
                     e.printStackTrace();
                 }
             }
@@ -247,6 +260,30 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
             }
         });
     }
+    /**
+     * 网络获取是否有需要领取的优惠券
+     *
+     * */
+    private void getCoupon() {
+/*        Call<Coupon> call = HttpUtil.getInstance().getApi(token).getCoupons();
+        call.enqueue(new Callback<Coupon>() {
+            @Override
+            public void onResponse(Call<Coupon> call, Response<Coupon> response) {
+                if (response.body().getData().size()>0){
+                    couponDialog(response.body().getData());
+                }else{
+                    getNotice();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Coupon> call, Throwable t) {
+
+            }
+        });*/
+
+    }
+
     /**
      * 通告
      * */
@@ -287,7 +324,6 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
         getUserInfo();
         if (!AppUtil.isServiceRunning(this,scoketService)){
             Log.i("service","重新启动推送服务");
-//            MyToast.show(getApplicationContext(),"启动接受消息服务");
             Intent intent = new Intent(this, SocketService.class);
             startService(intent);
         }
@@ -314,7 +350,6 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
                     String s = response.errorBody().string();
                     JSONObject object = new JSONObject(s);
                     Log.e("getUserInfo",object.getString("msg"));
-//                    MyToast.show(getActivity(), object.getString("msg"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -374,7 +409,46 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
             }
         });
     }
-
+    /**
+     *领取优惠券弹框
+     *
+     * @param data*/
+    private void couponDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        Window window = dialog.getWindow();
+        WindowManager m = getWindowManager();
+        Display defaultDisplay = m.getDefaultDisplay();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = (int) (defaultDisplay.getWidth()*0.8);
+        window.setAttributes(params);
+        dialog.setContentView(R.layout.dialog_ticket);
+        dialog.setCanceledOnTouchOutside(true);
+        RecyclerView recyclerView = dialog.findViewById(R.id.recyclerView);
+        Button btn = dialog.findViewById(R.id.btn);
+        ImageView close = dialog.findViewById(R.id.img_close);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        List<Integer> data = new ArrayList<>();
+        data.add(1);
+        data.add(1);
+        TicketWuliuAdapter ticketWuliuAdapter = new TicketWuliuAdapter(this,data);
+        recyclerView.setAdapter(ticketWuliuAdapter);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
     @OnClick({R.id.home, R.id.qipeishang,R.id.jijian, R.id.luntan, R.id.mine})
     public void onViewClicked(View view) {
         status = (int) SPUtil.get(this,Constant.ISCERTIFY,Constant.ISCERTIFY,0);

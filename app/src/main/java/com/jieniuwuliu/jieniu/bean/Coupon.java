@@ -61,8 +61,17 @@ public class Coupon implements Serializable {
         private int useMoney;
         private String couponTime;
         private int money;
+        private int st;//领取状态
         private boolean use;//是否使用
         private boolean expried = false;//是否过期
+
+        public int getSt() {
+            return st;
+        }
+
+        public void setSt(int st) {
+            this.st = st;
+        }
 
         public boolean isExpried() {
             return expried;
