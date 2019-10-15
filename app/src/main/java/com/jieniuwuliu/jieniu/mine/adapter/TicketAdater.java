@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.util.QcodeUtil;
 import com.jieniuwuliu.jieniu.util.TimeUtil;
 import com.jieniuwuliu.jieniu.bean.Coupon;
 import com.jieniuwuliu.jieniu.listener.OnItemClickListener;
@@ -46,15 +47,20 @@ public class TicketAdater extends RecyclerView.Adapter<TicketAdater.ViewHolder> 
         viewHolder.itemView.setTag(i);
         Coupon.DataBean item = list.get(i);
         if (item.isUse()){//判断优惠券是否使用
+            viewHolder.imgQCode.setVisibility(View.GONE);
            viewHolder.imgBg.setImageResource(R.mipmap.icon_used);
         }else {
             if (TimeUtil.isExprie(item.getCouponTime())){//判断优惠券是否过期
+                viewHolder.imgQCode.setVisibility(View.GONE);
                 viewHolder.imgBg.setImageResource(R.mipmap.icon_exprise);
             }else{
+                viewHolder.imgQCode.setVisibility(View.VISIBLE);
                 viewHolder.imgBg.setImageResource(R.mipmap.icon_un_used);
             }
         }
-        viewHolder.tvMoney.setText("¥  "+item.getMoney()/100);
+        String qcStr = String.valueOf(item.getId());
+        viewHolder.imgQCode.setImageBitmap(QcodeUtil.createQRCode(240,240,qcStr));
+        viewHolder.tvMoney.setText("¥"+(item.getMoney()/100));
         viewHolder.tvTime.setText("有效期至"+item.getCouponTime());
     }
 
@@ -77,6 +83,8 @@ public class TicketAdater extends RecyclerView.Adapter<TicketAdater.ViewHolder> 
         TextView tvTime;
         @BindView(R.id.img_bg)
         ImageView imgBg;
+        @BindView(R.id.img_qcode)
+        ImageView imgQCode;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

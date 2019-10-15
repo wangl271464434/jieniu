@@ -53,6 +53,7 @@ import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.util.GsonUtil;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
+import com.jieniuwuliu.jieniu.util.PinyinUtils;
 import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.util.SimpleCallBack;
 import com.jieniuwuliu.jieniu.util.TimeUtil;
@@ -181,6 +182,9 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
      * 获取天气信息
      */
     private void getWeather() {
+        String city = Constant.CITY.replace("市","");
+        Log.i("1235",PinyinUtils.getPinYin(city));
+        String url = Constant.WEATHERURL+"location="+PinyinUtils.getPinYin(city)+"&key="+Constant.WEATHERKEY;
         WeatherSearchQuery query = new WeatherSearchQuery(Constant.CITY, WeatherSearchQuery.WEATHER_TYPE_LIVE);
         WeatherSearch search = new WeatherSearch(this);
         search.setOnWeatherSearchListener(this);

@@ -14,7 +14,15 @@
             android:id="@+id/img_bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_used"
+            android:src="@mipmap/icon_un_used"
+            />
+        <ImageView
+            android:id="@+id/img_qcode"
+            android:layout_width="@dimen/size_70dp"
+            android:layout_height="@dimen/size_70dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:layout_marginRight="@dimen/size_10dp"
             />
         <LinearLayout
             android:id="@+id/layout_money"
