@@ -78,7 +78,7 @@ public class MyTicketActivity extends BaseActivity implements OnItemClickListene
      * */
     private void getCoupons() {
         loading.show();
-        Call<Coupon> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getCoupons(page,pageNum);
+        Call<Coupon> call = HttpUtil.getInstance().createRetrofit(token).create(HttpApi.class).getCoupons(page,pageNum,1);
         call.enqueue(new SimpleCallBack<Coupon>(MyTicketActivity.this) {
             @Override
             public void onSuccess(Response<Coupon> response) {

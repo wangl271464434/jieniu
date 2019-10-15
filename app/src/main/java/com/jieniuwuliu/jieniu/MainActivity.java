@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.view.Display;
@@ -28,6 +30,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,6 +65,12 @@ import com.jieniuwuliu.jieniu.fragment.LunTanFragment;
 import com.jieniuwuliu.jieniu.fragment.MineFragment;
 import com.jieniuwuliu.jieniu.jijian.JiJianActivity;
 import com.jieniuwuliu.jieniu.service.SocketService;
+import com.jieniuwuliu.jieniu.util.Util;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -93,6 +102,8 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
     RadioButton qipeishang;
     @BindView(R.id.mine)
     RadioButton mine;
+    @BindView(R.id.layout_bottom)
+    LinearLayout layoutBottom;
     private Fragment homeFragment,mineFragment,qipeishangFragment,luntanFragment;
     private Intent intent;
     private int status;
@@ -100,6 +111,7 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
     private MsgReceiver receiver;
     public static Badge badge;
     private String token;
+    private IWXAPI api;
     private int userType;
     private String scoketService = "com.jieniuwuliu.jieniu.service.SocketService";
     private String localVersion ="";
@@ -124,7 +136,6 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
         activity = this;
         checkSDK();
         localVersion = APKVersionCodeUtils.getVersionName(this);
-        token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
         userType = (int) SPUtil.get(this, Constant.USERTYPE, Constant.USERTYPE, 0);
         badge = new QBadgeView(this).bindTarget(luntan);
         //启动接收推送服务
@@ -184,8 +195,8 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
                 if (!localVersion.equals(response.body().getData().getVersion())){
                     showCheck(response.body().getData());
                 }else{
-                    couponDialog();
-//                    getCoupon();
+//                    couponDialog();
+                    getCoupon();
 //                    getNotice();
                 }
             }
@@ -241,8 +252,6 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
                 try{ String info = response.body().getData().get(0).getInfo();
                     if (response.body().getData().get(0).isStatus()){ //判断是否弹出公告
                         showNotice(info);
-                    }else{
-                        getCoupon();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -265,7 +274,7 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
      *
      * */
     private void getCoupon() {
-/*        Call<Coupon> call = HttpUtil.getInstance().getApi(token).getCoupons();
+        Call<Coupon> call = HttpUtil.getInstance().getApi(token).getCoupons(1,20,2);
         call.enqueue(new Callback<Coupon>() {
             @Override
             public void onResponse(Call<Coupon> call, Response<Coupon> response) {
@@ -280,7 +289,7 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
             public void onFailure(Call<Coupon> call, Throwable t) {
 
             }
-        });*/
+        });
 
     }
 
@@ -321,6 +330,8 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
     @Override
     protected void onResume() {
         super.onResume();
+        token = (String) SPUtil.get(this,Constant.TOKEN,Constant.TOKEN,"");
+        Log.i("首页当前存储的token：",token);
         getUserInfo();
         if (!AppUtil.isServiceRunning(this,scoketService)){
             Log.i("service","重新启动推送服务");
@@ -413,7 +424,7 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
      *领取优惠券弹框
      *
      * @param data*/
-    private void couponDialog() {
+    private void couponDialog(List<Coupon.DataBean> data) {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         Window window = dialog.getWindow();
         WindowManager m = getWindowManager();
@@ -431,9 +442,6 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
         ImageView close = dialog.findViewById(R.id.img_close);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        List<Integer> data = new ArrayList<>();
-        data.add(1);
-        data.add(1);
         TicketWuliuAdapter ticketWuliuAdapter = new TicketWuliuAdapter(this,data);
         recyclerView.setAdapter(ticketWuliuAdapter);
         close.setOnClickListener(new View.OnClickListener() {
@@ -446,10 +454,11 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                layoutBottom.setVisibility(View.VISIBLE);
             }
         });
     }
-    @OnClick({R.id.home, R.id.qipeishang,R.id.jijian, R.id.luntan, R.id.mine})
+    @OnClick({R.id.home, R.id.qipeishang,R.id.jijian, R.id.luntan, R.id.mine,R.id.weChat, R.id.wx_circle})
     public void onViewClicked(View view) {
         status = (int) SPUtil.get(this,Constant.ISCERTIFY,Constant.ISCERTIFY,0);
         switch (view.getId()) {
@@ -521,7 +530,48 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
                 }
                 getFragment(mineFragment);
                 break;
+            case R.id.weChat:
+                Constant.SHARETYPE = 1;
+                shareWeChat(Constant.WXFRIEND);
+                break;
+            case R.id.wx_circle:
+                Constant.SHARETYPE = 1;
+                shareWeChat(Constant.WXCIRCLE);
+                break;
         }
+    }
+    /**分享功能*/
+    private void shareWeChat(int type) {
+        api = WXAPIFactory.createWXAPI(this, Constant.WXAPPID, true);
+        if (!api.isWXAppInstalled()) {
+            MyToast.show(this, "请您安装微信客户端！");
+            return;
+        }
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = "https://www.jieniuwuliu.com/download";
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = "捷牛物流邀您参加领取优惠券活动";
+        msg.description = "公司业务范围广泛资质齐全涉及、汽车配件运输，配送，公司以诚信为本。";
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.logo);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+        bmp.recycle();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("webpage");
+        req.message = msg;
+        switch (type){
+            case Constant.WXFRIEND:
+                req.scene = SendMessageToWX.Req.WXSceneSession;
+                break;
+            case Constant.WXCIRCLE:
+                req.scene = SendMessageToWX.Req.WXSceneTimeline;
+                break;
+        }
+        api.sendReq(req);
+        layoutBottom.setVisibility(View.GONE);
+    }
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
     /**汽配商弹框*/
     private void qpsDialogType(){
@@ -682,6 +732,7 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("jieniu.msg")){
+                context.unregisterReceiver(this);
                 badge.setBadgeNumber(-1);
             }
         }

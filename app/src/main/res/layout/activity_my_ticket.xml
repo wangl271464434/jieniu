@@ -9,12 +9,6 @@
     tools:context=".mine.ui.MyTicketActivity">
     <include
         layout="@layout/title"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ticket_notice"
-        android:layout_margin="@dimen/size_10dp"
-        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

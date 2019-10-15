@@ -54,11 +54,7 @@ public class TicketAdater extends RecyclerView.Adapter<TicketAdater.ViewHolder> 
                 viewHolder.imgBg.setImageResource(R.mipmap.icon_un_used);
             }
         }
-        if (item.getUseMoney()==0){
-            viewHolder.tvMoney.setText("免运费");
-        }else{
-            viewHolder.tvMoney.setText("¥  "+item.getMoney()/100);
-        }
+        viewHolder.tvMoney.setText("¥  "+item.getMoney()/100);
         viewHolder.tvTime.setText("有效期至"+item.getCouponTime());
     }
 

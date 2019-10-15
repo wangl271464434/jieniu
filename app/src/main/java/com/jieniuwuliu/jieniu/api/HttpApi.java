@@ -104,7 +104,12 @@ public interface HttpApi {
      * 查询优惠券列表
      * */
     @GET("users/coupons")
-    Call<Coupon> getCoupons(@Query("page")int page,@Query("number")int num);
+    Call<Coupon> getCoupons(@Query("page")int page,@Query("number")int num,@Query("stype")int type);
+    /**
+     * 领取优惠券
+     * **/
+    @GET("users/receivepoints")
+    Call<ResponseBody> putCounpons();
     /**
      * 使用优惠券
      * */

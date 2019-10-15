@@ -31,4 +31,5 @@ public class Constant {
     public static final int CAMERA_CODE = 1002;//请求相机的请求码
     public static final int WXFRIEND = 1;
     public static final int WXCIRCLE = 2;
+    public static  int SHARETYPE = 1;//1 分享优惠券 2 物流订单
 }

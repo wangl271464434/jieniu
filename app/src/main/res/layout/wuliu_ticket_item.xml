@@ -7,7 +7,7 @@
     >
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_100dp"
+        android:layout_height="@dimen/size_80dp"
         android:background="@mipmap/wuliu_ticket_bg"
         >
         <LinearLayout
@@ -27,8 +27,7 @@
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10"
-                android:textSize="@dimen/size_28sp"
+                android:textSize="@dimen/size_25sp"
                 android:textColor="@color/white"
                 android:layout_marginLeft="@dimen/size_10dp"
                 android:textStyle="bold"
@@ -38,7 +37,6 @@
            android:id="@+id/tv_time"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:text="有效期至：2019-11-12"
            android:textColor="@color/white"
            android:textSize="@dimen/size_12sp"
            android:layout_alignParentBottom="true"

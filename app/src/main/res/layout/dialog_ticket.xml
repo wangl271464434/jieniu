@@ -6,27 +6,32 @@
     android:gravity="center"
     android:orientation="vertical"
     >
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/size_300dp"
         android:background="@mipmap/ticket_bg"
         android:orientation="vertical"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_200dp"
-            android:layout_marginTop="@dimen/size_120dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn"
+            android:layout_marginTop="@dimen/size_80dp"
             />
         <Button
             android:id="@+id/btn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/size_40dp"
             android:background="@color/lijibanli"
-            android:layout_margin="@dimen/size_10dp"
+            android:layout_marginBottom="@dimen/size_5dp"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_5dp"
+            android:layout_marginRight="@dimen/size_15dp"
             android:text="立即领取"
+            android:layout_alignParentBottom="true"
             />
-    </LinearLayout>
+    </RelativeLayout>
     <ImageView
         android:id="@+id/img_close"
         android:layout_width="@dimen/size_30dp"

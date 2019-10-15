@@ -348,9 +348,11 @@ public class OrderInfoActivity extends AppCompatActivity implements RouteSearch.
                 layoutBottom.setVisibility(View.GONE);
                 break;
             case R.id.weChat:
+                Constant.SHARETYPE = 2;
                 shareWeChat(Constant.WXFRIEND);
                 break;
             case R.id.wx_circle:
+                Constant.SHARETYPE = 2;
                 shareWeChat(Constant.WXCIRCLE);
                 break;
         }

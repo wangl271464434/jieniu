@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jieniuwuliu.jieniu.R;
+import com.jieniuwuliu.jieniu.bean.Coupon;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ import butterknife.ButterKnife;
  */
 public class TicketWuliuAdapter extends RecyclerView.Adapter<TicketWuliuAdapter.ViewHolder> {
     private LayoutInflater mInflater;
-    private List<Integer> mData;
+    private List<Coupon.DataBean> mData;
     private Context mContext;
 
-    public TicketWuliuAdapter(Context context, List<Integer> data) {
+    public TicketWuliuAdapter(Context context, List<Coupon.DataBean> data) {
         mInflater = LayoutInflater.from(context);
         mData = data;
         this.mContext = context;
@@ -38,7 +39,9 @@ public class TicketWuliuAdapter extends RecyclerView.Adapter<TicketWuliuAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.itemView.setTag(position);
-
+        Coupon.DataBean item = mData.get(position);
+        holder.tvPrice.setText(String.valueOf(item.getMoney()/100));
+        holder.tvTime.setText("有效期至："+item.getCouponTime());
     }
 
     @Override
