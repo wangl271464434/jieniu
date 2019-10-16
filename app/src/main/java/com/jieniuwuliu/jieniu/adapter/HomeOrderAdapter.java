@@ -64,7 +64,7 @@ public class HomeOrderAdapter extends PagerAdapter {
         viewHolder.tvEndAdr.setText(item.getToName());
         viewHolder.info.setText(item.getInfo());
         viewHolder.tvNum.setText(item.getNumber() + "件");
-        if (item.getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))) {
+        if (item.getFromUid() == Integer.valueOf(JwtUtil.JWTParse(context,token))) {
             viewHolder.img.setImageResource(R.mipmap.ic_home_jijian);
         } else {
             viewHolder.img.setImageResource(R.mipmap.ic_home_shoujian);

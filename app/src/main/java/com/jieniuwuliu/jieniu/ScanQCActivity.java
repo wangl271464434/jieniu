@@ -86,7 +86,7 @@ public class ScanQCActivity extends BaseActivity implements OnScannerCompletionL
         try {
             JSONObject object = new JSONObject();
             object.put("kuaidiStatus", true);
-            object.put("kuaidiID", Integer.valueOf(JwtUtil.JWTParse(token)));
+            object.put("kuaidiID", Integer.valueOf(JwtUtil.JWTParse(ScanQCActivity.this,token)));
             String json = object.toString();
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
             Call<ResponseBody> call = HttpUtil.getInstance().getApi(token).updateOrder(result, body);

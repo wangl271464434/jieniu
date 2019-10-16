@@ -59,7 +59,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         holder.tvEndAdr.setText(item.getToName());
         holder.info.setText(item.getInfo());
         holder.tvNum.setText(item.getNumber()+"件");
-        if (item.getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))){
+        if (item.getFromUid() == Integer.valueOf(JwtUtil.JWTParse(context,token))){
             holder.img.setImageResource(R.mipmap.ic_home_jijian);
         }else{
             holder.img.setImageResource(R.mipmap.ic_home_shoujian);

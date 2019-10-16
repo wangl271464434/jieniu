@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.LoginActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.util.GlideUtil;
 import com.jieniuwuliu.jieniu.util.JwtUtil;
@@ -129,7 +130,7 @@ public class LuntanAdater extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
         String token = (String) SPUtil.get(context,Constant.TOKEN,Constant.TOKEN,"");
-        String id = JwtUtil.JWTParse(token);
+        String id = JwtUtil.JWTParse(context,token);
         switch (getItemViewType(i)) {
             case 0:
                 if (i==0){

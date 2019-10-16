@@ -3,6 +3,8 @@ package com.jieniuwuliu.jieniu.mine.adapter;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jieniuwuliu.jieniu.LoginActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.util.JwtUtil;
 import com.jieniuwuliu.jieniu.util.SPUtil;
@@ -22,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.jsonwebtoken.ExpiredJwtException;
 
 public class FaPiaoAdater extends RecyclerView.Adapter<FaPiaoAdater.ViewHolder> implements View.OnClickListener {
     private Context context;
@@ -49,36 +53,37 @@ public class FaPiaoAdater extends RecyclerView.Adapter<FaPiaoAdater.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         viewHolder.itemView.setTag(i);
-        String token = (String) SPUtil.get(context, Constant.TOKEN, Constant.TOKEN, "");
-        if (list.size()!=0){
-            if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))) {
-                viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
-            } else {
-                viewHolder.imgType.setImageResource(R.mipmap.ic_home_shoujian);
-            }
-            viewHolder.tvNo.setText("运单号："+list.get(i).getOrderNumber());
-            viewHolder.tvNum.setText("x"+list.get(i).getNumber());
-            viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt());
-            float price  = list.get(i).getTotalMoney()/100;
-            viewHolder.tvPrice.setText("¥ "+String.format("%.2f",price));
-            if (list.get(i).isInvoice()){
-                viewHolder.checkBox.setChecked(true);
-            }else{
-                viewHolder.checkBox.setChecked(false);
-            }
-            viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (buttonView.isPressed()){
-                        if (isChecked){
-                            list.get(i).setInvoice(true);
-                        }else{
-                            list.get(i).setInvoice(false);
+            String token = (String) SPUtil.get(context, Constant.TOKEN, Constant.TOKEN, "");
+            if (list.size()!=0){
+                if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(context,token))) {
+                    viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
+                } else {
+                    viewHolder.imgType.setImageResource(R.mipmap.ic_home_shoujian);
+                }
+                viewHolder.tvNo.setText("运单号："+list.get(i).getOrderNumber());
+                viewHolder.tvNum.setText("x"+list.get(i).getNumber());
+                viewHolder.tvTime.setText("下单时间："+list.get(i).getCreatedAt());
+                float price  = list.get(i).getTotalMoney()/100;
+                viewHolder.tvPrice.setText("¥ "+String.format("%.2f",price));
+                if (list.get(i).isInvoice()){
+                    viewHolder.checkBox.setChecked(true);
+                }else{
+                    viewHolder.checkBox.setChecked(false);
+                }
+                viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (buttonView.isPressed()){
+                            if (isChecked){
+                                list.get(i).setInvoice(true);
+                            }else{
+                                list.get(i).setInvoice(false);
+                            }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
+
     }
 
     @Override

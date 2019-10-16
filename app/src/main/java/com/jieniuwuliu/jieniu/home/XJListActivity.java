@@ -8,9 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.jieniuwuliu.jieniu.LoginActivity;
 import com.jieniuwuliu.jieniu.R;
 import com.jieniuwuliu.jieniu.util.HttpUtil;
-import com.jieniuwuliu.jieniu.util.JwtUtil;
 import com.jieniuwuliu.jieniu.util.MyToast;
 import com.jieniuwuliu.jieniu.util.SPUtil;
 import com.jieniuwuliu.jieniu.util.SimpleCallBack;
@@ -60,7 +60,6 @@ public class XJListActivity extends BaseActivity implements OnRefreshListener, O
         refresh.setOnRefreshListener(this);
         refresh.setOnLoadMoreListener(this);
         token = (String) SPUtil.get(this, Constant.TOKEN,Constant.TOKEN,"");
-        Log.i("userid", JwtUtil.JWTParse(token));
         list = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);

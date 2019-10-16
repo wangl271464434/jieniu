@@ -275,18 +275,24 @@ public class MainActivity extends BaseActivity implements AMapLocationListener {
      * */
     private void getCoupon() {
         Call<Coupon> call = HttpUtil.getInstance().getApi(token).getCoupons(1,20,2);
-        call.enqueue(new Callback<Coupon>() {
+        call.enqueue(new SimpleCallBack<Coupon>(this) {
             @Override
-            public void onResponse(Call<Coupon> call, Response<Coupon> response) {
-                if (response.body().getData().size()>0){
-                    couponDialog(response.body().getData());
+            public void onSuccess(Response<Coupon> response) {
+                if (response.body().getData()!=null){
+                    if (response.body().getData().size()>0){
+                        couponDialog(response.body().getData());
+                    }else{
+                        getNotice();
+                    }
                 }else{
                     getNotice();
                 }
             }
-
             @Override
-            public void onFailure(Call<Coupon> call, Throwable t) {
+            public void onFail(int errorCode, Response<Coupon> response) {
+            }
+            @Override
+            public void onNetError(String s) {
 
             }
         });

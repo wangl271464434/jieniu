@@ -18,8 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HttpUtil {
     private static String TAG = "retrofit";
     private static HttpUtil intance = null;
-//    private String baseUrl = "https://api.jieniuwuliu.com/";
-    private String baseUrl = "http://192.168.1.105:1323/";
+    private String baseUrl = "https://api.jieniuwuliu.com/";
+//    private String baseUrl = "http://192.168.1.105:1323/";
     private static final int READ_TIMEOUT = 60;//读取超时时间,单位秒
     private static final int CONN_TIMEOUT = 50;//连接超时时间,单位秒
     private Retrofit retrofit;

@@ -58,7 +58,7 @@ public class JiJianSelectAdater extends RecyclerView.Adapter<JiJianSelectAdater.
         viewHolder.itemView.setTag(i);
         String token = (String) SPUtil.get(context, Constant.TOKEN, Constant.TOKEN, "");
         if (list.size()!=0){
-            if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(token))) {
+            if (list.get(i).getFromUid() == Integer.valueOf(JwtUtil.JWTParse(context,token))) {
                 viewHolder.layoutCancel.setVisibility(View.VISIBLE);
                 viewHolder.imgType.setImageResource(R.mipmap.ic_home_jijian);
                 if (list.get(i).isCancel()){ //先进行判断能不能被取消
