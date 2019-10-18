@@ -215,6 +215,7 @@ public class BindWechatActivity extends BaseActivity {
                 break;
             case R.id.tv_bind:
                 String info = tvBind.getText().toString();
+                Constant.SHARETYPE = 3;
                 if (info.equals("绑定微信")){
                     bindWeChat();
                 }else{

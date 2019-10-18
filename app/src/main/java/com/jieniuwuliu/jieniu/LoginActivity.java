@@ -288,6 +288,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.img_weChat:
                 loginType = 3;
+                Constant.SHARETYPE = 3;
                 loginWeChat();
                 break;
             case R.id.tv_agreement://协议

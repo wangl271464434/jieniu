@@ -31,7 +31,7 @@ public class Constant {
     public static final int CAMERA_CODE = 1002;//请求相机的请求码
     public static final int WXFRIEND = 1;
     public static final int WXCIRCLE = 2;
-    public static  int SHARETYPE = 1;//1 分享优惠券 2 物流订单
+    public static  int SHARETYPE = 1;//1 分享优惠券 2 物流订单 3 其他
     public static String WEATHERURL = "https://api.heweather.net/s6/weather/now?";
     public static String WEATHERKEY = "06e0655eb3ba44049a99375b846c717a";
 }
