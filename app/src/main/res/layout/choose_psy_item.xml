@@ -79,6 +79,7 @@
         android:textSize="@dimen/size_10sp"
         android:textColor="@color/home_text"
         android:layout_margin="@dimen/size_10dp"
+        android:visibility="gone"
         />
     <View
         android:layout_width="match_parent"

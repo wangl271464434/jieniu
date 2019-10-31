@@ -164,7 +164,7 @@
                 <TextView
                     android:id="@+id/tv_empty"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/size_150dp"
+                    android:layout_height="@dimen/size_140dp"
                     android:background="@drawable/bg_gray_shape"
                     android:layout_marginTop="@dimen/size_20dp"
                     android:layout_marginBottom="@dimen/size_20dp"

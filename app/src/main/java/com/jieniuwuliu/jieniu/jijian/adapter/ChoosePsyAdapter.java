@@ -46,12 +46,12 @@ public class ChoosePsyAdapter extends RecyclerView.Adapter<ChoosePsyAdapter.View
         viewHolder.itemView.setTag(i);
         PSYUser.DataBean item = list.get(i);
         viewHolder.tvName.setText(item.getNickname());
-        if (item.getDistance()>1000){
+       /* if (item.getDistance()>1000){
             DecimalFormat decimalFomat = new DecimalFormat("#0.00");
             viewHolder.tvRange.setText(decimalFomat.format(item.getDistance()/1000)+"km");
         }else{
             viewHolder.tvRange.setText(item.getDistance()+"m");
-        }
+        }*/
     }
 
     @Override
