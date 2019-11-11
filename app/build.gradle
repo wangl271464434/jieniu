@@ -43,17 +43,18 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "jieniu_${releaseTime()}_${variant.versionName}.apk"
+                }
+            }
         }
         debug {
+
             signingConfig signingConfigs.config
         }
     }
     //配置app打包后的名字
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "jieniu_${releaseTime()}_${variant.versionName}.apk"
-        }
-    }
     dexOptions {
         javaMaxHeapSize "4g"
     }
